@@ -27,7 +27,7 @@ public class JLine3Input implements TerminalInput {
                     //noinspection ResultOfMethodCallIgnored
                     inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
 
-                } catch (InterruptedException | IOError | NullPointerException e) {
+                } catch (Throwable e) {
                     Thread.currentThread().interrupt();
 
                     break;
