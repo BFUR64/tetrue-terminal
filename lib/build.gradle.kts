@@ -48,7 +48,7 @@ java {
 }
 
 application {
-    mainClass = "io.github.bfur64.terminal.tests.OutputTest"
+    mainClass = "io.github.bfur64.terminal.tests.Test"
 }
 
 mavenPublishing {
