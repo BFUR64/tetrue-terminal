@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "1.1.0"
+version = "1.2.0"
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
