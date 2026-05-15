@@ -13,7 +13,10 @@ plugins {
     `java-library`
 
     id("application")
+
     id("com.gradleup.shadow") version "9.3.1"
+
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 repositories {
@@ -35,7 +38,6 @@ dependencies {
     implementation("com.googlecode.lanterna:lanterna:3.1.3")
 
     implementation("org.jline:jline:3.30.13")
-    implementation("org.jline:jline-terminal-jna:3.30.13")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -47,4 +49,37 @@ java {
 
 application {
     mainClass = "io.github.bfur64.terminal.tests.OutputTest"
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(group.toString(), "tetrue-terminal", version.toString())
+
+    pom {
+        name.set("menu-manager")
+        description.set("A meta library that combines JLine3 and Lanterna for my specific purposes")
+        inceptionYear.set("2026")
+        url.set("https://github.com/BFUR64/tetrue-terminal")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/license/mit")
+                distribution.set("repo")
+            }
+        }
+        developers {
+            developer {
+                id.set("BFUR64")
+                name.set("Terrance")
+                url.set("https://github.com/BFUR64/")
+            }
+        }
+        scm {
+            url.set("https://github.com/BFUR64/tetrue-terminal")
+            connection.set("scm:git:https://github.com/BFUR64/tetrue-terminal.git")
+            developerConnection.set("scm:git:ssh://git@github.com/BFUR64/tetrue-terminal.git")
+        }
+    }
 }

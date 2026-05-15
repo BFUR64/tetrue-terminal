@@ -65,7 +65,7 @@ public class LanternaRenderer implements TerminalRenderer {
         try {
             setForegroundColor(255, 255, 255);
             setBackgroundColor(0, 0, 0);
-            
+
             terminal.resetColorAndSGR();
             flush();
         }
