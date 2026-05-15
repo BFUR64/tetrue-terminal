@@ -63,9 +63,9 @@ public class LanternaRenderer implements TerminalRenderer {
     @Override
     public void resetColorAndStyle() {
         try {
-            // Fallback
-            System.out.print("\033[0;39;49m");
-
+            setForegroundColor(255, 255, 255);
+            setBackgroundColor(0, 0, 0);
+            
             terminal.resetColorAndSGR();
             flush();
         }
