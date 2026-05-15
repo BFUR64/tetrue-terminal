@@ -18,6 +18,8 @@ public class JLine3Renderer implements TerminalRenderer {
 
         terminal.enterRawMode();
         terminal.puts(Capability.cursor_invisible);
+        terminal.puts(Capability.enter_ca_mode);
+        terminal.flush();
 
         printWriter = terminal.writer();
     }
@@ -76,6 +78,9 @@ public class JLine3Renderer implements TerminalRenderer {
     @Override
     public void close() throws IOException {
         terminal.puts(Capability.cursor_visible);
+        terminal.puts(Capability.exit_ca_mode);
+        terminal.flush();
+
         terminal.close();
     }
 }
