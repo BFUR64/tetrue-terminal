@@ -6,36 +6,52 @@ import org.jline.terminal.Terminal;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.IOException;
+import java.io.IOError;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class JLine3Input implements TerminalInput {
-    private final Terminal terminal;
     private final BindingReader bindingReader;
     private final KeyMap<KeyStroke> keyMap;
 
+    private final BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
+
     public JLine3Input(Terminal terminal) {
-        this.terminal = terminal;
         this.bindingReader = new BindingReader(terminal.reader());
         this.keyMap = buildKeyMap();
+
+        Thread pollingThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    //noinspection ResultOfMethodCallIgnored
+                    inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
+
+                } catch (InterruptedException | IOError | NullPointerException e) {
+                    Thread.currentThread().interrupt();
+
+                    break;
+                }
+            }
+        });
+
+        pollingThread.start();
     }
 
     @Override
     public @NonNull KeyStroke readInput() {
-        return bindingReader.readBinding(keyMap);
+        try {
+            return inputQueue.take();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        return new KeyStroke(KeyType.UNKNOWN);
     }
 
     @Override
     public @Nullable KeyStroke pollInput() {
-        try {
-            if (!terminal.reader().ready()) {
-                return null;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return bindingReader.readBinding(keyMap);
+        return inputQueue.poll();
     }
 
     private KeyMap<KeyStroke> buildKeyMap() {
