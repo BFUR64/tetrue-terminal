@@ -101,7 +101,7 @@ public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
 
     @Override
     public void close() throws IOException {
-        renderer.close();
         input.close();
+        renderer.close();
     }
 }
