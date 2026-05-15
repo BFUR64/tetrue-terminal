@@ -23,17 +23,25 @@ public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
     }
 
     @SuppressWarnings("unused")
-    public static Terminal build() throws IOException {
+    public static Terminal auto() throws IOException {
         if (isTermux()) {
-            LanternaRenderer renderer = new LanternaRenderer();
-            LanternaInput input = new LanternaInput(renderer.getTerminal());
-            return new Terminal(renderer, input);
+            return lanterna();
         }
         else {
-            JLine3Renderer renderer = new JLine3Renderer();
-            JLine3Input input = new JLine3Input(renderer.getTerminal());
-            return new Terminal(renderer, input);
+            return jline3();
         }
+    }
+
+    public static Terminal lanterna() throws IOException {
+        LanternaRenderer renderer = new LanternaRenderer();
+        LanternaInput input = new LanternaInput(renderer.getTerminal());
+        return new Terminal(renderer, input);
+    }
+
+    public static Terminal jline3() throws IOException {
+        JLine3Renderer renderer = new JLine3Renderer();
+        JLine3Input input = new JLine3Input(renderer.getTerminal());
+        return new Terminal(renderer, input);
     }
 
     private static boolean isTermux() {
