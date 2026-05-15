@@ -1,17 +1,15 @@
-package io.github.bfur64.terminal.tests;
+package examples;
 
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.input.JLine3Input;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.render.JLine3Renderer;
 
 import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
         try (
-            Terminal terminal = Terminal.build();
+                Terminal terminal = Terminal.jline3();
         ) {
             KeyStroke keyStroke = new KeyStroke('t');
 
@@ -35,7 +33,8 @@ public class Test {
                 }
 
                 terminal.clearScreen();
-                terminal.putString(0, 0, "Character: " + toPrint);
+                terminal.putString(0, 0, "Renderer: " + terminal.getTerminalInfo());
+                terminal.putString(0, 1, "Character: " + toPrint);
                 terminal.flush();
 
                 if (keyStroke.getKeyType() == KeyType.ESCAPE) {

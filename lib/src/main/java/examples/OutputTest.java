@@ -1,13 +1,12 @@
-package io.github.bfur64.terminal.tests;
+package examples;
 
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.render.TerminalRenderer;
 
 import java.io.IOException;
 
 public class OutputTest {
     public static void main(String[] args) throws IOException, InterruptedException {
-        try (Terminal terminal = Terminal.build()) {
+        try (Terminal terminal = Terminal.auto()) {
             runTerminalDebugTest(terminal);
         }
     }
