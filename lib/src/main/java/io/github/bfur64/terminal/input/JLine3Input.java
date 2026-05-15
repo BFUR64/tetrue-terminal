@@ -7,27 +7,32 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOError;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JLine3Input implements TerminalInput {
     private final BindingReader bindingReader;
     private final KeyMap<KeyStroke> keyMap;
 
     private final BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
+    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+
+    private final Thread pollingThread;
 
     public JLine3Input(Terminal terminal) {
         this.bindingReader = new BindingReader(terminal.reader());
         this.keyMap = buildKeyMap();
 
-        Thread pollingThread = new Thread(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
+        this.pollingThread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted() && isRunning.get()) {
                 try {
                     //noinspection ResultOfMethodCallIgnored
                     inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
 
-                } catch (Throwable e) {
+                } catch (InterruptedException | IOError e) {
                     Thread.currentThread().interrupt();
 
                     break;
@@ -83,5 +88,18 @@ public class JLine3Input implements TerminalInput {
         map.setAmbiguousTimeout(10);
 
         return map;
+    }
+
+    @Override
+    public void close() {
+        try {
+            isRunning.set(false);
+
+            pollingThread.interrupt();
+            pollingThread.join();
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

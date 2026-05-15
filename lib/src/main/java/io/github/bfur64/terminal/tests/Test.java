@@ -46,6 +46,7 @@ public class Test {
         }
         while (true);
 
+        input.close();
         renderer.close();
     }
 }

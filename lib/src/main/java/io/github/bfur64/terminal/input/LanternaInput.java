@@ -61,4 +61,9 @@ public class LanternaInput implements TerminalInput {
             default -> KeyType.UNKNOWN;
         };
     }
+
+    @Override
+    public void close() throws IOException {
+
+    }
 }

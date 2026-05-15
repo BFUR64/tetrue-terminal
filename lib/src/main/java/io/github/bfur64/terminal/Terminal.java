@@ -10,9 +10,10 @@ import io.github.bfur64.terminal.render.TerminalRenderer;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public class Terminal implements TerminalRenderer, TerminalInput {
+public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
     private final TerminalRenderer renderer;
     private final TerminalInput input;
 
@@ -89,11 +90,6 @@ public class Terminal implements TerminalRenderer, TerminalInput {
     }
 
     @Override
-    public void close() throws IOException {
-        renderer.close();
-    }
-
-    @Override
     public @NonNull KeyStroke readInput() {
         return input.readInput();
     }
@@ -101,5 +97,11 @@ public class Terminal implements TerminalRenderer, TerminalInput {
     @Override
     public @Nullable KeyStroke pollInput() {
         return input.pollInput();
+    }
+
+    @Override
+    public void close() throws IOException {
+        renderer.close();
+        input.close();
     }
 }
