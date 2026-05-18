@@ -58,6 +58,8 @@ public class LanternaInput implements TerminalInput {
             case ArrowDown -> KeyType.ARROW_DOWN;
             case ArrowLeft -> KeyType.ARROW_LEFT;
             case ArrowRight -> KeyType.ARROW_RIGHT;
+            case Home -> KeyType.HOME;
+            case End -> KeyType.END;
             default -> KeyType.UNKNOWN;
         };
     }

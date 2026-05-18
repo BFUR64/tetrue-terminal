@@ -66,11 +66,19 @@ public class JLine3Input implements TerminalInput {
         map.bind(new KeyStroke(KeyType.ARROW_DOWN),  "\033[B");
         map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033[C");
         map.bind(new KeyStroke(KeyType.ARROW_LEFT),  "\033[D");
+        map.bind(new KeyStroke(KeyType.HOME), "\033[H");
+        map.bind(new KeyStroke(KeyType.END), "\033[F");
 
         map.bind(new KeyStroke(KeyType.ARROW_UP),    "\033OA");
         map.bind(new KeyStroke(KeyType.ARROW_DOWN),  "\033OB");
         map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033OC");
         map.bind(new KeyStroke(KeyType.ARROW_LEFT),  "\033OD");
+        map.bind(new KeyStroke(KeyType.HOME), "\033OH");
+        map.bind(new KeyStroke(KeyType.END), "\033OF");
+
+        map.bind(new KeyStroke(KeyType.HOME), "\033[1~");
+        map.bind(new KeyStroke(KeyType.END), "\033[4~");
+
 
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\b"); // BS (8)
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\177"); // DEL

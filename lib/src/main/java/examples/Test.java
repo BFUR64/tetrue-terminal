@@ -55,6 +55,8 @@ public class Test {
                 case ARROW_DOWN -> "Arrow Down";
                 case ARROW_LEFT -> "Arrow Left";
                 case ARROW_RIGHT -> "Arrow Right";
+                case HOME -> "Home";
+                case END -> "End";
                 case UNKNOWN -> "Unknown";
             };
         }
