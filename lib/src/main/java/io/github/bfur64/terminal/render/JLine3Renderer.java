@@ -71,7 +71,7 @@ public class JLine3Renderer implements TerminalRenderer {
     }
 
     @Override
-    public String getTerminalInfo() {
+    public String getCurrentTerminal() {
         return "JLine3";
     }
 

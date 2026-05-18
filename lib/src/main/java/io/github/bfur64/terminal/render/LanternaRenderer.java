@@ -85,7 +85,7 @@ public class LanternaRenderer implements TerminalRenderer {
     }
 
     @Override
-    public String getTerminalInfo() {
+    public String getCurrentTerminal() {
         return "Lanterna";
     }
 

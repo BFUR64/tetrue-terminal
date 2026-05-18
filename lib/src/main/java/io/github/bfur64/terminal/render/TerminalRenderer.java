@@ -15,7 +15,7 @@ public interface TerminalRenderer extends Closeable {
     int getXSize();
     int getYSize();
 
-    String getTerminalInfo();
+    String getCurrentTerminal();
 
     @Override
     void close() throws IOException;

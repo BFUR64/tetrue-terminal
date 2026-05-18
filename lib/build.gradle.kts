@@ -6,7 +6,30 @@
  */
 
 group = "io.github.bfur64"
-version = "1.2.3"
+version = "1.3.0-SNAPSHOT"
+
+val lanternaVersion = "3.1.3"
+val jline3Version = "3.30.13"
+
+tasks.processResources {
+    val tetrueTerminalVersion = project.version.toString()
+    val lanternaVersion = lanternaVersion
+    val jline3Version = jline3Version
+
+    inputs.property("tetrueTerminalVersion", tetrueTerminalVersion)
+    inputs.property("lanternaVersion", lanternaVersion)
+    inputs.property("jline3Version", jline3Version)
+
+    filesMatching("io/github/bfur64/terminal/settings.json.template") {
+        expand(
+            "tetrueTerminalVersion" to tetrueTerminalVersion,
+            "lanternaVersion" to lanternaVersion,
+            "jline3Version" to jline3Version
+        )
+    }
+
+    rename("(.+)\\.template", "$1")
+}
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
@@ -17,6 +40,10 @@ plugins {
     id("com.gradleup.shadow") version "9.3.1"
 
     id("com.vanniktech.maven.publish") version "0.36.0"
+}
+
+shadow {
+    addShadowVariantIntoJavaComponent = false
 }
 
 repositories {
@@ -35,9 +62,12 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("com.googlecode.lanterna:lanterna:3.1.3")
+    implementation("com.googlecode.lanterna:lanterna:$lanternaVersion")
 
-    implementation("org.jline:jline:3.30.13")
+    implementation("org.jline:jline:$jline3Version")
+
+    // JSON Reader
+    implementation("tools.jackson.core:jackson-databind:3.1.3")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

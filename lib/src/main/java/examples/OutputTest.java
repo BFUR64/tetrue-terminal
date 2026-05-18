@@ -15,7 +15,7 @@ public class OutputTest {
         // 1. Query terminal size (tests getXSize / getYSize)
         int w = renderer.getXSize();
         int h = renderer.getYSize();
-        String terminalInfo = renderer.getTerminalInfo();
+        String terminalInfo = renderer.getCurrentTerminal();
 
         // 2. Clear and show basic metadata
         renderer.resetColorAndStyle();

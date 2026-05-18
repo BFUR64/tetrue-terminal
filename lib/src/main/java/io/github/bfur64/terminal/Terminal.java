@@ -12,6 +12,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
     private final TerminalRenderer renderer;
@@ -93,8 +95,18 @@ public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
     }
 
     @Override
-    public String getTerminalInfo() {
-        return renderer.getTerminalInfo();
+    public String getCurrentTerminal() {
+        return renderer.getCurrentTerminal();
+    }
+
+    public List<String> getTerminalInfo() {
+        List<String> arrayList = new ArrayList<>(3);
+
+        arrayList.add("Tetrue Terminal: " + Config.tetrueTerminalVersion);
+        arrayList.add("Lanterna: " + Config.lanternaVersion);
+        arrayList.add("JLine: " + Config.jline3Version);
+
+        return arrayList;
     }
 
     @Override
