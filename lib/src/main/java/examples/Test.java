@@ -16,8 +16,6 @@ public class Test {
             KeyStroke keyStroke = new KeyStroke('t');
 
             do {
-                String toPrint = getCharacterString(keyStroke);
-
                 terminal.clearScreen();
                 terminal.putString(0, 0, "Current Renderer: " + terminal.getCurrentTerminal());
 
@@ -27,7 +25,7 @@ public class Test {
                     terminal.putString(0, 1 + i, terminalInfo.get(i));
                 }
 
-                terminal.putString(0, terminalInfo.size() + 2, "Character: " + toPrint);
+                terminal.putString(0, terminalInfo.size() + 2, "Character: " + keyStroke);
                 terminal.flush();
 
                 if (keyStroke.getKeyType() == KeyType.ESCAPE) {
@@ -38,28 +36,5 @@ public class Test {
             }
             while (true);
         }
-    }
-
-    private static @Nullable String getCharacterString(KeyStroke keyStroke) {
-        String toPrint;
-
-        if (keyStroke.getCharacter() != null) {
-            toPrint = "" + keyStroke.getCharacter();
-        } else {
-            toPrint = switch (keyStroke.getKeyType()) {
-                case CHARACTER -> null;
-                case ESCAPE -> "Escape";
-                case BACKSPACE -> "Backspace";
-                case ENTER -> "Enter";
-                case ARROW_UP -> "Arrow Up";
-                case ARROW_DOWN -> "Arrow Down";
-                case ARROW_LEFT -> "Arrow Left";
-                case ARROW_RIGHT -> "Arrow Right";
-                case HOME -> "Home";
-                case END -> "End";
-                case UNKNOWN -> "Unknown";
-            };
-        }
-        return toPrint;
     }
 }
