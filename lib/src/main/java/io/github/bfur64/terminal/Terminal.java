@@ -3,7 +3,7 @@ package io.github.bfur64.terminal;
 import io.github.bfur64.terminal.jline3.JLine3Backend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.lanterna.LanternaBackend;
-import io.github.bfur64.terminal.utils.TerminalBackend;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 

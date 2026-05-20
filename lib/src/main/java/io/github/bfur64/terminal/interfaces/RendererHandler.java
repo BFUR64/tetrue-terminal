@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.utils;
+package io.github.bfur64.terminal.interfaces;
 
 import java.io.Closeable;
 

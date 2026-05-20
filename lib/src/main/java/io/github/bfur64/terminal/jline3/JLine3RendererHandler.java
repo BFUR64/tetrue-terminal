@@ -1,6 +1,6 @@
 package io.github.bfur64.terminal.jline3;
 
-import io.github.bfur64.terminal.utils.RendererHandler;
+import io.github.bfur64.terminal.interfaces.RendererHandler;
 import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;

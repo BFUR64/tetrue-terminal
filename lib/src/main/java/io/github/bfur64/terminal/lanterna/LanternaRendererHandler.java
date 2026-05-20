@@ -3,7 +3,7 @@ package io.github.bfur64.terminal.lanterna;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.Terminal;
-import io.github.bfur64.terminal.utils.RendererHandler;
+import io.github.bfur64.terminal.interfaces.RendererHandler;
 
 import java.io.IOException;
 

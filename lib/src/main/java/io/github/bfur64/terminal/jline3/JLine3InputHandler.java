@@ -1,6 +1,6 @@
 package io.github.bfur64.terminal.jline3;
 
-import io.github.bfur64.terminal.utils.InputHandler;
+import io.github.bfur64.terminal.interfaces.InputHandler;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import org.jline.keymap.BindingReader;

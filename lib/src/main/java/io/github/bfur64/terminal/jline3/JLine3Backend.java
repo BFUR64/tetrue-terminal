@@ -1,7 +1,7 @@
 package io.github.bfur64.terminal.jline3;
 
 import io.github.bfur64.terminal.Config;
-import io.github.bfur64.terminal.utils.TerminalBackend;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
