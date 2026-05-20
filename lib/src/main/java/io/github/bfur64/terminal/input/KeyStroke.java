@@ -1,9 +1,8 @@
 package io.github.bfur64.terminal.input;
 
-public class KeyStroke {
-    private final KeyType keyType;
-    private final Character character;
+import org.jspecify.annotations.NonNull;
 
+public record KeyStroke(KeyType keyType, Character character) {
     public KeyStroke(Character character) {
         this(KeyType.CHARACTER, character);
     }
@@ -12,31 +11,18 @@ public class KeyStroke {
         this(keyType, null);
     }
 
-    public KeyStroke(KeyType keyType, Character character) {
-        this.keyType = keyType;
-        this.character = character;
-    }
-
-    public KeyType getKeyType() {
-        return keyType;
-    }
-
-    public Character getCharacter() {
-        return character;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if(!(obj instanceof KeyStroke other)) return false;
-        if (this.keyType != other.keyType) return false;
+        if (!(obj instanceof KeyStroke(KeyType otherType, Character otherChar))) return false;
+        if (this.keyType != otherType) return false;
         if (this.keyType == KeyType.CHARACTER) {
-            return this.character == other.character;
+            return this.character == otherChar;
         }
         return true;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return switch (keyType) {
             case CHARACTER -> {

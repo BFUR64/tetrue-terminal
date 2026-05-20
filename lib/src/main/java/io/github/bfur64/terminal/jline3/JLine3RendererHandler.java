@@ -1,31 +1,32 @@
-package io.github.bfur64.terminal.render;
+package io.github.bfur64.terminal.jline3;
 
+import io.github.bfur64.terminal.utils.RendererHandler;
 import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.InfoCmp;
 import org.jline.utils.InfoCmp.Capability;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class JLine3Renderer implements TerminalRenderer {
+class JLine3RendererHandler implements RendererHandler {
     private final Terminal terminal;
     private final PrintWriter printWriter;
 
-    public JLine3Renderer() throws IOException {
-        terminal = TerminalBuilder.builder()
-                .dumb(false)
-                .build();
-
-        terminal.enterRawMode();
-        terminal.puts(Capability.cursor_invisible);
-        terminal.puts(Capability.enter_ca_mode);
-        terminal.flush();
-
-        printWriter = terminal.writer();
+    public JLine3RendererHandler(Terminal terminal, PrintWriter printWriter) {
+        this.terminal = terminal;
+        this.printWriter = printWriter;
     }
 
     public Terminal getTerminal() {
         return this.terminal;
+    }
+
+    @Override
+    public void start() {
+        terminal.enterRawMode();
+        terminal.puts(InfoCmp.Capability.cursor_invisible);
+        terminal.puts(InfoCmp.Capability.enter_ca_mode);
+        terminal.flush();
     }
 
     @Override
@@ -34,7 +35,7 @@ public class JLine3Renderer implements TerminalRenderer {
     }
 
     @Override
-    public void putString(int x, int y, String out) {
+    public void put(int x, int y, String out) {
         terminal.puts(Capability.cursor_address, y, x);
         printWriter.print(out);
     }
@@ -68,11 +69,6 @@ public class JLine3Renderer implements TerminalRenderer {
     @Override
     public int getYSize() {
         return terminal.getSize().getRows();
-    }
-
-    @Override
-    public String getCurrentTerminal() {
-        return "JLine3";
     }
 
     @Override

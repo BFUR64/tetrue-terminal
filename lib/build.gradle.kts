@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "1.5.0"
+version = "2.0.0-SNAPSHOT-1"
 
 val lanternaVersion = "3.1.3"
 val jline3Version = "3.30.13"
@@ -78,7 +78,7 @@ java {
 }
 
 application {
-    mainClass = "examples.Test"
+    mainClass = "examples.OutputTest"
 }
 
 mavenPublishing {

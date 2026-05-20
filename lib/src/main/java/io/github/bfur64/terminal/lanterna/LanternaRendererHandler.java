@@ -1,28 +1,30 @@
-package io.github.bfur64.terminal.render;
+package io.github.bfur64.terminal.lanterna;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import io.github.bfur64.terminal.utils.RendererHandler;
 
-import javax.swing.*;
 import java.io.IOException;
 
-public class LanternaRenderer implements TerminalRenderer {
+class LanternaRendererHandler implements RendererHandler {
     private final Terminal terminal;
     private final TextGraphics textGraphics;
 
-    public LanternaRenderer() throws IOException {
-        terminal = new DefaultTerminalFactory().createTerminal();
-        terminal.setCursorVisible(false);
-
-        textGraphics = terminal.newTextGraphics();
-
-        terminal.enterPrivateMode();
+    public LanternaRendererHandler(Terminal terminal, TextGraphics textGraphics) {
+        this.terminal = terminal;
+        this.textGraphics = textGraphics;
     }
 
-    public Terminal getTerminal() {
-        return this.terminal;
+    @Override
+    public void start() {
+        try {
+            terminal.setCursorVisible(false);
+            terminal.enterPrivateMode();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -36,7 +38,7 @@ public class LanternaRenderer implements TerminalRenderer {
     }
 
     @Override
-    public void putString(int x, int y, String out) {
+    public void put(int x, int y, String out) {
         textGraphics.putString(x, y, out);
     }
 
@@ -82,11 +84,6 @@ public class LanternaRenderer implements TerminalRenderer {
     @Override
     public int getYSize() {
         return textGraphics.getSize().getRows();
-    }
-
-    @Override
-    public String getCurrentTerminal() {
-        return "Lanterna";
     }
 
     @Override

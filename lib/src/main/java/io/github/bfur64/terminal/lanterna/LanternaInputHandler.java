@@ -1,16 +1,24 @@
-package io.github.bfur64.terminal.input;
+package io.github.bfur64.terminal.lanterna;
 
 import com.googlecode.lanterna.terminal.Terminal;
+import io.github.bfur64.terminal.utils.InputHandler;
+import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.KeyType;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
-public class LanternaInput implements TerminalInput {
+class LanternaInputHandler implements InputHandler {
     private final Terminal terminal;
 
-    public LanternaInput(Terminal terminal) {
+    public LanternaInputHandler(Terminal terminal) {
         this.terminal = terminal;
+    }
+
+    @Override
+    public void start() {
+
     }
 
     @Override
@@ -65,7 +73,7 @@ public class LanternaInput implements TerminalInput {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
 
     }
 }
