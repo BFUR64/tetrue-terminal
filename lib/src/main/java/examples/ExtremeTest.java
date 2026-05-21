@@ -1,6 +1,5 @@
 package examples;
 
-import io.github.bfur64.terminal.BufferedTerminal;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
@@ -8,7 +7,7 @@ import java.io.IOException;
 
 public class ExtremeTest {
     public static void main(String[] args) {
-        try (TerminalBackend renderer = BufferedTerminal.auto()) {
+        try (TerminalBackend renderer = Terminal.auto()) {
             renderer.start();
 
             int w = renderer.getXSize();

@@ -18,12 +18,12 @@ public class Terminal implements TerminalBackend {
         this.terminalBackend = terminalBackend;
     }
 
-    public static Terminal auto() throws IOException {
+    public static TerminalBackend auto() throws IOException {
         if (isTermux()) {
-
+            return new JLine3Backend(true);
         }
         else {
-            return jline3();
+            return new JLine3Backend(false);
         }
     }
 
