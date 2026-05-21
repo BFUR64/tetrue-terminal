@@ -15,17 +15,14 @@ public class JLine3Backend implements TerminalBackend {
     private final JLine3RendererHandler jLine3RendererHandler;
 
     public JLine3Backend(boolean isTermux) throws IOException {
-        Terminal terminal;
         if (isTermux) {
             System.setProperty("org.jline.terminal.provider", "exec");
             System.setProperty("java.awt.headless", "true");
             System.setProperty("file.encoding", "UTF-8");
 
-            terminal = TerminalBuilder.builder().system(true).dumb(false).build();
         }
-        else {
-            terminal = TerminalBuilder.builder().system(true).provider("exec").encoding("UTF-8").build();
-        }
+
+        Terminal terminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
         jLine3InputHandler = new JLine3InputHandler(terminal);
         jLine3RendererHandler = new JLine3RendererHandler(terminal, terminal.writer());
