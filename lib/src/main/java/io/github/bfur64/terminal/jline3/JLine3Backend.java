@@ -20,7 +20,7 @@ public class JLine3Backend implements TerminalBackend {
             System.setProperty("org.jline.terminal.provider", "exec");
             System.setProperty("java.awt.headless", "true");
             System.setProperty("file.encoding", "UTF-8");
-            
+
             terminal = TerminalBuilder.builder().system(true).dumb(false).build();
         }
         else {
