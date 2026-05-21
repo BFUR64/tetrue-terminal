@@ -1,27 +1,27 @@
 package examples;
 
 import io.github.bfur64.terminal.Terminal;
-
-import java.io.IOException;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 
 public class OutputTest {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        try (Terminal terminal = Terminal.auto()) {
+    public static void main(String[] args) throws Exception {
+        try (TerminalBackend terminal = Terminal.auto()) {
+            terminal.start();
             runTerminalDebugTest(terminal);
         }
     }
 
-    public static void runTerminalDebugTest(Terminal renderer) throws InterruptedException {
+    public static void runTerminalDebugTest(TerminalBackend renderer) throws InterruptedException {
         // 1. Query terminal size (tests getXSize / getYSize)
         int w = renderer.getXSize();
         int h = renderer.getYSize();
-        String terminalInfo = renderer.getCurrentTerminal();
+        String terminalInfo = renderer.getTerminalInfo();
 
         // 2. Clear and show basic metadata
         renderer.resetColorAndStyle();
         renderer.clearScreen();
         String info = String.format("Terminal size: %d x %d   True-color test (R,G,B full range)   %s", w, h, terminalInfo);
-        renderer.putString(0, 0, info);
+        renderer.put(0, 0, info);
         renderer.flush();
 
         Thread.sleep(3000);
@@ -29,7 +29,7 @@ public class OutputTest {
         // Announce next test before sleeping
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: RGB Color Channel Bars (Vertical Gradient)");
+        renderer.put(0, 0, "Next test: RGB Color Channel Bars (Vertical Gradient)");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -43,7 +43,7 @@ public class OutputTest {
             int r = y * 255 / (maxY - 1);
             renderer.setBackgroundColor(r, 0, 0);
             for (int x = 0; x < barWidth; x++) {
-                renderer.putString(startX + x, startY + y, " ");
+                renderer.put(startX + x, startY + y, " ");
             }
         }
         // G bar
@@ -52,7 +52,7 @@ public class OutputTest {
             int g = y * 255 / (maxY - 1);
             renderer.setBackgroundColor(0, g, 0);
             for (int x = 0; x < barWidth; x++) {
-                renderer.putString(gBarX + x, startY + y, " ");
+                renderer.put(gBarX + x, startY + y, " ");
             }
         }
         // B bar
@@ -61,7 +61,7 @@ public class OutputTest {
             int b = y * 255 / (maxY - 1);
             renderer.setBackgroundColor(0, 0, b);
             for (int x = 0; x < barWidth; x++) {
-                renderer.putString(bBarX + x, startY + y, " ");
+                renderer.put(bBarX + x, startY + y, " ");
             }
         }
         renderer.flush();
@@ -71,7 +71,7 @@ public class OutputTest {
         // Announce next test before sleeping
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: Foreground Color Spectrum (Horizontal Text)");
+        renderer.put(0, 0, "Next test: Foreground Color Spectrum (Horizontal Text)");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -88,7 +88,7 @@ public class OutputTest {
                 int b = (step * 7 + 170) % 256;
                 renderer.setForegroundColor(r, g, b);
                 renderer.setBackgroundColor(20, 20, 20);
-                renderer.putString(step, textY, sample.substring(0, 1));
+                renderer.put(step, textY, sample.substring(0, 1));
             }
         }
         renderer.flush();
@@ -98,7 +98,7 @@ public class OutputTest {
         // Announce next test before sleeping
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: Reset Color and Style");
+        renderer.put(0, 0, "Next test: Reset Color and Style");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -106,7 +106,7 @@ public class OutputTest {
         renderer.resetColorAndStyle();
         int resetY = textY + 2;
         if (resetY < h) {
-            renderer.putString(0, resetY, "Colours reset. Text should be default foreground/background.");
+            renderer.put(0, resetY, "Colours reset. Text should be default foreground/background.");
         }
         renderer.flush();
 
@@ -115,7 +115,7 @@ public class OutputTest {
         // Announce next test before sleeping
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: Edge Cases (Top‑Left and Bottom‑Right Corners)");
+        renderer.put(0, 0, "Next test: Edge Cases (Top‑Left and Bottom‑Right Corners)");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -125,8 +125,8 @@ public class OutputTest {
         String cornerTL = "TL";
         String cornerBR = "BR";
         if (w >= 2 && h >= 2) {
-            renderer.putString(0, 0, cornerTL);
-            renderer.putString(w - cornerBR.length(), h - 1, cornerBR);
+            renderer.put(0, 0, cornerTL);
+            renderer.put(w - cornerBR.length(), h - 1, cornerBR);
         }
         renderer.flush();
 
@@ -135,7 +135,7 @@ public class OutputTest {
         // Announce next test before sleeping
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: Stress Test (Full Screen Alternating Colours)");
+        renderer.put(0, 0, "Next test: Stress Test (Full Screen Alternating Colours)");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -144,7 +144,7 @@ public class OutputTest {
             for (int col = 0; col < w; col++) {
                 boolean even = ((row + col) & 1) == 0;
                 renderer.setBackgroundColor(even ? 30 : 60, even ? 30 : 60, even ? 30 : 60);
-                renderer.putString(col, row, ".");
+                renderer.put(col, row, ".");
             }
         }
         renderer.flush();
@@ -154,7 +154,7 @@ public class OutputTest {
         // Announce next test before sleeping (final message)
         renderer.resetColorAndStyle();
         renderer.clearScreen();
-        renderer.putString(0, 0, "Next test: Final clear and goodbye message");
+        renderer.put(0, 0, "Next test: Final clear and goodbye message");
         renderer.flush();
         Thread.sleep(3000);
 
@@ -162,7 +162,7 @@ public class OutputTest {
         renderer.setBackgroundColor(255, 255, 255);
         renderer.setForegroundColor(0, 0, 0);
         renderer.clearScreen();
-        renderer.putString(0, 0, "All tests completed.");
+        renderer.put(0, 0, "All tests completed.");
         renderer.flush();
 
         Thread.sleep(3000);

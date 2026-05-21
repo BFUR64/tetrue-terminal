@@ -6,24 +6,20 @@
  */
 
 group = "io.github.bfur64"
-version = "1.5.0"
+version = "2.0.0"
 
-val lanternaVersion = "3.1.3"
 val jline3Version = "3.30.13"
 
 tasks.processResources {
     val tetrueTerminalVersion = project.version.toString()
-    val lanternaVersion = lanternaVersion
     val jline3Version = jline3Version
 
     inputs.property("tetrueTerminalVersion", tetrueTerminalVersion)
-    inputs.property("lanternaVersion", lanternaVersion)
     inputs.property("jline3Version", jline3Version)
 
     filesMatching("io/github/bfur64/terminal/settings.json.template") {
         expand(
             "tetrueTerminalVersion" to tetrueTerminalVersion,
-            "lanternaVersion" to lanternaVersion,
             "jline3Version" to jline3Version
         )
     }
@@ -62,8 +58,6 @@ dependencies {
     implementation(libs.guava)
 
     // Rendering Pipeline
-    implementation("com.googlecode.lanterna:lanterna:$lanternaVersion")
-
     implementation("org.jline:jline:$jline3Version")
 
     // JSON Reader
@@ -78,7 +72,7 @@ java {
 }
 
 application {
-    mainClass = "examples.Test"
+    mainClass = "examples.ExtremeTest"
 }
 
 mavenPublishing {

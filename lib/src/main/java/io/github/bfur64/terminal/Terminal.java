@@ -1,49 +1,29 @@
 package io.github.bfur64.terminal;
 
-import io.github.bfur64.terminal.input.JLine3Input;
+import io.github.bfur64.terminal.jline3.JLine3Backend;
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.LanternaInput;
-import io.github.bfur64.terminal.input.TerminalInput;
-import io.github.bfur64.terminal.render.JLine3Renderer;
-import io.github.bfur64.terminal.render.LanternaRenderer;
-import io.github.bfur64.terminal.render.TerminalRenderer;
+import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
-    private final TerminalRenderer renderer;
-    private final TerminalInput input;
+public class Terminal implements TerminalBackend {
+    private final TerminalBackend terminalBackend;
+    private boolean started;
+    private boolean closed;
 
-    private Terminal(TerminalRenderer renderer, TerminalInput input) {
-        this.renderer = renderer;
-        this.input = input;
+    Terminal(TerminalBackend terminalBackend) {
+        this.terminalBackend = terminalBackend;
     }
 
-    @SuppressWarnings("unused")
-    public static Terminal auto() throws IOException {
+    public static TerminalBackend auto() throws IOException {
         if (isTermux()) {
-            return lanterna();
+            return new JLine3Backend(true);
         }
         else {
-            return jline3();
+            return new JLine3Backend(false);
         }
-    }
-
-    public static Terminal lanterna() throws IOException {
-        LanternaRenderer renderer = new LanternaRenderer();
-        LanternaInput input = new LanternaInput(renderer.getTerminal());
-        return new Terminal(renderer, input);
-    }
-
-    public static Terminal jline3() throws IOException {
-        JLine3Renderer renderer = new JLine3Renderer();
-        JLine3Input input = new JLine3Input(renderer.getTerminal());
-        return new Terminal(renderer, input);
     }
 
     private static boolean isTermux() {
@@ -55,73 +35,75 @@ public class Terminal implements TerminalRenderer, TerminalInput, Closeable {
     }
 
     @Override
-    public void clearScreen() {
-        renderer.clearScreen();
-    }
-
-    @Override
-    public void putString(int x, int y, String out) {
-        renderer.putString(x, y, out);
-    }
-
-    @Override
-    public void flush() {
-        renderer.flush();
-    }
-
-    @Override
-    public void setForegroundColor(int r, int g, int b) {
-        renderer.setForegroundColor(r, g, b);
-    }
-
-    @Override
-    public void setBackgroundColor(int r, int g, int b) {
-        renderer.setBackgroundColor(r, g, b);
-    }
-
-    @Override
-    public void resetColorAndStyle() {
-        renderer.resetColorAndStyle();
-    }
-
-    @Override
-    public int getXSize() {
-        return renderer.getXSize();
-    }
-
-    @Override
-    public int getYSize() {
-        return renderer.getYSize();
-    }
-
-    @Override
-    public String getCurrentTerminal() {
-        return renderer.getCurrentTerminal();
-    }
-
-    public List<String> getTerminalInfo() {
-        List<String> arrayList = new ArrayList<>(3);
-
-        arrayList.add("Tetrue Terminal: " + Config.tetrueTerminalVersion);
-        arrayList.add("Lanterna: " + Config.lanternaVersion);
-        arrayList.add("JLine: " + Config.jline3Version);
-
-        return arrayList;
-    }
-
-    @Override
     public @NonNull KeyStroke readInput() {
-        return input.readInput();
+        return terminalBackend.readInput();
     }
 
     @Override
     public @Nullable KeyStroke pollInput() {
-        return input.pollInput();
+        return terminalBackend.pollInput();
+    }
+
+    @Override
+    public void start() {
+        if (started) return;
+        started = true;
+        terminalBackend.start();
+    }
+
+    @Override
+    public void clearScreen() {
+        terminalBackend.clearScreen();
+    }
+
+    @Override
+    public void put(int x, int y, String out) {
+        terminalBackend.put(x, y, out);
+    }
+
+    @Override
+    public void flush() {
+        terminalBackend.flush();
+    }
+
+    @Override
+    public void setForegroundColor(int r, int g, int b) {
+        terminalBackend.setForegroundColor(r, g, b);
+    }
+
+    @Override
+    public void setBackgroundColor(int r, int g, int b) {
+        terminalBackend.setBackgroundColor(r, g, b);
+    }
+
+    @Override
+    public void resetColorAndStyle() {
+        terminalBackend.resetColorAndStyle();
+    }
+
+    @Override
+    public int getXSize() {
+        return terminalBackend.getXSize();
+    }
+
+    @Override
+    public int getYSize() {
+        return terminalBackend.getYSize();
+    }
+
+    @Override
+    public String getTerminalInfo() {
+        return terminalBackend.getTerminalInfo();
+    }
+
+    public static String getLibraryInfo() {
+        return "Tetrue Terminal: " + Config.tetrueTerminalVersion;
     }
 
     @Override
     public void close() throws IOException {
-        input.close();
-        renderer.close();
+        if (closed) return;
+        closed = true;
+        terminalBackend.close();
     }
 }

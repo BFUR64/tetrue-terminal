@@ -1,5 +1,8 @@
-package io.github.bfur64.terminal.input;
+package io.github.bfur64.terminal.jline3;
 
+import io.github.bfur64.terminal.interfaces.InputHandler;
+import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.KeyType;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.Terminal;
@@ -7,25 +10,27 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOError;
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class JLine3Input implements TerminalInput {
+class JLine3InputHandler implements InputHandler {
     private final BindingReader bindingReader;
     private final KeyMap<KeyStroke> keyMap;
 
     private final BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
     private final AtomicBoolean isRunning = new AtomicBoolean(true);
 
-    private final Thread pollingThread;
+    private Thread pollingThread;
 
-    public JLine3Input(Terminal terminal) {
+    public JLine3InputHandler(Terminal terminal) {
         this.bindingReader = new BindingReader(terminal.reader());
         this.keyMap = buildKeyMap();
+    }
 
+    @Override
+    public void start() {
         this.pollingThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted() && isRunning.get()) {
                 try {
