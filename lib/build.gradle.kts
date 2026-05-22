@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "2.2.0"
+version = "2.2.1"
 
 val lanternaVersion = "3.1.3"
 val jlineVersion = "4.1.0"
@@ -87,7 +87,7 @@ mavenPublishing {
 
     pom {
         name.set("menu-manager")
-        description.set("A meta library that combines JLine3 and Lanterna for my specific purposes")
+        description.set("A meta library that combines JLine and Lanterna for my specific purposes")
         inceptionYear.set("2026")
         url.set("https://github.com/BFUR64/tetrue-terminal")
         licenses {

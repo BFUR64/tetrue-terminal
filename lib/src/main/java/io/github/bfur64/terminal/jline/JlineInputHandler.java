@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.jline3;
+package io.github.bfur64.terminal.jline;
 
 import io.github.bfur64.terminal.interfaces.InputHandler;
 import io.github.bfur64.terminal.input.KeyStroke;
@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class JLine3InputHandler implements InputHandler {
+class JlineInputHandler implements InputHandler {
     private final BindingReader bindingReader;
     private final KeyMap<KeyStroke> keyMap;
 
@@ -24,7 +24,7 @@ class JLine3InputHandler implements InputHandler {
 
     private Thread pollingThread;
 
-    public JLine3InputHandler(Terminal terminal) {
+    public JlineInputHandler(Terminal terminal) {
         this.bindingReader = new BindingReader(terminal.reader());
         this.keyMap = buildKeyMap();
     }
