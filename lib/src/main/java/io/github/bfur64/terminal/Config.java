@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 public class Config {
     public static String tetrueTerminalVersion;
+    public static String lanternaVersion;
     public static String jline3Version;
 
     static {
@@ -17,6 +18,7 @@ public class Config {
             JsonNode jsonNode = objectMapper.readTree(is);
 
             tetrueTerminalVersion = jsonNode.get("tetrueTerminalVersion").asString();
+            lanternaVersion = jsonNode.get("lanternaVersion").asString();
             jline3Version = jsonNode.get("jline3Version").asString();
         }
         catch (IOException e) {

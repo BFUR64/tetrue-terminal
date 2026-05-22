@@ -3,6 +3,7 @@ package io.github.bfur64.terminal;
 import io.github.bfur64.terminal.jline3.JLine3Backend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import io.github.bfur64.terminal.lanterna.LanternaBackend;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -19,10 +20,10 @@ public class Terminal implements TerminalBackend {
 
     public static TerminalBackend auto() throws IOException {
         if (isTermux()) {
-            return new JLine3Backend(true);
+            return new LanternaBackend();
         }
         else {
-            return new JLine3Backend(false);
+            return new JLine3Backend();
         }
     }
 
