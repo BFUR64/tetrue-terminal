@@ -6,24 +6,24 @@
  */
 
 group = "io.github.bfur64"
-version = "2.1.1"
+version = "2.2.1"
 
 val lanternaVersion = "3.1.3"
-val jline3Version = "3.30.13"
+val jlineVersion = "4.1.0"
 
 tasks.processResources {
     val tetrueTerminalVersion = project.version.toString()
     val lanternaVersion = lanternaVersion
-    val jline3Version = jline3Version
+    val jlineVersion = jlineVersion
 
     inputs.property("tetrueTerminalVersion", tetrueTerminalVersion)
-    inputs.property("jline3Version", jline3Version)
+    inputs.property("jlineVersion", jlineVersion)
 
     filesMatching("io/github/bfur64/terminal/settings.json.template") {
         expand(
             "tetrueTerminalVersion" to tetrueTerminalVersion,
             "lanternaVersion" to lanternaVersion,
-            "jline3Version" to jline3Version
+            "jlineVersion" to jlineVersion
         )
     }
 
@@ -62,7 +62,7 @@ dependencies {
 
     // Rendering Pipeline
     implementation("com.googlecode.lanterna:lanterna:${lanternaVersion}")
-    implementation("org.jline:jline:$jline3Version")
+    implementation("org.jline:jline:$jlineVersion")
 
     // JSON Reader
     implementation("tools.jackson.core:jackson-databind:3.1.3")
@@ -87,7 +87,7 @@ mavenPublishing {
 
     pom {
         name.set("menu-manager")
-        description.set("A meta library that combines JLine3 and Lanterna for my specific purposes")
+        description.set("A meta library that combines JLine and Lanterna for my specific purposes")
         inceptionYear.set("2026")
         url.set("https://github.com/BFUR64/tetrue-terminal")
         licenses {

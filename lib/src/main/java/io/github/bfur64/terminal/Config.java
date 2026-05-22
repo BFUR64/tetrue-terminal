@@ -9,7 +9,7 @@ import java.io.InputStream;
 public class Config {
     public static String tetrueTerminalVersion;
     public static String lanternaVersion;
-    public static String jline3Version;
+    public static String jlineVersion;
 
     static {
         try (InputStream is = Config.class.getResourceAsStream("/io/github/bfur64/terminal/settings.json")) {
@@ -19,7 +19,7 @@ public class Config {
 
             tetrueTerminalVersion = jsonNode.get("tetrueTerminalVersion").asString();
             lanternaVersion = jsonNode.get("lanternaVersion").asString();
-            jline3Version = jsonNode.get("jline3Version").asString();
+            jlineVersion = jsonNode.get("jlineVersion").asString();
         }
         catch (IOException e) {
             throw new RuntimeException(e);

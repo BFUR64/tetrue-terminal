@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.jline3;
+package io.github.bfur64.terminal.jline;
 
 import io.github.bfur64.terminal.interfaces.RendererHandler;
 import org.jline.terminal.Terminal;
@@ -8,11 +8,11 @@ import org.jline.utils.InfoCmp.Capability;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-class JLine3RendererHandler implements RendererHandler {
+class JlineRendererHandler implements RendererHandler {
     private final Terminal terminal;
     private final PrintWriter printWriter;
 
-    public JLine3RendererHandler(Terminal terminal, PrintWriter printWriter) {
+    public JlineRendererHandler(Terminal terminal, PrintWriter printWriter) {
         this.terminal = terminal;
         this.printWriter = printWriter;
     }
