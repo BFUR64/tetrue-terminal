@@ -33,6 +33,9 @@ public class OutputTest {
         renderer.flush();
         Thread.sleep(3000);
 
+        w = renderer.getXSize();
+        h = renderer.getYSize();
+
         // 3. Test full 0‑255 range for each colour channel as vertical gradient bars
         int barWidth = Math.min(w / 3, 20);
         int startX = 1, startY = 1;
@@ -74,6 +77,9 @@ public class OutputTest {
         renderer.put(0, 0, "Next test: Foreground Color Spectrum (Horizontal Text)");
         renderer.flush();
         Thread.sleep(3000);
+
+        w = renderer.getXSize();
+        h = renderer.getYSize();
 
         // 4. Test setForegroundColor with text across full RGB spectrum (horizontal strip)
         renderer.resetColorAndStyle();
@@ -119,6 +125,9 @@ public class OutputTest {
         renderer.flush();
         Thread.sleep(3000);
 
+        w = renderer.getXSize();
+        h = renderer.getYSize();
+
         // 6. Edge‑case putString: top‑left and bottom‑right corners
         renderer.setForegroundColor(255, 255, 0);
         renderer.setBackgroundColor(128, 0, 128);
@@ -138,6 +147,9 @@ public class OutputTest {
         renderer.put(0, 0, "Next test: Stress Test (Full Screen Alternating Colours)");
         renderer.flush();
         Thread.sleep(3000);
+
+        w = renderer.getXSize();
+        h = renderer.getYSize();
 
         // 7. Stress test: fill entire screen with a character using alternating colours
         for (int row = 0; row < h; row++) {

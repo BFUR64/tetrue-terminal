@@ -10,18 +10,21 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class BufferedJLineBackend implements TerminalBackend {
     private final JlineInputHandler jlineInputHandler;
     private final JlineRendererHandler jlineRendererHandler;
-    private final BufferedRenderer bufferedRenderer;
+    private BufferedRenderer bufferedRenderer;
+    private ScheduledExecutorService bufferedResizePoller;
 
     public BufferedJLineBackend() throws IOException {
         Terminal terminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
         jlineInputHandler = new JlineInputHandler(terminal);
         jlineRendererHandler = new JlineRendererHandler(terminal, terminal.writer());
-        bufferedRenderer = new BufferedRenderer(jlineRendererHandler);
     }
 
     @Override
@@ -39,9 +42,18 @@ public class BufferedJLineBackend implements TerminalBackend {
         jlineInputHandler.start();
         jlineRendererHandler.start();
 
-        bufferedRenderer.setWidth(jlineRendererHandler.getXSize());
-        bufferedRenderer.setHeight(jlineRendererHandler.getYSize());
-        bufferedRenderer.init();
+        bufferedRenderer = new BufferedRenderer(
+            jlineRendererHandler,
+            jlineRendererHandler.getXSize(),
+            jlineRendererHandler.getYSize()
+        );
+
+        bufferedResizePoller = Executors.newSingleThreadScheduledExecutor();
+        bufferedResizePoller.scheduleAtFixedRate(() -> {
+            int newWidth = jlineRendererHandler.getXSize();
+            int newHeight = jlineRendererHandler.getYSize();
+            bufferedRenderer.resize(newWidth, newHeight);
+        }, 0, 200, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -92,6 +104,7 @@ public class BufferedJLineBackend implements TerminalBackend {
     @Override
     public void close() throws IOException {
         jlineInputHandler.close();
+        bufferedResizePoller.close();
         jlineRendererHandler.close();
     }
 }

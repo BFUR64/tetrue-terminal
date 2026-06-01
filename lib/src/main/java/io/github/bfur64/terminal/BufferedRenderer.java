@@ -14,11 +14,17 @@ public class BufferedRenderer implements TextGraphics {
     private int currFgR = -1, currFgG = -1, currFgB = -1;
     private int currBgR = -1, currBgG = -1, currBgB = -1;
 
-    public BufferedRenderer(TextGraphics renderer) {
+    private boolean fullRedraw;
+
+    public BufferedRenderer(TextGraphics renderer, int width, int height) {
         this.renderer = renderer;
+        this.width = width;
+        this.height = height;
+
+        allocateBuffers();
     }
 
-    public void init() {
+    private void allocateBuffers() {
         prevBuffer = new Cell[height][width];
         nextBuffer = new Cell[height][width];
 
@@ -30,6 +36,17 @@ public class BufferedRenderer implements TextGraphics {
         }
     }
 
+    public void resize(int newWidth, int newHeight) {
+        if (newWidth == width && newHeight == height) return;
+
+        width = newWidth;
+        height = newHeight;
+
+        allocateBuffers();
+
+        fullRedraw = true;
+    }
+
     @Override
     public void clearScreen() {
         for (Cell[] row : nextBuffer) {
@@ -37,8 +54,6 @@ public class BufferedRenderer implements TextGraphics {
                 col.reset();
             }
         }
-
-        renderer.resetColorAndStyle();
     }
 
     @Override
@@ -47,6 +62,8 @@ public class BufferedRenderer implements TextGraphics {
         if (out == null || out.isEmpty()) return;
 
         for (int i = 0; i < out.length(); i++) {
+            if (x + (i + 1) > width) break;
+
             Cell cell = nextBuffer[y][x + i];
 
             cell.ch = out.charAt(i);
@@ -57,6 +74,11 @@ public class BufferedRenderer implements TextGraphics {
 
     @Override
     public void flush() {
+        if (fullRedraw) {
+            renderer.clearScreen();
+            fullRedraw = false;
+        }
+
         boolean termFgDefault = true;
         int termFgR = -1, termFgG = -1, termFgB = -1;
 
@@ -110,6 +132,8 @@ public class BufferedRenderer implements TextGraphics {
                 nextBuffer[y][x].reset();
             }
         }
+
+        renderer.resetColorAndStyle();
     }
 
     @Override
