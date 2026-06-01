@@ -28,6 +28,14 @@ public class Terminal implements TerminalBackend {
         }
     }
 
+    public static TerminalBackend lanterna() throws IOException {
+        return new LanternaBackend();
+    }
+
+    public static TerminalBackend jline() throws IOException {
+        return new JLineBackend();
+    }
+
     private static boolean isTermux() {
         String prefix = System.getenv("PREFIX");
 

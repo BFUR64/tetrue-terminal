@@ -3,7 +3,7 @@ package io.github.bfur64.terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.jline.BufferedJLineBackend;
-import io.github.bfur64.terminal.lanterna.LanternaBackend;
+import io.github.bfur64.terminal.lanterna.BufferedLanternaBackend;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -21,11 +21,19 @@ public class BufferedTerminal implements TerminalBackend {
 
     public static TerminalBackend auto() throws IOException {
         if (isTermux()) {
-            return new LanternaBackend();
+            return new BufferedLanternaBackend();
         }
         else {
             return new BufferedJLineBackend();
         }
+    }
+
+    public static TerminalBackend lanterna() throws IOException {
+        return new BufferedLanternaBackend();
+    }
+
+    public static TerminalBackend jline() throws IOException {
+        return new BufferedJLineBackend();
     }
 
     private static boolean isTermux() {
