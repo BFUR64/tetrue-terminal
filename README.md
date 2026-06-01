@@ -2,10 +2,3 @@
 [![Java](https://img.shields.io/badge/Java-21%2B-blue)](https://openjdk.org/)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.bfur64/tetrue-terminal)](https://central.sonatype.com/artifact/io.github.bfur64/tetrue-terminal)
 # tetrue-terminal
-
-## Known Issues
-### Buffered Rendering (JLine)
-- Internal buffer does not resize when the terminal resizes
-
-### Buffered Rendering (Lanterna)
-- Does not exist
