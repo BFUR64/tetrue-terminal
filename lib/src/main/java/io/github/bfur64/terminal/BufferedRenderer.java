@@ -12,15 +12,13 @@ public class BufferedRenderer implements TextGraphics {
     private int currFgR = -1, currFgG = -1, currFgB = -1;
     private int currBgR = -1, currBgG = -1, currBgB = -1;
 
-    private volatile boolean fullRedraw;
-
     public BufferedRenderer(TextGraphics renderer) {
         this.renderer = renderer;
 
-        allocateBuffers(0, 0);
+        allocateBuffers(0, 0, false);
     }
 
-    private void allocateBuffers(int width, int height) {
+    private void allocateBuffers(int width, int height, boolean localFullRedraw) {
         Cell[][] prevBuffer = new Cell[height][width];
         Cell[][] nextBuffer = new Cell[height][width];
 
@@ -31,7 +29,7 @@ public class BufferedRenderer implements TextGraphics {
             }
         }
 
-        buffer = new Buffer(prevBuffer, nextBuffer, width, height);
+        buffer = new Buffer(prevBuffer, nextBuffer, width, height, localFullRedraw);
     }
 
     public void resize(int newWidth, int newHeight) {
@@ -39,9 +37,7 @@ public class BufferedRenderer implements TextGraphics {
 
         if (newWidth == current.width && newHeight == current.height) return;
 
-        allocateBuffers(newWidth, newHeight);
-
-        fullRedraw = true;
+        allocateBuffers(newWidth, newHeight, true);
     }
 
     @Override
@@ -75,9 +71,9 @@ public class BufferedRenderer implements TextGraphics {
     public void flush() {
         Buffer current = buffer;
 
-        if (fullRedraw) {
+        if (current.fullRedraw) {
             renderer.clearScreen();
-            fullRedraw = false;
+            current.fullRedraw = false;
         }
 
         boolean termFgDefault = true;
@@ -174,5 +170,19 @@ public class BufferedRenderer implements TextGraphics {
         boolean isBgDefault() { return bgR == -1; }
     }
 
-    private record Buffer(Cell[][] prevBuffer, Cell[][] nextBuffer, int width, int height) {}
+    private static final class Buffer {
+        private final Cell[][] prevBuffer;
+        private final Cell[][] nextBuffer;
+        private final int width;
+        private final int height;
+        private volatile boolean fullRedraw;
+
+        private Buffer(Cell[][] prevBuffer, Cell[][] nextBuffer, int width, int height, boolean fullRedraw) {
+            this.prevBuffer = prevBuffer;
+            this.nextBuffer = nextBuffer;
+            this.width = width;
+            this.height = height;
+            this.fullRedraw = fullRedraw;
+        }
+    }
 }
