@@ -8,6 +8,8 @@ import org.jspecify.annotations.NullMarked;
 
 import com.googlecode.lanterna.terminal.Terminal;
 
+import java.io.IOException;
+
 @NullMarked
 public final class LanternaBackend implements RendererBackend {
     private final Terminal terminal;
@@ -31,11 +33,17 @@ public final class LanternaBackend implements RendererBackend {
     }
 
     private void clear() {
-        terminal.clearScreen();
+        try {
+            terminal.clearScreen();
+        }
+        catch (IOException ignored) {}
     }
 
     private void flush() {
-        terminal.flush();
+        try {
+            terminal.flush();
+        }
+        catch (IOException ignored) {}
     }
 
     private void put(Put put) {
@@ -43,7 +51,10 @@ public final class LanternaBackend implements RendererBackend {
     }
 
     private void reset() {
-        terminal.resetColorAndSGR();
+        try {
+            terminal.resetColorAndSGR();
+        }
+        catch (IOException ignored) {}
     }
 
     private void setBg(SetBg setBg) {
