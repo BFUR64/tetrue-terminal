@@ -1,13 +1,13 @@
 package io.github.bfur64.terminal.v3.mock;
 
-import io.github.bfur64.terminal.v3.PipelineType;
+import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
-import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
-import io.github.bfur64.terminal.v3.pipeline.Pipeline;
+import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
+import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderMode;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
@@ -20,9 +20,9 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final int ySize;
 
     public MockRuntime(TerminalConfig config) {
-        Pipeline pipeline = config.pipelineType() == PipelineType.BUFFERED ?
-            new BufferedPipeline(new MockBackend()) :
-            new ImmediatePipeline(new MockBackend());
+        RenderMode pipeline = config.renderType() == RenderType.BUFFERED ?
+            new BufferedMode(new MockBackend()) :
+            new ImmediateMode(new MockBackend());
 
         this.terminal = new Terminal(this, pipeline, new MockInputSource());
 

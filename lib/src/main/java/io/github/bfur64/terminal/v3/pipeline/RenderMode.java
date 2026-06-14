@@ -6,6 +6,6 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public interface Pipeline {
+public interface RenderMode {
     void execute(List<Command> commands, int xSize, int ySize);
 }

@@ -4,6 +4,7 @@ import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.jline.JLineRuntime;
 import io.github.bfur64.terminal.v3.lanterna.LanternaRuntime;
 import io.github.bfur64.terminal.v3.mock.MockRuntime;
+import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 @NullMarked
 public class TerminalBuilder {
     private @Nullable RuntimeType runtimeType;
-    private @Nullable PipelineType pipelineType;
+    private @Nullable RenderType renderType;
     private int xSize;
     private int ySize;
     private boolean sizeOverride;
@@ -37,12 +38,12 @@ public class TerminalBuilder {
     }
 
     public TerminalBuilder immediate() {
-        this.pipelineType = PipelineType.IMMEDIATE;
+        this.renderType = RenderType.IMMEDIATE;
         return this;
     }
 
     public TerminalBuilder buffered() {
-        this.pipelineType = PipelineType.BUFFERED;
+        this.renderType = RenderType.BUFFERED;
         return this;
     }
 
@@ -58,11 +59,11 @@ public class TerminalBuilder {
             throw new IllegalArgumentException("Runtime type must be either: auto(), jline(), lanterna(), or mock()");
         }
 
-        if (pipelineType == null) {
+        if (renderType == null) {
             throw new IllegalArgumentException("Pipeline type must be either: immediate(), or buffered()");
         }
 
-        TerminalConfig config = new TerminalConfig(pipelineType, xSize, ySize, sizeOverride);
+        TerminalConfig config = new TerminalConfig(renderType, xSize, ySize, sizeOverride);
 
         return switch (runtimeType) {
             case JLINE -> new JLineRuntime(config);

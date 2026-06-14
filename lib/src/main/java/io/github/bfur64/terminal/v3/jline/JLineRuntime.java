@@ -3,14 +3,14 @@ package io.github.bfur64.terminal.v3.jline;
 import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.v3.PipelineType;
+import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
-import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
-import io.github.bfur64.terminal.v3.pipeline.Pipeline;
+import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
+import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderMode;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
@@ -40,14 +40,14 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
         this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
-        Pipeline pipeline = config.pipelineType() == PipelineType.BUFFERED ?
-            new BufferedPipeline(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
-            new ImmediatePipeline(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
+        RenderMode renderMode = config.renderType() == RenderType.BUFFERED ?
+            new BufferedMode(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
+            new ImmediateMode(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
 
         BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
-        this.terminal = new Terminal(this, pipeline, new JLineInputSource(inputQueue));
+        this.terminal = new Terminal(this, renderMode, new JLineInputSource(inputQueue));
 
         start();
     }

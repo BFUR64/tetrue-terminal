@@ -2,14 +2,14 @@ package io.github.bfur64.terminal.v3.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.terminal.Config;
-import io.github.bfur64.terminal.v3.PipelineType;
+import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
-import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
-import io.github.bfur64.terminal.v3.pipeline.Pipeline;
+import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
+import io.github.bfur64.terminal.v3.pipeline.ImmediateMode;
+import io.github.bfur64.terminal.v3.pipeline.RenderMode;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
@@ -29,11 +29,11 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
 
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
 
-        Pipeline pipeline = config.pipelineType() == PipelineType.BUFFERED ?
-                new BufferedPipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
-                new ImmediatePipeline(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
+        RenderMode renderMode = config.renderType() == RenderType.BUFFERED ?
+                new BufferedMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
+                new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
-        this.terminal = new Terminal(this, pipeline, new LanternaInputSource(lanternaTerminal));
+        this.terminal = new Terminal(this, renderMode, new LanternaInputSource(lanternaTerminal));
     }
 
     private void start() {
