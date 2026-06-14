@@ -5,6 +5,7 @@ import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.v3.PipelineType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
+import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
 import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
@@ -14,7 +15,7 @@ import org.jspecify.annotations.NullMarked;
 import java.io.IOException;
 
 @NullMarked
-public final class LanternaRuntime implements TerminalRuntime {
+public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironment {
     private static final int DEFAULT_X = 0;
     private static final int DEFAULT_Y = 0;
 

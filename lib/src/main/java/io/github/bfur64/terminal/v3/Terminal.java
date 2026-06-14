@@ -25,6 +25,10 @@ public final class Terminal {
         this.pipeline = pipeline;
         this.inputSource = inputSource;
     }
+    
+    public static TerminalBuilder builder() {
+        return new TerminalBuilder();
+    }
 
     public KeyStroke read() {
         return inputSource.read();

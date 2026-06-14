@@ -5,6 +5,7 @@ import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.v3.PipelineType;
 import io.github.bfur64.terminal.v3.Terminal;
 import io.github.bfur64.terminal.v3.TerminalConfig;
+import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedPipeline;
 import io.github.bfur64.terminal.v3.pipeline.ImmediatePipeline;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @NullMarked
-public final class JLineRuntime implements TerminalRuntime {
+public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment {
     private final Terminal terminal;
     private final org.jline.terminal.Terminal jlineTerminal;
 

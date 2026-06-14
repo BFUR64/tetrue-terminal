@@ -58,10 +58,10 @@ public final class LanternaBackend implements RendererBackend {
     }
 
     private void setBg(SetBg setBg) {
-        textGraphics.setForegroundColor(TextColor.Indexed.fromRGB(setBg.r(), setBg.g(), setBg.b()));
+        textGraphics.setForegroundColor(new TextColor.RGB(setBg.r(), setBg.g(), setBg.b()));
     }
 
     private void setFg(SetFg setFg) {
-        textGraphics.setForegroundColor(TextColor.Indexed.fromRGB(setFg.r(), setFg.g(), setFg.b()));
+        textGraphics.setForegroundColor(new TextColor.RGB(setFg.r(), setFg.g(), setFg.b()));
     }
 }
