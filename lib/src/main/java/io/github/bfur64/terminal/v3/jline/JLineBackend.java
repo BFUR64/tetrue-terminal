@@ -21,38 +21,18 @@ public final class JLineBackend implements RendererBackend {
     @Override
     public void execute(Command command) {
         switch (command) {
-            case Clear clear -> clear();
-            case Flush flush -> flush();
-            case Put put -> put(put);
-            case Reset reset -> reset();
-            case SetBg setBg -> setBg(setBg);
-            case SetFg setFg -> setFg(setFg);
+            case Clear ignored -> terminal.puts(Capability.clear_screen);
+            case Flush ignored -> printWriter.flush();
+            case Put put -> {
+                terminal.puts(Capability.cursor_address, put.y(), put.x());
+                printWriter.print(put.text());
+            }
+            case Reset ignored -> {
+                printWriter.print("\u001b[0m");
+                execute(new Flush());
+            }
+            case SetBg setBg -> printWriter.print(String.format("\u001b[48;2;%s;%s;%sm", setBg.r(), setBg.g(), setBg.b()));
+            case SetFg setFg -> printWriter.print(String.format("\u001b[38;2;%s;%s;%sm", setFg.r(), setFg.g(), setFg.b()));
         }
-    }
-
-    private void clear() {
-        terminal.puts(Capability.clear_screen);
-    }
-
-    private void flush() {
-        printWriter.flush();
-    }
-
-    private void put(Put put) {
-        terminal.puts(Capability.cursor_address, put.y(), put.x());
-        printWriter.print(put.text());
-    }
-
-    private void reset() {
-        printWriter.print("\u001b[0m");
-        flush();
-    }
-
-    private void setFg(SetFg setFg) {
-        printWriter.print(String.format("\u001b[38;2;%s;%s;%sm", setFg.r(), setFg.g(), setFg.b()));
-    }
-
-    private void setBg(SetBg setBg) {
-        printWriter.print(String.format("\u001b[48;2;%s;%s;%sm", setBg.r(), setBg.g(), setBg.b()));
     }
 }
