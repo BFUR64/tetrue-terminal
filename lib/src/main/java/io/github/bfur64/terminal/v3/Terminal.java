@@ -84,11 +84,13 @@ public final class Terminal {
     }
 
     public void flush(List<Command> externalBuffer) {
+        buffer.add(new Flush());
         renderStrategy.execute(externalBuffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 
     public void flush() {
+        buffer.add(new Flush());
         renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
