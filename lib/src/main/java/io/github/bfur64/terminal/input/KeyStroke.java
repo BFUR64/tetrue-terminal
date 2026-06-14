@@ -43,6 +43,8 @@ public record KeyStroke(KeyType keyType, @Nullable Character character) {
             case ARROW_RIGHT -> "Arrow Right";
             case HOME -> "Home";
             case END -> "End";
+            case PAGE_UP -> "Page Up";
+            case PAGE_DOWN -> "Page Down";
             case UNKNOWN -> "Unknown";
         };
     }

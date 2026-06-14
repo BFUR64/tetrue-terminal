@@ -11,5 +11,7 @@ public enum KeyType {
     ARROW_RIGHT,
     HOME,
     END,
+    PAGE_UP,
+    PAGE_DOWN,
     UNKNOWN
 }

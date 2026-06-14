@@ -64,6 +64,8 @@ public final class LanternaInputSource implements InputSource {
             case ArrowRight -> KeyType.ARROW_RIGHT;
             case Home -> KeyType.HOME;
             case End -> KeyType.END;
+            case PageUp -> KeyType.PAGE_UP;
+            case PageDown -> KeyType.PAGE_DOWN;
             default -> KeyType.UNKNOWN;
         };
     }

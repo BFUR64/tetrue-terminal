@@ -130,7 +130,8 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
         map.bind(new KeyStroke(KeyType.HOME), "\033[1~");
         map.bind(new KeyStroke(KeyType.END), "\033[4~");
-
+        map.bind(new KeyStroke(KeyType.PAGE_UP), "\033[5~");
+        map.bind(new KeyStroke(KeyType.PAGE_DOWN), "\033[6~");
 
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\b"); // BS (8)
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\177"); // DEL
