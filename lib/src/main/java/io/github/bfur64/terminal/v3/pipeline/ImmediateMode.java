@@ -7,7 +7,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public class ImmediateMode implements RenderStrategy {
+public final class ImmediateMode implements RenderStrategy {
     private final RendererBackend rendererBackend;
 
     public ImmediateMode(RendererBackend rendererBackend) {
