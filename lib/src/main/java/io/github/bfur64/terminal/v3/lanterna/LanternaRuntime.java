@@ -23,10 +23,6 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
     public LanternaRuntime(TerminalConfig config) throws IOException {
-        if (config.sizeOverride()) {
-            throw new UnsupportedOperationException("Lanterna does not support size override");
-        }
-
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
 
         RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?

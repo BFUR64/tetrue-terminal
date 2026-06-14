@@ -34,10 +34,6 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     private final Thread pollingThread;
 
     public JLineRuntime(TerminalConfig config) throws IOException {
-        if (config.sizeOverride()) {
-            throw new UnsupportedOperationException("JLine does not support size override");
-        }
-
         this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
         RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?

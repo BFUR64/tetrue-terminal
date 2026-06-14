@@ -165,6 +165,10 @@ public final class Terminal {
         }
 
         public TerminalRuntime build() throws IOException {
+            if (!runtimeType.equals(RuntimeType.MOCK) && sizeOverride) {
+                throw new IllegalArgumentException("Size override supported only by mock terminals");
+            }
+
             return switch (runtimeType) {
                 case JLINE -> new JLineRuntime(config);
                 case LANTERNA -> new LanternaRuntime(config);
