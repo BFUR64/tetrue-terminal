@@ -5,7 +5,6 @@ import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
@@ -33,10 +32,10 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     private final Thread pollingThread;
 
-    public JLineRuntime(TerminalConfig config) throws IOException {
+    public JLineRuntime(RenderType renderType) throws IOException {
         this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
 
-        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
+        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
             new BufferedMode(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
             new ImmediateMode(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
 

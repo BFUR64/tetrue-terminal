@@ -2,7 +2,6 @@ package io.github.bfur64.terminal.v3.mock;
 
 import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
@@ -19,23 +18,23 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private final int xSize;
     private final int ySize;
 
-    public MockRuntime(TerminalConfig config) {
-        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
+    public MockRuntime(RenderType renderType, int xSize, int ySize, boolean sizeOverride) {
+        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
             new BufferedMode(new MockBackend()) :
             new ImmediateMode(new MockBackend());
 
         this.terminal = new Terminal(this, renderStrategy, new MockInputSource());
 
-        int xSize = DEFAULT_X;
-        int ySize = DEFAULT_Y;
+        int localXSize = DEFAULT_X;
+        int localYSize = DEFAULT_Y;
 
-        if (config.sizeOverride()) {
-            xSize = config.xSize();
-            ySize = config.ySize();
+        if (sizeOverride) {
+            localXSize = xSize;
+            localYSize = ySize;
         }
 
-        this.xSize = xSize;
-        this.ySize = ySize;
+        this.xSize = localXSize;
+        this.ySize = localYSize;
     }
 
     @Override

@@ -170,9 +170,9 @@ public final class Terminal {
             }
 
             return switch (runtimeType) {
-                case JLINE -> new JLineRuntime(config);
-                case LANTERNA -> new LanternaRuntime(config);
-                case MOCK -> new MockRuntime(config);
+                case JLINE -> new JLineRuntime(renderType);
+                case LANTERNA -> new LanternaRuntime(renderType);
+                case MOCK -> new MockRuntime(renderType, xSize, ySize, sizeOverride);
             };
         }
     }

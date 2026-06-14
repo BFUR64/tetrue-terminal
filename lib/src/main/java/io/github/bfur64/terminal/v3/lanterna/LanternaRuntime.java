@@ -4,7 +4,6 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.terminal.Config;
 import io.github.bfur64.terminal.v3.pipeline.RenderType;
 import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.TerminalConfig;
 import io.github.bfur64.terminal.v3.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.v3.pipeline.BufferedMode;
@@ -22,10 +21,10 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     private final Terminal terminal;
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
-    public LanternaRuntime(TerminalConfig config) throws IOException {
+    public LanternaRuntime(RenderType renderType) throws IOException {
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
 
-        RenderStrategy renderStrategy = config.renderType() == RenderType.BUFFERED ?
+        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
                 new BufferedMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
                 new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
 
