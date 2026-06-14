@@ -1,10 +1,11 @@
 package examples;
 
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import org.jspecify.annotations.NullMarked;
 
-import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
-
-public class OutputTest {
+@NullMarked
+public final class OutputTest {
     public static void main(String[] args) throws Exception {
         try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
             Terminal terminal = runtime.terminal();

@@ -76,7 +76,7 @@ java {
 }
 
 application {
-    mainClass = "examples.Test"
+    mainClass = "examples.LoopTest"
 }
 
 mavenPublishing {

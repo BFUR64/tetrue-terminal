@@ -1,119 +1,178 @@
 package io.github.bfur64.terminal;
 
-import io.github.bfur64.terminal.jline.JLineBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.interfaces.TerminalBackend;
-import io.github.bfur64.terminal.lanterna.LanternaBackend;
+import io.github.bfur64.terminal.commands.*;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.jline.JLineRuntime;
+import io.github.bfur64.terminal.lanterna.LanternaRuntime;
+import io.github.bfur64.terminal.mock.MockRuntime;
+import io.github.bfur64.terminal.output.Color;
+import io.github.bfur64.terminal.output.TextColor;
+import io.github.bfur64.terminal.interfaces.InputSource;
+import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
+import io.github.bfur64.terminal.pipeline.RenderStrategy;
+import io.github.bfur64.terminal.pipeline.RenderType;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @NullMarked
-public class Terminal implements TerminalBackend {
-    private final TerminalBackend terminalBackend;
-    private boolean started;
-    private boolean closed;
+public final class Terminal {
+    private final TerminalEnvironment environment;
+    private final RenderStrategy renderStrategy;
+    private final InputSource inputSource;
 
-    Terminal(TerminalBackend terminalBackend) {
-        this.terminalBackend = terminalBackend;
+    private final List<Command> buffer = new ArrayList<>();
+
+    public Terminal(TerminalEnvironment environment, RenderStrategy renderStrategy, InputSource inputSource) {
+        this.environment = environment;
+        this.renderStrategy = renderStrategy;
+        this.inputSource = inputSource;
     }
 
-    public static TerminalBackend auto() throws IOException {
-        if (isTermux()) {
-            return new LanternaBackend();
-        }
-        else {
-            return new JLineBackend();
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public static TerminalBackend lanterna() throws IOException {
-        return new LanternaBackend();
+    public KeyStroke read() {
+        return inputSource.read();
     }
 
-    public static TerminalBackend jline() throws IOException {
-        return new JLineBackend();
+    public @Nullable KeyStroke poll() {
+        return inputSource.poll();
     }
 
-    private static boolean isTermux() {
-        String prefix = System.getenv("PREFIX");
-
-        return (prefix != null &&
-            prefix.contains("termux")) ||
-            System.getenv("TERMUX_VERSION") != null;
+    public void setFg(TextColor color) {
+        setFg(color.color());
     }
 
-    @Override
-    public KeyStroke readInput() {
-        return terminalBackend.readInput();
+    public void setFg(Color color) {
+        setFg(color.r(), color.g(), color.b());
     }
 
-    @Override
-    public @Nullable KeyStroke pollInput() {
-        return terminalBackend.pollInput();
+    public void setFg(int r, int g, int b) {
+        buffer.add(new SetFg(r, g, b));
     }
 
-    @Override
-    public void start() {
-        if (started) return;
-        started = true;
-        terminalBackend.start();
+    public void setBg(TextColor color) {
+        setBg(color.color());
     }
 
-    @Override
-    public void clearScreen() {
-        terminalBackend.clearScreen();
+    public void setBg(Color color) {
+        setBg(color.r(), color.g(), color.b());
     }
 
-    @Override
+    public void setBg(int r, int g, int b) {
+        buffer.add(new SetBg(r, g, b));
+    }
+
+    public void put(int x, int y, char out) {
+        put(x, y, String.valueOf(out));
+    }
+
     public void put(int x, int y, String out) {
-        terminalBackend.put(x, y, out);
+        buffer.add(new Put(x, y, out));
     }
 
-    @Override
+    public void clear() {
+        buffer.add(new Clear());
+    }
+
+    public void flush(List<Command> externalBuffer) {
+        List<Command> localBuffer = new ArrayList<>(externalBuffer);
+        localBuffer.add(new Flush());
+        
+        renderStrategy.execute(localBuffer, environment.xSize(), environment.ySize());
+        buffer.clear();
+    }
+
     public void flush() {
-        terminalBackend.flush();
+        buffer.add(new Flush());
+        renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
+        buffer.clear();
     }
 
-    @Override
-    public void setForegroundColor(int r, int g, int b) {
-        terminalBackend.setForegroundColor(r, g, b);
+    public void reset() {
+        buffer.add(new Reset());
     }
 
-    @Override
-    public void setBackgroundColor(int r, int g, int b) {
-        terminalBackend.setBackgroundColor(r, g, b);
+    public int xSize() {
+        return environment.xSize();
     }
 
-    @Override
-    public void resetColorAndStyle() {
-        terminalBackend.resetColorAndStyle();
+    public int ySize() {
+        return environment.ySize();
     }
 
-    @Override
-    public int getXSize() {
-        return terminalBackend.getXSize();
+    public String libraryInfo() {
+        return Config.tetrueTerminalVersion;
     }
 
-    @Override
-    public int getYSize() {
-        return terminalBackend.getYSize();
+    public String terminalInfo() {
+        return environment.terminalInfo();
     }
 
-    @Override
-    public String getTerminalInfo() {
-        return terminalBackend.getTerminalInfo();
+    public List<Command> snapshotBuffer() {
+        return Collections.unmodifiableList(buffer);
     }
 
-    public static String getLibraryInfo() {
-        return "Tetrue Terminal: " + Config.tetrueTerminalVersion;
-    }
+    @NullMarked
+    public static class Builder {
+        private RuntimeType runtimeType = RuntimeType.JLINE;
+        private RenderType renderType = RenderType.IMMEDIATE;
 
-    @Override
-    public void close() throws IOException {
-        if (closed) return;
-        closed = true;
-        terminalBackend.close();
+        public Builder auto() {
+            if (isTermux()) {
+                return lanterna();
+            }
+            else {
+                return jline();
+            }
+        }
+
+        private static boolean isTermux() {
+            String prefix = System.getenv("PREFIX");
+
+            return (prefix != null &&
+                    prefix.contains("termux")) ||
+                    System.getenv("TERMUX_VERSION") != null;
+        }
+
+        public Builder jline() {
+            this.runtimeType = RuntimeType.JLINE;
+            return this;
+        }
+
+        public Builder lanterna() {
+            this.runtimeType = RuntimeType.LANTERNA;
+            return this;
+        }
+
+        public Builder mock() {
+            this.runtimeType = RuntimeType.MOCK;
+            return this;
+        }
+
+        public Builder immediate() {
+            this.renderType = RenderType.IMMEDIATE;
+            return this;
+        }
+
+        public Builder buffered() {
+            this.renderType = RenderType.BUFFERED;
+            return this;
+        }
+
+        public TerminalRuntime build() throws IOException {
+            return switch (runtimeType) {
+                case JLINE -> new JLineRuntime(renderType);
+                case LANTERNA -> new LanternaRuntime(renderType);
+                case MOCK -> new MockRuntime(renderType);
+            };
+        }
     }
 }

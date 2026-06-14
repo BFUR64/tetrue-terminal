@@ -1,90 +1,37 @@
 package io.github.bfur64.terminal.lanterna;
 
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
-import io.github.bfur64.terminal.Config;
-import io.github.bfur64.terminal.interfaces.TerminalBackend;
-import io.github.bfur64.terminal.input.KeyStroke;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
+import io.github.bfur64.terminal.commands.*;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+
+import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
 
 @NullMarked
-public class LanternaBackend implements TerminalBackend {
-    private final LanternaInputHandler lanternaInputHandler;
-    private final LanternaRendererHandler lanternaRendererHandler;
+public final class LanternaBackend implements RendererBackend {
+    private final Terminal terminal;
+    private final TextGraphics textGraphics;
 
-    public LanternaBackend() throws IOException {
-        Terminal terminal = new DefaultTerminalFactory().createTerminal();
-        lanternaInputHandler = new LanternaInputHandler(terminal);
-        lanternaRendererHandler = new LanternaRendererHandler(terminal, terminal.newTextGraphics());
+    public LanternaBackend(Terminal terminal, TextGraphics textGraphics) {
+        this.terminal = terminal;
+        this.textGraphics = textGraphics;
     }
 
     @Override
-    public KeyStroke readInput() {
-        return lanternaInputHandler.readInput();
-    }
-
-    @Override
-    public @Nullable KeyStroke pollInput() {
-        return lanternaInputHandler.pollInput();
-    }
-
-    @Override
-    public void start() {
-        lanternaInputHandler.start();
-        lanternaRendererHandler.start();
-    }
-
-    @Override
-    public void clearScreen() {
-        lanternaRendererHandler.clearScreen();
-    }
-
-    @Override
-    public void put(int x, int y, String out) {
-        lanternaRendererHandler.put(x, y, out);
-    }
-
-    @Override
-    public void flush() {
-        lanternaRendererHandler.flush();
-    }
-
-    @Override
-    public void setForegroundColor(int r, int g, int b) {
-        lanternaRendererHandler.setForegroundColor(r, g, b);
-    }
-
-    @Override
-    public void setBackgroundColor(int r, int g, int b) {
-        lanternaRendererHandler.setBackgroundColor(r, g, b);
-    }
-
-    @Override
-    public void resetColorAndStyle() {
-        lanternaRendererHandler.resetColorAndStyle();
-    }
-
-    @Override
-    public int getXSize() {
-        return lanternaRendererHandler.getXSize();
-    }
-
-    @Override
-    public int getYSize() {
-        return lanternaRendererHandler.getYSize();
-    }
-
-    @Override
-    public String getTerminalInfo() {
-        return "Lanterna: " + Config.lanternaVersion;
-    }
-
-    @Override
-    public void close() throws IOException {
-        lanternaInputHandler.close();
-        lanternaRendererHandler.close();
+    public void execute(Command command) {
+        try {
+            switch (command) {
+                case Clear ignored -> terminal.clearScreen();
+                case Flush ignored -> terminal.flush();
+                case Put put -> textGraphics.putString(put.x(), put.y(), put.text());
+                case Reset ignored -> terminal.resetColorAndSGR();
+                case SetBg setBg -> textGraphics.setForegroundColor(new TextColor.RGB(setBg.r(), setBg.g(), setBg.b()));
+                case SetFg setFg -> textGraphics.setForegroundColor(new TextColor.RGB(setFg.r(), setFg.g(), setFg.b()));
+            }
+        }
+        catch (IOException ignored) {}
     }
 }

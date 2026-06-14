@@ -2,12 +2,14 @@ package examples;
 
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.locks.LockSupport;
 
-public class LoopTest {
+@NullMarked
+public final class LoopTest {
     private static final long NS_PER_FRAME = 1_000_000_000L / 60;
 
     public static void main(String[] args) {

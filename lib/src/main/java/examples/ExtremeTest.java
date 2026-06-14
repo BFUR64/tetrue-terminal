@@ -1,84 +1,84 @@
 package examples;
 
-import io.github.bfur64.terminal.BufferedTerminal;
-import io.github.bfur64.terminal.interfaces.TerminalBackend;
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import org.jspecify.annotations.NullMarked;
 
-import java.io.IOException;
-
-public class ExtremeTest {
+@NullMarked
+public final class ExtremeTest {
     public static void main(String[] args) {
-        try (TerminalBackend renderer = BufferedTerminal.auto()) {
-            renderer.start();
+        try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
+            Terminal terminal = runtime.terminal();
+            
+            int w = terminal.xSize();
+            int h = terminal.ySize();
 
-            int w = renderer.getXSize();
-            int h = renderer.getYSize();
-
-            renderer.resetColorAndStyle();
-            renderer.clearScreen();
-            renderer.put(0, 0, "Next test: Stress Test (Full Screen Alternating Colours)");
-            renderer.flush();
+            terminal.reset();
+            terminal.clear();
+            terminal.put(0, 0, "Next test: Stress Test (Full Screen Alternating Colours)");
+            terminal.flush();
 
             Thread.sleep(3000);
 
             for (int i = 0; i < 1; i++) {
-                runStress1(renderer, h, w);
+                runStress1(terminal, h, w);
                 Thread.sleep(250);
             }
 
             for (int i = 0; i < 1; i++) {
-                runStress2(renderer, h, w, 'r');
+                runStress2(terminal, h, w, 'r');
                 Thread.sleep(250);
-                runStress2(renderer, h, w, 'g');
+                runStress2(terminal, h, w, 'g');
                 Thread.sleep(250);
-                runStress2(renderer, h, w, 'b');
+                runStress2(terminal, h, w, 'b');
                 Thread.sleep(250);
             }
 
             for (int i = 0; i < 3; i++ ) {
-                runStress3(renderer, h, w);
+                runStress3(terminal, h, w);
                 Thread.sleep(250);
             }
 
             for (int i = 0; i < 2; i++) {
-                runStress4(renderer, w, h, 255, 0, 0);    // Red
+                runStress4(terminal, w, h, 255, 0, 0);    // Red
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 0, 255, 0);    // Green
+                runStress4(terminal, w, h, 0, 255, 0);    // Green
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 0, 0, 255);    // Blue
+                runStress4(terminal, w, h, 0, 0, 255);    // Blue
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 255, 255, 0);  // Yellow
+                runStress4(terminal, w, h, 255, 255, 0);  // Yellow
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 0, 255, 255);  // Cyan
+                runStress4(terminal, w, h, 0, 255, 255);  // Cyan
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 255, 0, 255);  // Magenta
+                runStress4(terminal, w, h, 255, 0, 255);  // Magenta
                 Thread.sleep(250);
-                runStress4(renderer, w, h, 255, 255, 255); // White
+                runStress4(terminal, w, h, 255, 255, 255); // White
                 Thread.sleep(250);
             }
 
-            renderer.resetColorAndStyle();
-            renderer.clearScreen();
-            renderer.put(0, 0, "lol");
-            renderer.flush();
+            terminal.reset();
+            terminal.clear();
+            terminal.put(0, 0, "lol");
+            terminal.flush();
         }
-        catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private static void runStress1(TerminalBackend renderer, int h, int w) {
-        renderer.clearScreen();
+    private static void runStress1(Terminal terminal, int h, int w) {
+        terminal.clear();
         for (int row = 0; row < h; row++) {
             for (int col = 0; col < w; col++) {
                 boolean even = ((row + col) & 1) == 0;
-                renderer.setBackgroundColor(even ? 30 : 60, even ? 30 : 60, even ? 30 : 60);
-                renderer.put(col, row, ".");
+                terminal.setBg(even ? 30 : 60, even ? 30 : 60, even ? 30 : 60);
+                terminal.put(col, row, ".");
             }
         }
-        renderer.flush();
+        terminal.flush();
     }
-    public static void runStress2(TerminalBackend renderer, int h, int w, char colorChannel) {
-        renderer.clearScreen();
+    public static void runStress2(Terminal terminal, int h, int w, char colorChannel) {
+        terminal.clear();
 
         // Create a string of spaces for the full width
         String fullRow = " ".repeat(Math.max(0, w));
@@ -90,30 +90,30 @@ public class ExtremeTest {
             switch (colorChannel) {
                 case 'r':
                 case 'R':
-                    renderer.setBackgroundColor(colorValue, 0, 0);
+                    terminal.setBg(colorValue, 0, 0);
                     break;
                 case 'g':
                 case 'G':
-                    renderer.setBackgroundColor(0, colorValue, 0);
+                    terminal.setBg(0, colorValue, 0);
                     break;
                 case 'b':
                 case 'B':
-                    renderer.setBackgroundColor(0, 0, colorValue);
+                    terminal.setBg(0, 0, colorValue);
                     break;
                 default:
-                    renderer.setBackgroundColor(colorValue, 0, 0); // Default to red
+                    terminal.setBg(colorValue, 0, 0); // Default to red
                     break;
             }
 
             // Write the entire row at once
-            renderer.put(0, y, fullRow);
+            terminal.put(0, y, fullRow);
         }
 
-        renderer.flush();
+        terminal.flush();
     }
 
-    public static void runStress3(TerminalBackend renderer, int h, int w) {
-        renderer.clearScreen();
+    public static void runStress3(Terminal renderer, int h, int w) {
+        renderer.clear();
 
         // Create a string of dots for the full width
         String fullRow = " ".repeat(Math.max(0, w));
@@ -123,19 +123,19 @@ public class ExtremeTest {
             float hue = (float) y / h;
             int[] rgb = hsvToRgb(hue, 1.0f, 1.0f);
 
-            renderer.setBackgroundColor(rgb[0], rgb[1], rgb[2]);
+            renderer.setBg(rgb[0], rgb[1], rgb[2]);
             renderer.put(0, y, fullRow);
         }
 
         renderer.flush();
     }
 
-    public static void runStress4(TerminalBackend renderer, int w, int h, int r, int g, int b) {
-        renderer.clearScreen();
+    public static void runStress4(Terminal renderer, int w, int h, int r, int g, int b) {
+        renderer.clear();
 
         String fullRow = ".".repeat(Math.max(0, w));
 
-        renderer.setBackgroundColor(r, g, b);
+        renderer.setBg(r, g, b);
 
         for (int y = 0; y < h; y++) {
             renderer.put(0, y, fullRow);

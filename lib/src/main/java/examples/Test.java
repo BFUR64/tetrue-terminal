@@ -2,14 +2,16 @@ package examples;
 
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.v3.Terminal;
-import io.github.bfur64.terminal.v3.commands.Command;
-import io.github.bfur64.terminal.v3.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.commands.Command;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test {
+@NullMarked
+public final class Test {
     public static void main(String[] args) throws Exception {
         List<Command> buffer = new ArrayList<>();
 
