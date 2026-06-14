@@ -13,7 +13,7 @@ public class Test {
     public static void main(String[] args) throws Exception {
         List<Command> buffer = new ArrayList<>();
 
-        try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
+        try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
             Terminal terminal = runtime.terminal();
 
             KeyStroke keyStroke = new KeyStroke('t');
@@ -21,8 +21,9 @@ public class Test {
             do {
                 terminal.clear();
                 terminal.put(0, 0, "Current Renderer: " + terminal.terminalInfo());
+                terminal.put(0, 1, "Cols: " + terminal.xSize() + " | " + "Rows: " + terminal.ySize());
 
-                terminal.put(0, 2, "Character: " + keyStroke);
+                terminal.put(0, 3, "Character: " + keyStroke);
                 buffer.addAll(terminal.snapshotBuffer());
                 terminal.flush();
 
