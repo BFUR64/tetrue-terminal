@@ -10,11 +10,12 @@ import java.util.List;
 @NullMarked
 public final class BufferedMode implements RenderStrategy {
     private static final Color DEFAULT_COLOR = Color.of(-1, -1, -1);
+    private static final Cell DEFAULT_CELL = new Cell(' ', DEFAULT_COLOR, DEFAULT_COLOR);
 
     private final RendererBackend rendererBackend;
 
-    private int xSize = 0;
-    private int ySize = 0;
+    private int frameXSize = 0;
+    private int frameYSize = 0;
 
     private Cell[][] prevBuffer;
     private Cell[][] nextBuffer;
@@ -30,69 +31,50 @@ public final class BufferedMode implements RenderStrategy {
     public BufferedMode(RendererBackend rendererBackend) {
         this.rendererBackend = rendererBackend;
 
-        prevBuffer = createBuffer();
-        nextBuffer = createBuffer();
+        prevBuffer = createBuffer(frameXSize, frameYSize);
+        nextBuffer = createBuffer(frameXSize, frameYSize);
     }
 
     @Override
-    public void execute(List<Command> commands, int xSize, int ySize) {
-        if (this.xSize != xSize || this.ySize != ySize) {
-            this.xSize = xSize;
-            this.ySize = ySize;
+    public void execute(List<Command> commands, int termXSize, int termYSize) {
+        if (frameXSize != termXSize || frameYSize != termYSize) {
+            prevBuffer = copyBuffer(prevBuffer, frameXSize, frameYSize, termXSize, termYSize);
+            nextBuffer = copyBuffer(prevBuffer, frameXSize, frameYSize, termXSize, termYSize);
 
-            prevBuffer = createBuffer();
-            nextBuffer = createBuffer();
+            frameXSize = termXSize;
+            frameYSize = termYSize;
             fullRedraw = true;
-
-            termFg = DEFAULT_COLOR;
-            termBg = DEFAULT_COLOR;
         }
 
         for (Command command : commands) {
             switch (command) {
-                case Clear ignored -> nextBuffer = createBuffer();
+                case Clear ignored -> nextBuffer = createBuffer(frameXSize, frameYSize);
                 case Flush ignored -> {
                     if (fullRedraw) {
+                        rendererBackend.execute(new Reset());
                         rendererBackend.execute(new Clear());
-                        fullRedraw = false;
+                        termFg = DEFAULT_COLOR;
+                        termBg = DEFAULT_COLOR;
                     }
 
-                    for (int y = 0; y < this.ySize; y++) {
-                        for (int x = 0; x < this.xSize; x++) {
+                    for (int y = 0; y < frameYSize; y++) {
+                        for (int x = 0; x < frameXSize; x++) {
                             Cell prev = prevBuffer[y][x];
                             Cell next = nextBuffer[y][x];
 
+                            if (fullRedraw && !prev.equals(DEFAULT_CELL)) {
+                                renderCell(prev, x, y);
+                            }
+
                             if (!prev.equals(next)) {
-                                boolean fgDefault = next.foreground().equals(DEFAULT_COLOR);
-                                boolean bgDefault = next.background().equals(DEFAULT_COLOR);
-
-                                if ((fgDefault && !termFg.equals(DEFAULT_COLOR)) ||
-                                    (bgDefault && !termBg.equals(DEFAULT_COLOR)))
-                                {
-                                    rendererBackend.execute(new Reset());
-
-                                    termFg = DEFAULT_COLOR;
-                                    termBg = DEFAULT_COLOR;
-                                }
-
-                                if (!fgDefault && !next.foreground().equals(termFg)) {
-                                    termFg = next.foreground();
-                                    rendererBackend.execute(new SetFg(termFg.r(), termFg.g(), termFg.b()));
-                                }
-
-                                if (!bgDefault && !next.background().equals(termBg)) {
-                                    termBg = next.background();
-                                    rendererBackend.execute(new SetBg(termBg.r(), termBg.g(), termBg.b()));
-                                }
-
-                                rendererBackend.execute(new Put(x, y, String.valueOf(next.character())));
-
+                                renderCell(next, x, y);
                                 prevBuffer[y][x] = next;
                             }
                         }
                     }
 
-                    nextBuffer = createBuffer();
+                    fullRedraw = false;
+                    nextBuffer = createBuffer(frameXSize, frameYSize);
                     rendererBackend.execute(new Flush());
                 }
                 case Put put -> {
@@ -101,7 +83,7 @@ public final class BufferedMode implements RenderStrategy {
                     int y = put.y();
 
                     for (int i = 0; i < text.length; i++) {
-                        if (x + i < xSize && y < ySize) {
+                        if (x + i < frameXSize && y < frameYSize) {
                             nextBuffer[y][x + i] = new Cell(text[i], frameFg, frameBg);
                         }
                     }
@@ -116,22 +98,58 @@ public final class BufferedMode implements RenderStrategy {
         }
     }
 
-    private Cell[][] createBuffer() {
+    private void renderCell(Cell cell, int x, int y) {
+        boolean fgDefault = cell.foreground().equals(DEFAULT_COLOR);
+        boolean bgDefault = cell.background().equals(DEFAULT_COLOR);
+
+        if ((fgDefault && !termFg.equals(DEFAULT_COLOR)) ||
+            (bgDefault && !termBg.equals(DEFAULT_COLOR)))
+        {
+            rendererBackend.execute(new Reset());
+
+            termFg = DEFAULT_COLOR;
+            termBg = DEFAULT_COLOR;
+        }
+
+        if (!fgDefault && !cell.foreground().equals(termFg)) {
+            termFg = cell.foreground();
+            rendererBackend.execute(new SetFg(termFg.r(), termFg.g(), termFg.b()));
+        }
+
+        if (!bgDefault && !cell.background().equals(termBg)) {
+            termBg = cell.background();
+            rendererBackend.execute(new SetBg(termBg.r(), termBg.g(), termBg.b()));
+        }
+
+        rendererBackend.execute(new Put(x, y, String.valueOf(cell.character())));
+    }
+
+    private Cell[][] createBuffer(int xSize, int ySize) {
         Cell[][] localBuffer = new Cell[ySize][xSize];
 
         for (int y = 0; y < ySize; y++) {
             for (int x = 0; x < xSize; x++) {
-                localBuffer[y][x] = new Cell(' ', DEFAULT_COLOR, DEFAULT_COLOR);
+                localBuffer[y][x] = DEFAULT_CELL;
             }
         }
 
         return localBuffer;
     }
 
+    private Cell[][] copyBuffer(Cell[][] oldBuffer, int oldXSize, int oldYSize, int newXSize, int newYSize) {
+        Cell[][] newBuffer = createBuffer(newXSize, newYSize);
+
+        for (int y = 0; y < newYSize; y++) {
+            for (int x = 0; x < newXSize; x++) {
+                if(y < oldYSize && x < oldXSize) {
+                    newBuffer[y][x] = oldBuffer[y][x];
+                }
+            }
+        }
+
+        return newBuffer;
+    }
+
     @NullMarked
-    public record Cell(
-        char character,
-        Color foreground,
-        Color background
-    ) {}
+    public record Cell(char character, Color foreground, Color background) {}
 }
