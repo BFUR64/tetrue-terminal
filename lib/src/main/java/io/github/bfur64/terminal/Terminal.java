@@ -116,4 +116,9 @@ public class Terminal implements TerminalBackend {
         closed = true;
         terminalBackend.close();
     }
+
+    @Override
+    public void flushBuffer(SymbolBuffer buffer) {
+        terminalBackend.flushBuffer(buffer);
+    }
 }

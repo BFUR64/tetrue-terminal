@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.jline;
 
 import io.github.bfur64.terminal.Config;
+import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import org.jline.terminal.Terminal;
@@ -87,5 +88,10 @@ public class JLineBackend implements TerminalBackend {
     public void close() throws IOException {
         jlineInputHandler.close();
         jlineRendererHandler.close();
+    }
+
+    @Override
+    public void flushBuffer(SymbolBuffer buffer) {
+        jlineRendererHandler.flushBuffer(buffer);
     }
 }

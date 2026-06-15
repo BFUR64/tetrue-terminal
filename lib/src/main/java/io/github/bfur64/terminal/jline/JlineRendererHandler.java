@@ -1,22 +1,31 @@
 package io.github.bfur64.terminal.jline;
 
+import io.github.bfur64.terminal.Symbol;
+import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.RendererHandler;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
-import org.jline.utils.InfoCmp;
+import org.jline.utils.*;
 import org.jline.utils.InfoCmp.Capability;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @NullMarked
 class JlineRendererHandler implements RendererHandler {
-    private final Terminal terminal;
+
     private final PrintWriter printWriter;
+    private final Terminal terminal;
+    private final Display display;
 
     public JlineRendererHandler(Terminal terminal, PrintWriter printWriter) {
         this.terminal = terminal;
         this.printWriter = printWriter;
+
+        display = new Display(terminal, false);
     }
 
     public Terminal getTerminal() {
@@ -26,13 +35,18 @@ class JlineRendererHandler implements RendererHandler {
     @Override
     public void start() {
         terminal.enterRawMode();
-        terminal.puts(InfoCmp.Capability.cursor_invisible);
-        terminal.puts(InfoCmp.Capability.enter_ca_mode);
+        terminal.puts(Capability.cursor_invisible);
+        terminal.puts(Capability.enter_ca_mode);
+
+        display.resize(terminal.getSize());
+
         terminal.flush();
+
     }
 
     @Override
     public void clearScreen() {
+        display.clear();
         terminal.puts(Capability.clear_screen);
     }
 
@@ -80,5 +94,36 @@ class JlineRendererHandler implements RendererHandler {
         terminal.flush();
 
         terminal.close();
+    }
+
+    @Override
+    public void flushBuffer(final SymbolBuffer buffer) {
+        final int bufferHeight = buffer.getHeight();
+        final int bufferWidth = buffer.getWidth();
+
+        if (bufferHeight <= 0 || bufferWidth <= 0) return;
+
+        display.resize(Size.of(bufferHeight, bufferWidth));
+
+        final List<AttributedString> lines = new ArrayList<>();
+        for (int y = 0; y < bufferHeight; y++) {
+            final AttributedStringBuilder stringBuilder = new AttributedStringBuilder(bufferWidth);
+
+            for (int x = 0; x < bufferWidth; x++) {
+                final Symbol symbol = buffer.get()[y][x];
+
+                if (symbol == null) {
+                    stringBuilder.append(" ", AttributedStyle.DEFAULT);
+                    continue;
+                }
+
+                stringBuilder.append(symbol.value());
+            }
+
+            lines.add(stringBuilder.toAttributedString());
+        }
+
+        display.update(lines, 0);
+        terminal.flush();
     }
 }

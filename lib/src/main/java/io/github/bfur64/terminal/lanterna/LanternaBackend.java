@@ -3,6 +3,7 @@ package io.github.bfur64.terminal.lanterna;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.Config;
+import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
 import org.jspecify.annotations.NullMarked;
@@ -86,5 +87,10 @@ public class LanternaBackend implements TerminalBackend {
     public void close() throws IOException {
         lanternaInputHandler.close();
         lanternaRendererHandler.close();
+    }
+
+    @Override
+    public void flushBuffer(SymbolBuffer buffer) {
+        lanternaRendererHandler.flushBuffer(buffer);
     }
 }

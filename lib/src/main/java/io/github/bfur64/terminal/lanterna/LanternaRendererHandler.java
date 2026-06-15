@@ -3,6 +3,7 @@ package io.github.bfur64.terminal.lanterna;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.Terminal;
+import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.RendererHandler;
 import org.jspecify.annotations.NullMarked;
 
@@ -92,5 +93,10 @@ class LanternaRendererHandler implements RendererHandler {
     public void close() throws IOException {
         terminal.exitPrivateMode();
         terminal.close();
+    }
+
+    @Override
+    public void flushBuffer(SymbolBuffer buffer) {
+
     }
 }
