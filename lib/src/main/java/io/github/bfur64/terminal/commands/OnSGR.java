@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.commands;
 
+import io.github.bfur64.terminal.output.SGR;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public sealed interface Command permits Clear, Flush, OffSGR, OnSGR, Put, Reset, SetBg, SetFg {}
+public record OnSGR(SGR SGR) implements Command {}

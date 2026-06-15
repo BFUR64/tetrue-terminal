@@ -5,6 +5,7 @@ import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.commands.Command;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import io.github.bfur64.terminal.output.SGR;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
@@ -22,8 +23,10 @@ public final class Test {
 
             do {
                 terminal.clear();
+                terminal.onSGR(SGR.UNDERLINE, SGR.BOLD, SGR.ITALIC);
                 terminal.put(0, 0, "Current Renderer: " + terminal.terminalInfo());
                 terminal.put(0, 1, "Cols: " + terminal.xSize() + " | " + "Rows: " + terminal.ySize());
+                terminal.offSGR(SGR.UNDERLINE, SGR.BOLD, SGR.ITALIC);
 
                 terminal.put(0, 3, "Character: " + keyStroke);
                 buffer.addAll(terminal.snapshotBuffer());

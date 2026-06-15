@@ -3,14 +3,18 @@ package io.github.bfur64.terminal.pipeline;
 import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.Color;
+import io.github.bfur64.terminal.output.SGR;
 import org.jspecify.annotations.NullMarked;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NullMarked
 public final class BufferedMode implements RenderStrategy {
     private static final Color DEFAULT_COLOR = Color.of(-1, -1, -1);
-    private static final Cell DEFAULT_CELL = new Cell(' ', DEFAULT_COLOR, DEFAULT_COLOR);
+    private static final Set<SGR> DEFAULT_SGR = Set.of();
+    private static final Cell DEFAULT_CELL = new Cell(' ', DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_SGR);
 
     private final RendererBackend rendererBackend;
 
@@ -22,9 +26,11 @@ public final class BufferedMode implements RenderStrategy {
 
     private Color frameFg = DEFAULT_COLOR;
     private Color frameBg = DEFAULT_COLOR;
+    private final Set<SGR> frameSGRs = new HashSet<>();
 
     private Color termFg = DEFAULT_COLOR;
     private Color termBg = DEFAULT_COLOR;
+    private final Set<SGR> termSGRs = new HashSet<>();
 
     private boolean fullRedraw;
 
@@ -55,6 +61,7 @@ public final class BufferedMode implements RenderStrategy {
                         rendererBackend.execute(new Clear());
                         termFg = DEFAULT_COLOR;
                         termBg = DEFAULT_COLOR;
+                        termSGRs.clear();
                     }
 
                     for (int y = 0; y < frameYSize; y++) {
@@ -77,6 +84,8 @@ public final class BufferedMode implements RenderStrategy {
                     nextBuffer = createBuffer(frameXSize, frameYSize);
                     rendererBackend.execute(new Flush());
                 }
+                case OffSGR offSGR -> frameSGRs.remove(offSGR.SGR());
+                case OnSGR onSGR -> frameSGRs.add(onSGR.SGR());
                 case Put put -> {
                     char[] text = put.text().toCharArray();
                     int x = put.x();
@@ -84,13 +93,14 @@ public final class BufferedMode implements RenderStrategy {
 
                     for (int i = 0; i < text.length; i++) {
                         if (x + i < frameXSize && y < frameYSize) {
-                            nextBuffer[y][x + i] = new Cell(text[i], frameFg, frameBg);
+                            nextBuffer[y][x + i] = new Cell(text[i], frameFg, frameBg, Set.copyOf(frameSGRs));
                         }
                     }
                 }
                 case Reset ignored -> {
                     frameFg = DEFAULT_COLOR;
                     frameBg = DEFAULT_COLOR;
+                    frameSGRs.clear();
                 }
                 case SetBg setBg -> frameBg = Color.of(setBg.r(), setBg.g(), setBg.b());
                 case SetFg setFg -> frameFg = Color.of(setFg.r(), setFg.g(), setFg.b());
@@ -103,12 +113,20 @@ public final class BufferedMode implements RenderStrategy {
         boolean bgDefault = cell.background().equals(DEFAULT_COLOR);
 
         if ((fgDefault && !termFg.equals(DEFAULT_COLOR)) ||
-            (bgDefault && !termBg.equals(DEFAULT_COLOR)))
+            (bgDefault && !termBg.equals(DEFAULT_COLOR)) ||
+            !cell.SGRs().equals(termSGRs))
         {
             rendererBackend.execute(new Reset());
 
             termFg = DEFAULT_COLOR;
             termBg = DEFAULT_COLOR;
+
+            termSGRs.clear();
+
+            for (SGR SGR : cell.SGRs()) {
+                rendererBackend.execute(new OnSGR(SGR));
+                termSGRs.add(SGR);
+            }
         }
 
         if (!fgDefault && !cell.foreground().equals(termFg)) {
@@ -151,5 +169,5 @@ public final class BufferedMode implements RenderStrategy {
     }
 
     @NullMarked
-    public record Cell(char character, Color foreground, Color background) {}
+    public record Cell(char character, Color foreground, Color background, Set<SGR> SGRs) {}
 }

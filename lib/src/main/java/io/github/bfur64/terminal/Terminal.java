@@ -7,6 +7,7 @@ import io.github.bfur64.terminal.jline.JLineRuntime;
 import io.github.bfur64.terminal.lanterna.LanternaRuntime;
 import io.github.bfur64.terminal.mock.MockRuntime;
 import io.github.bfur64.terminal.output.Color;
+import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.TextColor;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
@@ -17,6 +18,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,6 +80,38 @@ public final class Terminal {
         buffer.add(new Put(x, y, out));
     }
 
+    public void onSGR(SGR SGR) {
+        buffer.add(new OnSGR(SGR));
+    }
+
+    public void onSGR(SGR... SGRs) {
+        for (SGR SGR : SGRs) {
+            buffer.add(new OnSGR(SGR));
+        }
+    }
+
+    public void onSGR(List<SGR> SGRs) {
+        for (SGR SGR : SGRs) {
+            buffer.add(new OnSGR(SGR));
+        }
+    }
+
+    public void offSGR(SGR SGR) {
+        buffer.add(new OffSGR(SGR));
+    }
+
+    public void offSGR(SGR... SGRs) {
+        for (SGR SGR : SGRs) {
+            buffer.add(new OffSGR(SGR));
+        }
+    }
+
+    public void offSGR(List<SGR> SGRs) {
+        for (SGR SGR : SGRs) {
+            buffer.add(new OffSGR(SGR));
+        }
+    }
+
     public void clear() {
         buffer.add(new Clear());
     }
@@ -110,6 +144,10 @@ public final class Terminal {
 
     public void addToBuffer(Command command) {
         buffer.add(command);
+    }
+
+    public void addToBuffer(Command... commands) {
+        buffer.addAll(Arrays.asList(commands));
     }
 
     public void addToBuffer(List<Command> commands) {
