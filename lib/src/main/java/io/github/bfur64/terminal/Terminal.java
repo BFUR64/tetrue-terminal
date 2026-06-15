@@ -82,14 +82,6 @@ public final class Terminal {
         buffer.add(new Clear());
     }
 
-    public void flush(List<Command> externalBuffer) {
-        List<Command> localBuffer = new ArrayList<>(externalBuffer);
-        localBuffer.add(new Flush());
-        
-        renderStrategy.execute(localBuffer, environment.xSize(), environment.ySize());
-        buffer.clear();
-    }
-
     public void flush() {
         buffer.add(new Flush());
         renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
@@ -114,6 +106,14 @@ public final class Terminal {
 
     public String terminalInfo() {
         return environment.terminalInfo();
+    }
+
+    public void addToBuffer(Command command) {
+        buffer.add(command);
+    }
+
+    public void addToBuffer(List<Command> commands) {
+        buffer.addAll(new ArrayList<>(commands));
     }
 
     public List<Command> snapshotBuffer() {
