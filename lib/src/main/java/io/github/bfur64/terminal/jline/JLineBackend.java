@@ -27,10 +27,7 @@ public final class JLineBackend implements RendererBackend {
                 terminal.puts(Capability.cursor_address, put.y(), put.x());
                 printWriter.print(put.text());
             }
-            case Reset ignored -> {
-                printWriter.print("\u001b[0m");
-                execute(new Flush());
-            }
+            case Reset ignored -> printWriter.print("\u001b[0m");
             case SetBg setBg -> printWriter.print(String.format("\u001b[48;2;%s;%s;%sm", setBg.r(), setBg.g(), setBg.b()));
             case SetFg setFg -> printWriter.print(String.format("\u001b[38;2;%s;%s;%sm", setFg.r(), setFg.g(), setFg.b()));
         }
