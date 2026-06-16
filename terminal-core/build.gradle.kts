@@ -8,8 +8,8 @@
 group = "io.github.bfur64"
 version = "3.0.0-SNAPSHOT"
 
-val lanternaVersion = "3.1.3"
-val jlineVersion = "4.1.0"
+val lanternaVersion = project.properties["lanternaVersion"] as String
+val jlineVersion = project.properties["jlineVersion"] as String
 
 tasks.processResources {
     val tetrueTerminalVersion = project.version.toString()
@@ -34,31 +34,18 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
 
-    id("application")
-
-    id("com.gradleup.shadow") version "9.3.1"
-
     id("com.vanniktech.maven.publish") version "0.36.0"
-}
-
-shadow {
-    addShadowVariantIntoJavaComponent = false
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     // Use JUnit test framework.
     testImplementation(libs.junit)
-
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api(libs.commons.math3)
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation(libs.guava)
 
     // Rendering Pipeline
     implementation("com.googlecode.lanterna:lanterna:${lanternaVersion}")
@@ -76,10 +63,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-application {
-    mainClass = "examples.LoopTest"
 }
 
 mavenPublishing {

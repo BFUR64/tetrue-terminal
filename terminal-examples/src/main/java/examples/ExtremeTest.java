@@ -2,9 +2,7 @@ package examples;
 
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public final class ExtremeTest {
     public static void main(String[] args) {
         try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {

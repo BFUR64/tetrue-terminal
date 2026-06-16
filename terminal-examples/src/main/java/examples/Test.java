@@ -6,12 +6,10 @@ import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.commands.Command;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.output.SGR;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NullMarked
 public final class Test {
     public static void main(String[] args) throws Exception {
         List<Command> buffer = new ArrayList<>();
