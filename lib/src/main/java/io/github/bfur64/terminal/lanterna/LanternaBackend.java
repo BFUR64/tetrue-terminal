@@ -31,7 +31,7 @@ public final class LanternaBackend implements RendererBackend {
                 case OnSGR onSGR -> terminal.enableSGR(convertSGR(onSGR.SGR()));
                 case Put put -> textGraphics.putString(put.x(), put.y(), put.text());
                 case Reset ignored -> terminal.resetColorAndSGR();
-                case SetBg setBg -> textGraphics.setForegroundColor(new TextColor.RGB(setBg.r(), setBg.g(), setBg.b()));
+                case SetBg setBg -> textGraphics.setBackgroundColor(new TextColor.RGB(setBg.r(), setBg.g(), setBg.b()));
                 case SetFg setFg -> textGraphics.setForegroundColor(new TextColor.RGB(setFg.r(), setFg.g(), setFg.b()));
             }
         }
