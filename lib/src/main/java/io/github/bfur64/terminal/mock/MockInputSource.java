@@ -6,7 +6,6 @@ import io.github.bfur64.terminal.interfaces.InputSource;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,9 +39,5 @@ public final class MockInputSource implements InputSource {
 
     void addKeyStroke(@Nullable KeyStroke keyStroke) {
         keyStrokes.add(keyStroke);
-    }
-
-    void addKeyStrokes(List<@Nullable KeyStroke> keyStrokes) {
-        this.keyStrokes.addAll(new ArrayList<>(keyStrokes));
     }
 }

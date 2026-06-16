@@ -65,7 +65,15 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
         mockInputSource.addKeyStroke(keyStroke);
     }
 
-    public void addKeyStrokes(List<@Nullable KeyStroke> keyStrokes) {
-        mockInputSource.addKeyStrokes(keyStrokes);
+    public void addKeyStroke(@Nullable KeyStroke... keyStrokes) {
+        for (KeyStroke keyStroke : keyStrokes) {
+            mockInputSource.addKeyStroke(keyStroke);
+        }
+    }
+
+    public void addKeyStroke(List<@Nullable KeyStroke> keyStrokes) {
+        for (KeyStroke keyStroke : keyStrokes) {
+            mockInputSource.addKeyStroke(keyStroke);
+        }
     }
 }
