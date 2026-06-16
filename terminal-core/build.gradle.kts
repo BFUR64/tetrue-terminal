@@ -6,7 +6,7 @@
  */
 
 group = "io.github.bfur64"
-version = "3.0.0-SNAPSHOT"
+version = project.properties["version"] as String
 
 val lanternaVersion = project.properties["lanternaVersion"] as String
 val jlineVersion = project.properties["jlineVersion"] as String
