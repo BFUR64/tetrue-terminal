@@ -1,13 +1,13 @@
 package io.github.bfur64.terminal.mock;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.pipeline.RenderType;
+import io.github.bfur64.terminal.render.RenderType;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.pipeline.BufferedMode;
-import io.github.bfur64.terminal.pipeline.ImmediateMode;
-import io.github.bfur64.terminal.pipeline.RenderStrategy;
+import io.github.bfur64.terminal.render.BufferedMode;
+import io.github.bfur64.terminal.render.ImmediateMode;
+import io.github.bfur64.terminal.render.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 

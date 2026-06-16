@@ -2,13 +2,13 @@ package io.github.bfur64.terminal.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.terminal.Config;
-import io.github.bfur64.terminal.pipeline.RenderType;
+import io.github.bfur64.terminal.render.RenderType;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.pipeline.BufferedMode;
-import io.github.bfur64.terminal.pipeline.ImmediateMode;
-import io.github.bfur64.terminal.pipeline.RenderStrategy;
+import io.github.bfur64.terminal.render.BufferedMode;
+import io.github.bfur64.terminal.render.ImmediateMode;
+import io.github.bfur64.terminal.render.RenderStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;

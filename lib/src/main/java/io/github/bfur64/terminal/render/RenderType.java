@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.pipeline;
+package io.github.bfur64.terminal.render;
 
 import org.jspecify.annotations.NullMarked;
 

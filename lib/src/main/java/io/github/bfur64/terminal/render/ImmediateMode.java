@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.pipeline;
+package io.github.bfur64.terminal.render;
 
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.commands.Command;
