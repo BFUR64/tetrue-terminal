@@ -1,6 +1,7 @@
-package io.github.bfur64.terminal.jline;
+package io.github.bfur64.terminal.impl.jline;
 
 import io.github.bfur64.terminal.Config;
+import io.github.bfur64.terminal.Size;
 import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
@@ -40,6 +41,21 @@ public class JLineBackend implements TerminalBackend {
     }
 
     @Override
+    public Size getSize() {
+        return jlineRendererHandler.getSize();
+    }
+
+    @Override
+    public int getHeight() {
+        return jlineRendererHandler.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return jlineRendererHandler.getWidth();
+    }
+
+    @Override
     public void clearScreen() {
         jlineRendererHandler.clearScreen();
     }
@@ -67,16 +83,6 @@ public class JLineBackend implements TerminalBackend {
     @Override
     public void resetColorAndStyle() {
         jlineRendererHandler.resetColorAndStyle();
-    }
-
-    @Override
-    public int getXSize() {
-        return jlineRendererHandler.getXSize();
-    }
-
-    @Override
-    public int getYSize() {
-        return jlineRendererHandler.getYSize();
     }
 
     @Override

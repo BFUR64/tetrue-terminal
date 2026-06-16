@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.lanterna;
+package io.github.bfur64.terminal.impl.lanterna;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.InputHandler;

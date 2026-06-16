@@ -1,8 +1,9 @@
-package io.github.bfur64.terminal.lanterna;
+package io.github.bfur64.terminal.impl.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.Config;
+import io.github.bfur64.terminal.Size;
 import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.TerminalBackend;
 import io.github.bfur64.terminal.input.KeyStroke;
@@ -39,6 +40,21 @@ public class LanternaBackend implements TerminalBackend {
     }
 
     @Override
+    public Size getSize() {
+        return lanternaRendererHandler.getSize();
+    }
+
+    @Override
+    public int getHeight() {
+        return lanternaRendererHandler.getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return lanternaRendererHandler.getWidth();
+    }
+
+    @Override
     public void clearScreen() {
         lanternaRendererHandler.clearScreen();
     }
@@ -66,16 +82,6 @@ public class LanternaBackend implements TerminalBackend {
     @Override
     public void resetColorAndStyle() {
         lanternaRendererHandler.resetColorAndStyle();
-    }
-
-    @Override
-    public int getXSize() {
-        return lanternaRendererHandler.getXSize();
-    }
-
-    @Override
-    public int getYSize() {
-        return lanternaRendererHandler.getYSize();
     }
 
     @Override

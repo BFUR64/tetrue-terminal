@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.jline;
+package io.github.bfur64.terminal.impl.jline;
 
 import io.github.bfur64.terminal.interfaces.InputHandler;
 import io.github.bfur64.terminal.input.KeyStroke;

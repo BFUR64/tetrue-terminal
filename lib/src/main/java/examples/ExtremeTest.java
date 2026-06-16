@@ -10,8 +10,8 @@ public class ExtremeTest {
         try (TerminalBackend renderer = Terminal.auto()) {
             renderer.start();
 
-            int w = renderer.getXSize();
-            int h = renderer.getYSize();
+            int w = renderer.getWidth();
+            int h = renderer.getHeight();
 
             renderer.resetColorAndStyle();
             renderer.clearScreen();

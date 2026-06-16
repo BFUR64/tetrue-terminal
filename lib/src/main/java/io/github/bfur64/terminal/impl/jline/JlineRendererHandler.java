@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.jline;
+package io.github.bfur64.terminal.impl.jline;
 
 import io.github.bfur64.terminal.Symbol;
 import io.github.bfur64.terminal.SymbolBuffer;
@@ -25,7 +25,7 @@ class JlineRendererHandler implements RendererHandler {
         this.terminal = terminal;
         this.printWriter = printWriter;
 
-        display = new Display(terminal, false);
+        display = new Display(terminal, true);
     }
 
     public Terminal getTerminal() {
@@ -78,13 +78,18 @@ class JlineRendererHandler implements RendererHandler {
     }
 
     @Override
-    public int getXSize() {
-        return terminal.getSize().getColumns();
+    public io.github.bfur64.terminal.Size getSize() {
+        return io.github.bfur64.terminal.Size.of(display.getRows(), display.getColumns());
     }
 
     @Override
-    public int getYSize() {
-        return terminal.getSize().getRows();
+    public int getHeight() {
+        return display.getRows();
+    }
+
+    @Override
+    public int getWidth() {
+        return display.getColumns();
     }
 
     @Override
@@ -103,20 +108,25 @@ class JlineRendererHandler implements RendererHandler {
 
         if (bufferHeight <= 0 || bufferWidth <= 0) return;
 
-        display.resize(Size.of(bufferHeight, bufferWidth));
+        display.resize(Size.of(bufferWidth, bufferHeight));
 
         final List<AttributedString> lines = new ArrayList<>();
         for (int y = 0; y < bufferHeight; y++) {
             final AttributedStringBuilder stringBuilder = new AttributedStringBuilder(bufferWidth);
 
             for (int x = 0; x < bufferWidth; x++) {
-                final Symbol symbol = buffer.get()[y][x];
+                final Symbol symbol = buffer.get(x, y);
 
                 if (symbol == null) {
                     stringBuilder.append(" ", AttributedStyle.DEFAULT);
                     continue;
                 }
 
+                AttributedStyle style = AttributedStyle.DEFAULT
+                        .backgroundRgb(symbol.backgroundColor().getRgb())
+                        .foregroundRgb(symbol.foregroundColor().getRgb());
+
+                stringBuilder.style(style);
                 stringBuilder.append(symbol.value());
             }
 

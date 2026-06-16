@@ -1,8 +1,12 @@
-package io.github.bfur64.terminal.lanterna;
+package io.github.bfur64.terminal.impl.lanterna;
 
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.Terminal;
+import io.github.bfur64.terminal.Color;
+import io.github.bfur64.terminal.Size;
+import io.github.bfur64.terminal.Symbol;
 import io.github.bfur64.terminal.SymbolBuffer;
 import io.github.bfur64.terminal.interfaces.RendererHandler;
 import org.jspecify.annotations.NullMarked;
@@ -28,6 +32,22 @@ class LanternaRendererHandler implements RendererHandler {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Size getSize() {
+        final TerminalSize size = textGraphics.getSize();
+        return Size.of(size.getRows(), size.getColumns());
+    }
+
+    @Override
+    public int getHeight() {
+        return textGraphics.getSize().getRows();
+    }
+
+    @Override
+    public int getWidth() {
+        return textGraphics.getSize().getColumns();
     }
 
     @Override
@@ -80,16 +100,6 @@ class LanternaRendererHandler implements RendererHandler {
     }
 
     @Override
-    public int getXSize() {
-        return textGraphics.getSize().getColumns();
-    }
-
-    @Override
-    public int getYSize() {
-        return textGraphics.getSize().getRows();
-    }
-
-    @Override
     public void close() throws IOException {
         terminal.exitPrivateMode();
         terminal.close();
@@ -97,6 +107,27 @@ class LanternaRendererHandler implements RendererHandler {
 
     @Override
     public void flushBuffer(SymbolBuffer buffer) {
+        final int bufferWidth = buffer.getWidth();
+        final int bufferHeight = buffer.getHeight();
 
+        if (bufferHeight <= 0 || bufferWidth <= 0) return;
+
+        for (int y = 0; y < bufferHeight; y++) {
+            for (int x = 0; x < bufferWidth; x++) {
+                final Symbol symbol = buffer.get(x, y);
+
+                final Color foregroundColor = symbol.foregroundColor();
+                final Color backgroundColor = symbol.backgroundColor();
+
+                textGraphics.setForegroundColor(new TextColor.RGB(
+                        foregroundColor.getRed(), foregroundColor.getGreen(), foregroundColor.getBlue()));
+                textGraphics.setBackgroundColor(new TextColor.RGB(
+                        backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue()));
+
+                textGraphics.setCharacter(x, y, symbol.value());
+            }
+        }
+
+        flush();
     }
 }
