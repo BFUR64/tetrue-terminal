@@ -39,6 +39,8 @@ dependencies {
     // Use JUnit test framework.
     testImplementation(libs.junit)
 
+    implementation("org.jspecify:jspecify:1.0.0")
+
     // Rendering Pipeline
     implementation("com.googlecode.lanterna:lanterna:${lanternaVersion}")
     implementation("org.jline:jline:$jlineVersion")
