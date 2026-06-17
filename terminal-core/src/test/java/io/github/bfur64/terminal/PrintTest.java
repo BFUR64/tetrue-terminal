@@ -1,7 +1,7 @@
 package io.github.bfur64.terminal;
 
 import io.github.bfur64.terminal.commands.Put;
-import io.github.bfur64.terminal.mock.MockRuntime;
+import io.github.bfur64.terminal.implementations.mock.MockRuntime;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

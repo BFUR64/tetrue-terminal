@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.mock;
+package io.github.bfur64.terminal.implementations.mock;
 
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.render.RenderType;

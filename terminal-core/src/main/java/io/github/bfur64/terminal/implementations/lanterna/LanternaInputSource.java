@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.lanterna;
+package io.github.bfur64.terminal.implementations.lanterna;
 
 import com.googlecode.lanterna.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;

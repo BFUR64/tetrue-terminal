@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.lanterna;
+package io.github.bfur64.terminal.implementations.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.Versions;

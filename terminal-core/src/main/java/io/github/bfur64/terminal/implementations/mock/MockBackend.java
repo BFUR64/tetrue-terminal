@@ -1,4 +1,4 @@
-package io.github.bfur64.terminal.mock;
+package io.github.bfur64.terminal.implementations.mock;
 
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.commands.Command;
