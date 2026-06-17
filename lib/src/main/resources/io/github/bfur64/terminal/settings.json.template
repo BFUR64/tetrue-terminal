@@ -1,5 +1,0 @@
-{
-  "tetrueTerminalVersion": "${tetrueTerminalVersion}",
-  "lanternaVersion" : "${lanternaVersion}",
-  "jlineVersion" : "${jlineVersion}"
-}

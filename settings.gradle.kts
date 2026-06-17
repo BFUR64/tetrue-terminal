@@ -11,4 +11,6 @@ plugins {
 }
 
 rootProject.name = "tetrue-terminal"
-include("lib")
+
+include("terminal-core")
+include("terminal-examples")
