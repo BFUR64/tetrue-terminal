@@ -38,15 +38,13 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 
 ## Installation / Running
 
-#### Dependencies
-
-Kotlin
+### Kotlin
 
 ```kotlin
 implementation("io.github.bfur64:tetrue-terminal:x.x.x")
 ```
 
-Maven
+### Maven
 
 ```maven
 <dependency>
