@@ -148,7 +148,8 @@ while (true) {
 
 Write text or individual characters at a specific x and y terminal position
 
-Any `Terminal` commands require `flush()` to output any changes to the terminal
+> [!IMPORTANT]
+> Changes are buffered. Call `flush()` to render any pending `Terminal` commands.
 
 ```java
 terminal.put(0, 0, "Hello World!");
@@ -176,7 +177,7 @@ terminal.offSGR(SGR.UNDERLINE, SGR.BOLD);
 terminal.flush();
 ```
 
-Opinionated CSS1 coloring via `TextColor`
+Predefined colors via `TextColor`
 
 ```java
 terminal.setBg(TextColor.MAROON);
