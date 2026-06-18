@@ -4,7 +4,7 @@
 
 <h1 align="center">Tetrue Terminal</h1>
 
-<h3 align="center">Opinionated framework abstraction layer for the terminal</h3>
+<h3 align="center">Opinionated terminal framework abstraction layer for Java 21+</h3>
 
 <div align="center">
   <img width="612" height="296" alt="Tetrue Lite using Tetrue Terminal" src="https://github.com/user-attachments/assets/82459d5a-0a77-45b0-9c9e-877d924a65a9" />
