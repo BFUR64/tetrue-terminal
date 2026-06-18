@@ -10,6 +10,10 @@
   <img width="612" height="296" alt="Tetrue Lite using Tetrue Terminal" src="https://github.com/user-attachments/assets/82459d5a-0a77-45b0-9c9e-877d924a65a9" />
 </div>
 
+<div align="center">
+  <img width="612" alt="Colors, SGR, and text manipulation presented" src="https://github.com/user-attachments/assets/ebcf22f0-7015-43a6-980d-6b71124a8b8e" />
+</div>
+
 ## Quick Start
 
 ```java
