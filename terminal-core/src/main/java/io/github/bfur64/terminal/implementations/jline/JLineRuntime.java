@@ -3,19 +3,17 @@ package io.github.bfur64.terminal.implementations.jline;
 import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.render.RenderType;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.render.BufferedMode;
-import io.github.bfur64.terminal.render.ImmediateMode;
-import io.github.bfur64.terminal.render.RenderStrategy;
+import io.github.bfur64.terminal.render.FrameBuilder;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 import org.jspecify.annotations.NullMarked;
 
+import java.awt.*;
 import java.io.IOError;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -32,17 +30,13 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     private final Thread pollingThread;
 
-    public JLineRuntime(RenderType renderType) throws IOException {
+    public JLineRuntime() throws IOException {
         this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
-
-        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
-            new BufferedMode(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
-            new ImmediateMode(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
 
         BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
-        this.terminal = new Terminal(this, renderStrategy, new JLineInputSource(inputQueue));
+        this.terminal = new Terminal(this, new JLineInputSource(inputQueue));
 
         start();
     }

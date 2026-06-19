@@ -2,13 +2,10 @@ package io.github.bfur64.terminal.implementations.lanterna;
 
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.Versions;
-import io.github.bfur64.terminal.render.RenderType;
+import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.render.BufferedMode;
-import io.github.bfur64.terminal.render.ImmediateMode;
-import io.github.bfur64.terminal.render.RenderStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
@@ -28,14 +25,10 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     private final Terminal terminal;
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
-    public LanternaRuntime(RenderType renderType) throws IOException {
+    public LanternaRuntime() throws IOException {
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
 
-        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
-                new BufferedMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
-                new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
-
-        this.terminal = new Terminal(this, renderStrategy, new LanternaInputSource(lanternaTerminal));
+        this.terminal = new Terminal(this, new LanternaInputSource(lanternaTerminal));
 
         start();
     }

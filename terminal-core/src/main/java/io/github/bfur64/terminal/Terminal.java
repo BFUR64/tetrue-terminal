@@ -207,7 +207,7 @@ public final class Terminal {
 
             logger.info("Initialized {} runtime", runtimeType);
 
-            return  terminalRuntime;
+            return terminalRuntime;
         }
     }
 }

@@ -1,13 +1,10 @@
 package io.github.bfur64.terminal.implementations.mock;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.render.RenderType;
+import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.render.BufferedMode;
-import io.github.bfur64.terminal.render.ImmediateMode;
-import io.github.bfur64.terminal.render.RenderStrategy;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -20,14 +17,10 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     private int xSize;
     private int ySize;
 
-    public MockRuntime(RenderType renderType) {
-        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
-            new BufferedMode(new MockBackend()) :
-            new ImmediateMode(new MockBackend());
-
+    public MockRuntime() {
         this.mockInputSource = new MockInputSource();
 
-        this.terminal = new Terminal(this, renderStrategy, this.mockInputSource);
+        this.terminal = new Terminal(this, this.mockInputSource);
     }
 
     @Override
