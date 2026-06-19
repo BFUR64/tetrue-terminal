@@ -37,7 +37,7 @@ public class FrameBuilder {
 
         for (Command command : commands) {
             switch (command) {
-                case Clear ignored -> frame = new Symbol[frameXSize][frameYSize];
+                case Clear ignored -> frame = new Symbol[frameYSize][frameXSize];
                 case Flush ignored -> {}
                 case OffSGR offSGR -> activeSGRs.remove(offSGR.SGR());
                 case OnSGR onSGR -> activeSGRs.add(onSGR.SGR());
@@ -66,7 +66,7 @@ public class FrameBuilder {
     }
 
     private Symbol[][] copyFrame(Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
-        Symbol[][] localFrame = new Symbol[newXSize][newYSize];
+        Symbol[][] localFrame = new Symbol[newYSize][newXSize];
 
         for (int y = 0; y < newYSize; y++) {
             for (int x = 0; x < newXSize; x++) {
