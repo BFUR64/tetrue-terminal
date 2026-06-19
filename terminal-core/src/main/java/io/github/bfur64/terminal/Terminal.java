@@ -12,8 +12,7 @@ import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.TextColor;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
-import io.github.bfur64.terminal.render.RenderStrategy;
-import io.github.bfur64.terminal.render.RenderType;
+import io.github.bfur64.terminal.render.FrameBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
@@ -30,14 +29,14 @@ public final class Terminal {
     private static final Logger logger = LogManager.getLogger(Terminal.class);
 
     private final TerminalEnvironment environment;
-    private final RenderStrategy renderStrategy;
+    private final FrameBuilder frameBuilder;
     private final InputSource inputSource;
 
     private final List<Command> buffer = new ArrayList<>();
 
-    public Terminal(TerminalEnvironment environment, RenderStrategy renderStrategy, InputSource inputSource) {
+    public Terminal(TerminalEnvironment environment, FrameBuilder frameBuilder, InputSource inputSource) {
         this.environment = environment;
-        this.renderStrategy = renderStrategy;
+        this.frameBuilder = frameBuilder;
         this.inputSource = inputSource;
     }
 
@@ -123,7 +122,7 @@ public final class Terminal {
 
     public void flush() {
         buffer.add(new Flush());
-        renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
+        frameBuilder.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 
