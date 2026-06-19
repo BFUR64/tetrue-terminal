@@ -30,8 +30,8 @@ public final class JLineBackend implements RendererBackend {
     public void execute(Symbol[][] frame, int termXSize, int termYSize) {
         if (termXSize <= 0 || termYSize <= 0) return;
 
+        display.reset();
         display.resize(Size.of(termXSize, termYSize));
-        display.clear();
 
         List<AttributedString> lines = new ArrayList<>();
         for (int y = 0; y < termYSize; y++) {
