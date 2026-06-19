@@ -166,7 +166,6 @@ public final class Terminal {
     @NullMarked
     public static class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
-        private RenderType renderType = RenderType.IMMEDIATE;
 
         public Builder auto() {
             if (isTermux()) {
@@ -200,16 +199,6 @@ public final class Terminal {
             return this;
         }
 
-        public Builder immediate() {
-            this.renderType = RenderType.IMMEDIATE;
-            return this;
-        }
-
-        public Builder buffered() {
-            this.renderType = RenderType.BUFFERED;
-            return this;
-        }
-
         public TerminalRuntime build() throws IOException {
             TerminalRuntime terminalRuntime = switch (runtimeType) {
                 case JLINE -> new JLineRuntime(renderType);
@@ -217,7 +206,7 @@ public final class Terminal {
                 case MOCK -> new MockRuntime(renderType);
             };
 
-            logger.info("Initialized {} runtime with {} strategy", runtimeType, renderType);
+            logger.info("Initialized {} runtime", runtimeType);
 
             return  terminalRuntime;
         }
