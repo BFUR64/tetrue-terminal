@@ -1,5 +1,8 @@
 package io.github.bfur64.terminal.implementations.lanterna;
 
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.render.*;
@@ -23,10 +26,12 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     private static final int DEFAULT_Y = 0;
 
     private final Terminal terminal;
+    private final Screen screen;
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
     public LanternaRuntime() throws IOException {
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
+        this.screen = new TerminalScreen(lanternaTerminal);
 
         this.terminal = new Terminal(this, new LanternaInputSource(lanternaTerminal));
 
@@ -34,8 +39,8 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     }
 
     private void start() throws IOException {
-        lanternaTerminal.enterPrivateMode();
-        lanternaTerminal.setCursorVisible(false);
+        screen.startScreen();
+        screen.setCursorPosition(null);
     }
 
     @Override
@@ -46,8 +51,8 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     @Override
     public void close() {
         try {
-            lanternaTerminal.exitPrivateMode();
-            lanternaTerminal.close();
+            screen.setCursorPosition(TerminalPosition.TOP_LEFT_CORNER);
+            screen.stopScreen();
         }
         catch (IOException e) {
             logger.error("Failed to close Lanterna runtime", e);
