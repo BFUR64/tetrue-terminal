@@ -41,16 +41,16 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 ### Kotlin
 
 ```kotlin
-implementation("io.github.bfur64:tetrue-terminal:x.x.x")
+implementation("io.github.bfur64:tetrue-terminal:3.0.0")
 ```
 
 ### Maven
 
-```maven
+```xml
 <dependency>
     <groupId>io.github.bfur64</groupId>
     <artifactId>tetrue-terminal</artifactId>
-    <version>x.x.x</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
