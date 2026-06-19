@@ -5,7 +5,7 @@ import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 public final class OutputTest {
     public static void main(String[] args) throws Exception {
-        try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
+        try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
             runTerminalDebugTest(terminal);
         }

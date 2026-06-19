@@ -14,7 +14,7 @@ public final class Test {
     public static void main(String[] args) throws Exception {
         List<Command> buffer = new ArrayList<>();
 
-        try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
+        try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
 
             KeyStroke keyStroke = new KeyStroke('t');
