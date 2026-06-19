@@ -14,7 +14,6 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 import org.jspecify.annotations.NullMarked;
 
-import java.awt.*;
 import java.io.IOError;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
