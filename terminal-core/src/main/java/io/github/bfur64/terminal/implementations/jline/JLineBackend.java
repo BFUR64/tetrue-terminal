@@ -2,58 +2,65 @@ package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
-import io.github.bfur64.terminal.output.SGR;
+import io.github.bfur64.terminal.render.Symbol;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
-import org.jline.utils.InfoCmp.Capability;
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
+import org.jline.utils.Display;
 import org.jspecify.annotations.NullMarked;
 
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
     private final Terminal terminal;
-    private final PrintWriter printWriter;
+    private final Display display;
 
-    public JLineBackend(Terminal terminal, PrintWriter printWriter) {
+    public JLineBackend(Terminal terminal) {
         this.terminal = terminal;
-        this.printWriter = printWriter;
+        this.display = new Display(terminal, true);
     }
 
     @Override
-    public void execute(Command command) {
-        switch (command) {
-            case Clear ignored -> terminal.puts(Capability.clear_screen);
-            case Flush ignored -> printWriter.flush();
-            case OffSGR offSGR -> printWriter.print(convertSGR(offSGR.SGR(), false));
-            case OnSGR onSGR -> printWriter.print(convertSGR(onSGR.SGR(), true));
-            case Put put -> {
-                terminal.puts(Capability.cursor_address, put.y(), put.x());
-                printWriter.print(put.text());
-            }
-            case Reset ignored -> printWriter.print("\u001b[0m");
-            case SetBg setBg -> printWriter.print(String.format("\u001b[48;2;%s;%s;%sm", setBg.r(), setBg.g(), setBg.b()));
-            case SetFg setFg -> printWriter.print(String.format("\u001b[38;2;%s;%s;%sm", setFg.r(), setFg.g(), setFg.b()));
-        }
-    }
+    public void execute(Symbol[][] frame, int termXSize, int termYSize) {
+        if (termXSize <= 0 || termYSize <= 0) return;
 
-    private String convertSGR(SGR SGR, boolean enabled) {
-        if (enabled) {
-            return switch (SGR) {
-                case BOLD -> "\u001B[1m";
-                case REVERSE -> "\u001B[7m";
-                case UNDERLINE -> "\u001B[4m";
-                case ITALIC -> "\u001B[3m";
-                case STRIKETHROUGH -> "\u001B[9m";
-            };
+        display.resize(Size.of(termXSize, termYSize));
+        display.clear();
+
+        List<AttributedString> lines = new ArrayList<>();
+        for (int y = 0; y < termYSize; y++) {
+            AttributedStringBuilder stringBuilder = new AttributedStringBuilder(termXSize);
+
+            for (int x = 0; x < termXSize; x++) {
+                Symbol symbol = frame[y][x];
+
+                if (symbol == null) {
+                    stringBuilder.append(" ", AttributedStyle.DEFAULT);
+                    continue;
+                }
+
+                AttributedStyle style = AttributedStyle.DEFAULT;
+
+                if (symbol.bg() != null) {
+                    style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
+                }
+
+                if (symbol.fg() != null) {
+                    style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
+                }
+
+                stringBuilder.style(style);
+                stringBuilder.append(symbol.cell());
+            }
+
+            lines.add(stringBuilder.toAttributedString());
         }
-        else {
-            return switch (SGR) {
-                case BOLD -> "\u001B[22m";
-                case REVERSE -> "\u001B[27m";
-                case UNDERLINE -> "\u001B[24m";
-                case ITALIC -> "\u001B[23m";
-                case STRIKETHROUGH -> "\u001B[29m";
-            };
-        }
+
+        display.update(lines, 0);
+        terminal.flush();
     }
 }
