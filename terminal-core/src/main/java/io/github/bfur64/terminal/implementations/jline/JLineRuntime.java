@@ -55,10 +55,9 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         Thread pollingThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted() && isRunning.get()) {
                 try {
-                    //noinspection ResultOfMethodCallIgnored
-                    inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
-
-                } catch (InterruptedException | IOError e) {
+                    boolean ignored = inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
+                }
+                catch (InterruptedException | IOError e) {
                     Thread.currentThread().interrupt();
 
                     break;
