@@ -58,7 +58,6 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
                 }
                 catch (InterruptedException | IOError e) {
                     Thread.currentThread().interrupt();
-
                     break;
                 }
             }

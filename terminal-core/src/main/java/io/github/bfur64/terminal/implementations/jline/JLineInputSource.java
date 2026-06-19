@@ -20,7 +20,8 @@ public final class JLineInputSource implements InputSource {
     public KeyStroke read() {
         try {
             return inputQueue.take();
-        } catch (InterruptedException ignored) {
+        }
+        catch (InterruptedException ignored) {
             Thread.currentThread().interrupt();
         }
 
