@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.render;
 
 import io.github.bfur64.terminal.commands.*;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
 import org.jspecify.annotations.NullMarked;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @NullMarked
 public class FrameBuilder {
+    private final RendererBackend rendererBackend;
     private Symbol[][] frame;
 
     private int frameXSize = 0;
@@ -21,7 +23,8 @@ public class FrameBuilder {
     private @Nullable Color frameFg;
     private @Nullable Color frameBg;
 
-    public FrameBuilder() {
+    public FrameBuilder(RendererBackend rendererBackend) {
+        this.rendererBackend = rendererBackend;
         frame = new Symbol[frameXSize][frameYSize];
     }
 
@@ -58,6 +61,8 @@ public class FrameBuilder {
                 case SetFg setFg -> frameFg = Color.of(setFg.r(), setFg.g(), setFg.b());
             }
         }
+
+        rendererBackend.execute(frame, termXSize, termYSize);
     }
 
     private Symbol[][] copyFrame(Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
