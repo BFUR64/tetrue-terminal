@@ -200,9 +200,9 @@ public final class Terminal {
 
         public TerminalRuntime build() throws IOException {
             TerminalRuntime terminalRuntime = switch (runtimeType) {
-                case JLINE -> new JLineRuntime(renderType);
-                case LANTERNA -> new LanternaRuntime(renderType);
-                case MOCK -> new MockRuntime(renderType);
+                case JLINE -> new JLineRuntime();
+                case LANTERNA -> new LanternaRuntime();
+                case MOCK -> new MockRuntime();
             };
 
             logger.info("Initialized {} runtime", runtimeType);
