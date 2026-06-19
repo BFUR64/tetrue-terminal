@@ -34,9 +34,9 @@ public final class Terminal {
 
     private final List<Command> buffer = new ArrayList<>();
 
-    public Terminal(TerminalEnvironment environment, FrameBuilder frameBuilder, InputSource inputSource) {
+    public Terminal(TerminalEnvironment environment, InputSource inputSource) {
         this.environment = environment;
-        this.frameBuilder = frameBuilder;
+        this.frameBuilder = new FrameBuilder();
         this.inputSource = inputSource;
     }
 
