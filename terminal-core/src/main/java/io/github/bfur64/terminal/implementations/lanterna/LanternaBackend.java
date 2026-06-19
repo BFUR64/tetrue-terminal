@@ -53,7 +53,9 @@ public final class LanternaBackend implements RendererBackend {
                         : TextColor.ANSI.DEFAULT
                 );
 
-                textGraphics.setModifiers(convertSGR(symbol.SGRs()));
+                if (!symbol.SGRs().isEmpty()) {
+                    textGraphics.setModifiers(convertSGR(symbol.SGRs()));
+                }
 
                 textGraphics.setCharacter(x, y, symbol.cell());
             }
