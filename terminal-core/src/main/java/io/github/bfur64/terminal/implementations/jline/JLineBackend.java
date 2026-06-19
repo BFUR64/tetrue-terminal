@@ -40,22 +40,23 @@ public final class JLineBackend implements RendererBackend {
             for (int x = 0; x < termXSize; x++) {
                 Symbol symbol = frame[y][x];
 
+                AttributedStyle style = AttributedStyle.DEFAULT;
+
                 if (symbol == null) {
-                    stringBuilder.append(" ", AttributedStyle.DEFAULT);
+                    stringBuilder.style(style);
+                    stringBuilder.append(" ");
                     continue;
                 }
 
-                AttributedStyle style = AttributedStyle.DEFAULT;
-
                 if (symbol.bg() != null) {
-                    style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
+                    style = style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
                 }
 
                 if (symbol.fg() != null) {
-                    style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
+                    style = style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
                 }
 
-                setSGR(style, symbol.SGRs());
+                style = setSGR(style, symbol.SGRs());
 
                 stringBuilder.style(style);
                 stringBuilder.append(symbol.cell());
@@ -68,15 +69,19 @@ public final class JLineBackend implements RendererBackend {
         terminal.flush();
     }
 
-    private void setSGR(AttributedStyle style, Set<SGR> SGRs) {
+    private AttributedStyle setSGR(AttributedStyle style, Set<SGR> SGRs) {
+        AttributedStyle localStyle = style;
+
         for (SGR sgr : SGRs) {
-            switch (sgr) {
-                case BOLD -> style.bold();
-                case REVERSE -> style.inverse();
-                case UNDERLINE -> style.underline();
-                case ITALIC -> style.italic();
-                case STRIKETHROUGH -> style.crossedOut();
-            }
+            localStyle = switch (sgr) {
+                case BOLD -> localStyle.bold();
+                case REVERSE -> localStyle.inverse();
+                case UNDERLINE -> localStyle.underline();
+                case ITALIC -> localStyle.italic();
+                case STRIKETHROUGH -> localStyle.crossedOut();
+            };
         }
+
+        return localStyle;
     }
 }
