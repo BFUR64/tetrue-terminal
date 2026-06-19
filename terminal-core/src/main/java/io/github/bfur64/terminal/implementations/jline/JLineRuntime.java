@@ -4,6 +4,7 @@ import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.render.FrameBuilder;
@@ -36,7 +37,9 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
-        this.terminal = new Terminal(this, new JLineInputSource(inputQueue));
+        RendererBackend rendererBackend = new JLineBackend(jlineTerminal);
+
+        this.terminal = new Terminal(this, new FrameBuilder(rendererBackend), new JLineInputSource(inputQueue));
 
         start();
     }

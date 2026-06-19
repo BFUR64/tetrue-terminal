@@ -5,6 +5,7 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.Versions;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
@@ -33,7 +34,9 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
         this.screen = new TerminalScreen(lanternaTerminal);
 
-        this.terminal = new Terminal(this, new LanternaInputSource(lanternaTerminal));
+        RendererBackend rendererBackend = new LanternaBackend(screen);
+
+        this.terminal = new Terminal(this, new FrameBuilder(rendererBackend), new LanternaInputSource(lanternaTerminal));
 
         start();
     }
