@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.implementations.mock;
 
 import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
@@ -20,7 +21,9 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     public MockRuntime() {
         this.mockInputSource = new MockInputSource();
 
-        this.terminal = new Terminal(this, this.mockInputSource);
+        RendererBackend rendererBackend = new MockBackend();
+
+        this.terminal = new Terminal(this, new FrameBuilder(rendererBackend), this.mockInputSource);
     }
 
     @Override
