@@ -84,35 +84,35 @@ public final class Terminal {
         buffer.add(new Put(x, y, out));
     }
 
-    public void onSGR(SGR SGR) {
-        buffer.add(new OnSGR(SGR));
+    public void onSGR(SGR sgr) {
+        buffer.add(new OnSGR(sgr));
     }
 
-    public void onSGR(SGR... SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OnSGR(SGR));
+    public void onSGR(SGR... sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OnSGR(sgr));
         }
     }
 
-    public void onSGR(List<SGR> SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OnSGR(SGR));
+    public void onSGR(List<SGR> sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OnSGR(sgr));
         }
     }
 
-    public void offSGR(SGR SGR) {
-        buffer.add(new OffSGR(SGR));
+    public void offSGR(SGR sgr) {
+        buffer.add(new OffSGR(sgr));
     }
 
-    public void offSGR(SGR... SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OffSGR(SGR));
+    public void offSGR(SGR... sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OffSGR(sgr));
         }
     }
 
-    public void offSGR(List<SGR> SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OffSGR(SGR));
+    public void offSGR(List<SGR> sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OffSGR(sgr));
         }
     }
 
