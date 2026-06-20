@@ -121,7 +121,6 @@ public final class Terminal {
     }
 
     public void flush() {
-        buffer.add(new Flush());
         frameBuilder.execute(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }

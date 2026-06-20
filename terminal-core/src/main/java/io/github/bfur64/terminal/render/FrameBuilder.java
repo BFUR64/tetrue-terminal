@@ -37,7 +37,6 @@ public final class FrameBuilder {
         for (Command command : commands) {
             switch (command) {
                 case Clear ignored -> frame = new Symbol[frameYSize][frameXSize];
-                case Flush ignored -> {}
                 case OffSGR offSGR -> activeSGRs.remove(offSGR.SGR());
                 case OnSGR onSGR -> activeSGRs.add(onSGR.SGR());
                 case Put put -> {
