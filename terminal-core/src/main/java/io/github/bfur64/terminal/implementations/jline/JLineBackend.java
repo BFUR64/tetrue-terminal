@@ -14,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
@@ -40,25 +39,13 @@ public final class JLineBackend implements RendererBackend {
             for (int x = 0; x < termXSize; x++) {
                 Symbol symbol = frame[y][x];
 
-                AttributedStyle style = AttributedStyle.DEFAULT;
-
                 if (symbol == null) {
-                    stringBuilder.style(style);
+                    stringBuilder.style(AttributedStyle.DEFAULT);
                     stringBuilder.append(" ");
                     continue;
                 }
 
-                if (symbol.bg() != null) {
-                    style = style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
-                }
-
-                if (symbol.fg() != null) {
-                    style = style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
-                }
-
-                style = setSGR(style, symbol.SGRs());
-
-                stringBuilder.style(style);
+                stringBuilder.style(buildStyle(symbol));
                 stringBuilder.append(symbol.cell());
             }
 
@@ -69,19 +56,26 @@ public final class JLineBackend implements RendererBackend {
         terminal.flush();
     }
 
-    private AttributedStyle setSGR(AttributedStyle style, Set<SGR> SGRs) {
-        AttributedStyle localStyle = style;
+    private AttributedStyle buildStyle(Symbol symbol) {
+        AttributedStyle style = AttributedStyle.DEFAULT;
 
-        for (SGR sgr : SGRs) {
-            localStyle = switch (sgr) {
-                case BOLD -> localStyle.bold();
-                case REVERSE -> localStyle.inverse();
-                case UNDERLINE -> localStyle.underline();
-                case ITALIC -> localStyle.italic();
-                case STRIKETHROUGH -> localStyle.crossedOut();
+        if (symbol.bg() != null) {
+            style = style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
+        }
+        if (symbol.fg() != null) {
+            style = style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
+        }
+
+        for (SGR sgr : symbol.SGRs()) {
+            style = switch (sgr) {
+                case BOLD -> style.bold();
+                case REVERSE -> style.inverse();
+                case UNDERLINE -> style.underline();
+                case ITALIC -> style.italic();
+                case STRIKETHROUGH -> style.crossedOut();
             };
         }
 
-        return localStyle;
+        return style;
     }
 }
