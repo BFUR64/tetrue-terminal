@@ -39,7 +39,13 @@ public final class LanternaBackend implements RendererBackend {
             for (int x = 0; x < termXSize; x++) {
                 Symbol symbol = frame[y][x];
 
-                if (symbol == null) continue;
+                if (symbol == null) {
+                    textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
+                    textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
+                    textGraphics.clearModifiers();
+                    textGraphics.setCharacter(x, y, ' ');
+                    continue;
+                };
 
                 textGraphics.setBackgroundColor(
                     symbol.bg() != null
@@ -53,6 +59,7 @@ public final class LanternaBackend implements RendererBackend {
                         : TextColor.ANSI.DEFAULT
                 );
 
+                textGraphics.clearModifiers();
                 if (!symbol.SGRs().isEmpty()) {
                     textGraphics.setModifiers(convertSGR(symbol.SGRs()));
                 }
