@@ -45,7 +45,7 @@ public final class LanternaBackend implements RendererBackend {
                     textGraphics.clearModifiers();
                     textGraphics.setCharacter(x, y, ' ');
                     continue;
-                };
+                }
 
                 textGraphics.setBackgroundColor(
                     symbol.bg() != null
