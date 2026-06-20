@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @NullMarked
-public class FrameBuilder {
+public final class FrameBuilder {
     private final RendererBackend rendererBackend;
 
     private int frameXSize = 0;
