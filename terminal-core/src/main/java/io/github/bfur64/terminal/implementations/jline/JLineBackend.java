@@ -1,6 +1,5 @@
 package io.github.bfur64.terminal.implementations.jline;
 
-import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.render.Symbol;
@@ -46,7 +45,7 @@ public final class JLineBackend implements RendererBackend {
                 }
 
                 stringBuilder.style(buildStyle(symbol));
-                stringBuilder.append(symbol.cell());
+                stringBuilder.append(symbol.character());
             }
 
             lines.add(stringBuilder.toAttributedString());

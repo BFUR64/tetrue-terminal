@@ -4,7 +4,6 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
-import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.logging.log4j.LogManager;
@@ -64,7 +63,7 @@ public final class LanternaBackend implements RendererBackend {
                     textGraphics.setModifiers(convertSGR(symbol.SGRs()));
                 }
 
-                textGraphics.setCharacter(x, y, symbol.cell());
+                textGraphics.setCharacter(x, y, symbol.character());
             }
         }
 

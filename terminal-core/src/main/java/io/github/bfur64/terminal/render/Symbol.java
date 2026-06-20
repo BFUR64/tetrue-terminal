@@ -8,4 +8,4 @@ import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 @NullMarked
-public record Symbol(char cell, @Nullable Color fg, @Nullable Color bg, Set<SGR> SGRs) {}
+public record Symbol(char character, @Nullable Color fg, @Nullable Color bg, Set<SGR> SGRs) {}
