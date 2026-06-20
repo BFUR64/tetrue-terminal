@@ -14,10 +14,10 @@ import java.util.Set;
 @NullMarked
 public class FrameBuilder {
     private final RendererBackend rendererBackend;
-    private Symbol[][] frame;
 
     private int frameXSize = 0;
     private int frameYSize = 0;
+    private Symbol[][] frame = new Symbol[frameYSize][frameXSize];
 
     private final Set<SGR> activeSGRs = new HashSet<>();
     private @Nullable Color frameFg;
@@ -25,7 +25,6 @@ public class FrameBuilder {
 
     public FrameBuilder(RendererBackend rendererBackend) {
         this.rendererBackend = rendererBackend;
-        frame = new Symbol[frameXSize][frameYSize];
     }
 
     public void execute(List<Command> commands, int termXSize, int termYSize) {
