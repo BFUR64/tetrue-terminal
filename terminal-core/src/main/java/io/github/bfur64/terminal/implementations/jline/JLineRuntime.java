@@ -33,7 +33,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     public JLineRuntime() throws IOException {
         this.jlineTerminal = TerminalBuilder.builder().build();
 
-        BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
+        BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(16);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
         RendererBackend rendererBackend = new JLineBackend(jlineTerminal);
