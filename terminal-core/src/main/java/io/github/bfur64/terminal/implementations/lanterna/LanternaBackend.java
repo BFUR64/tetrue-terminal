@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 
 @NullMarked
