@@ -9,6 +9,7 @@ import io.github.bfur64.terminal.render.Symbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -22,6 +23,10 @@ public final class LanternaBackend implements RendererBackend {
 
     private final Screen screen;
     private final TextGraphics textGraphics;
+
+    private @Nullable TextColor prevBg = null;
+    private @Nullable TextColor prevFg = null;
+    private @Nullable Set<SGR> prevSGRs = null;
 
     public LanternaBackend(Screen screen) {
         this.screen = screen;
@@ -38,29 +43,32 @@ public final class LanternaBackend implements RendererBackend {
             for (int x = 0; x < termXSize; x++) {
                 Symbol symbol = frame[y][x];
 
-                if (symbol == null) {
-                    textGraphics.setBackgroundColor(TextColor.ANSI.DEFAULT);
-                    textGraphics.setForegroundColor(TextColor.ANSI.DEFAULT);
-                    textGraphics.clearModifiers();
-                    textGraphics.setCharacter(x, y, ' ');
-                    continue;
+                if (symbol == null) continue;
+
+                TextColor bg = symbol.bg() != null
+                    ? new TextColor.RGB(symbol.bg().r(), symbol.bg().g(), symbol.bg().b())
+                    : TextColor.ANSI.DEFAULT;
+
+                if (!bg.equals(prevBg)) {
+                    textGraphics.setBackgroundColor(bg);
+                    prevBg = bg;
                 }
 
-                textGraphics.setBackgroundColor(
-                    symbol.bg() != null
-                        ? new TextColor.RGB(symbol.bg().r(), symbol.bg().g(), symbol.bg().b())
-                        : TextColor.ANSI.DEFAULT
-                );
+                TextColor fg = symbol.fg() != null
+                    ? new TextColor.RGB(symbol.fg().r(), symbol.fg().g(), symbol.fg().b())
+                    : TextColor.ANSI.DEFAULT;
 
-                textGraphics.setForegroundColor(
-                    symbol.fg() != null
-                        ? new TextColor.RGB(symbol.fg().r(), symbol.fg().g(), symbol.fg().b())
-                        : TextColor.ANSI.DEFAULT
-                );
+                if (!fg.equals(prevFg)) {
+                    textGraphics.setForegroundColor(fg);
+                    prevFg = fg;
+                }
 
-                textGraphics.clearModifiers();
-                if (!symbol.SGRs().isEmpty()) {
-                    textGraphics.setModifiers(convertSGR(symbol.SGRs()));
+                if (!symbol.SGRs().equals(prevSGRs)) {
+                    textGraphics.clearModifiers();
+                    if (!symbol.SGRs().isEmpty()) {
+                        textGraphics.setModifiers(convertSGR(symbol.SGRs()));
+                    }
+                    prevSGRs = symbol.SGRs();
                 }
 
                 textGraphics.setCharacter(x, y, symbol.character());
@@ -79,10 +87,10 @@ public final class LanternaBackend implements RendererBackend {
     }
 
     private EnumSet<com.googlecode.lanterna.SGR> convertSGR(Set<SGR> SGRs) {
-        Set<com.googlecode.lanterna.SGR> localEnums = new HashSet<>();
+        EnumSet<com.googlecode.lanterna.SGR> result = EnumSet.noneOf(com.googlecode.lanterna.SGR.class);
 
         for (SGR sgr : SGRs) {
-            localEnums.add(switch (sgr) {
+            result.add(switch (sgr) {
                 case BOLD -> com.googlecode.lanterna.SGR.BOLD;
                 case REVERSE -> com.googlecode.lanterna.SGR.REVERSE;
                 case UNDERLINE -> com.googlecode.lanterna.SGR.UNDERLINE;
@@ -91,6 +99,6 @@ public final class LanternaBackend implements RendererBackend {
             });
         }
 
-        return EnumSet.copyOf(localEnums);
+        return result;
     }
 }
