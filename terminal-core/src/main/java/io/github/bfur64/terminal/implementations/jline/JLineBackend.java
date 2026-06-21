@@ -37,10 +37,10 @@ public final class JLineBackend implements RendererBackend {
         }
 
         List<AttributedString> lines = new ArrayList<>();
-        for (int y = 0; y < termYSize; y++) {
-            AttributedStringBuilder stringBuilder = new AttributedStringBuilder(termXSize);
+        for (int y = 0; y < displayYSize; y++) {
+            AttributedStringBuilder stringBuilder = new AttributedStringBuilder(displayXSize);
 
-            for (int x = 0; x < termXSize; x++) {
+            for (int x = 0; x < displayXSize; x++) {
                 Symbol symbol = frame[y][x];
 
                 if (symbol == null) {
