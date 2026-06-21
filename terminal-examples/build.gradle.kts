@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.bfur64:tetrue-terminal:3.0.0")
+    implementation(project(":terminal-core"))
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -33,5 +33,5 @@ java {
 }
 
 application {
-    mainClass = "examples.Testing"
+    mainClass = "examples.LoopTest"
 }

@@ -3,13 +3,11 @@ package io.github.bfur64.terminal.implementations.jline;
 import io.github.bfur64.Versions;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
-import io.github.bfur64.terminal.render.RenderType;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.render.BufferedMode;
-import io.github.bfur64.terminal.render.ImmediateMode;
-import io.github.bfur64.terminal.render.RenderStrategy;
+import io.github.bfur64.terminal.render.FrameBuilder;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
@@ -32,17 +30,15 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     private final Thread pollingThread;
 
-    public JLineRuntime(RenderType renderType) throws IOException {
-        this.jlineTerminal = TerminalBuilder.builder().system(true).dumb(false).build();
+    public JLineRuntime() throws IOException {
+        this.jlineTerminal = TerminalBuilder.builder().build();
 
-        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
-            new BufferedMode(new JLineBackend(jlineTerminal, jlineTerminal.writer())) :
-            new ImmediateMode(new JLineBackend(jlineTerminal, jlineTerminal.writer()));
-
-        BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(1);
+        BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(16);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
-        this.terminal = new Terminal(this, renderStrategy, new JLineInputSource(inputQueue));
+        RendererBackend rendererBackend = new JLineBackend(jlineTerminal);
+
+        this.terminal = new Terminal(this, new FrameBuilder(rendererBackend), new JLineInputSource(inputQueue));
 
         start();
     }
@@ -58,12 +54,10 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         Thread pollingThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted() && isRunning.get()) {
                 try {
-                    //noinspection ResultOfMethodCallIgnored
-                    inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
-
-                } catch (InterruptedException | IOError e) {
+                    boolean ignored = inputQueue.offer(bindingReader.readBinding(keyMap), 5, TimeUnit.MILLISECONDS);
+                }
+                catch (InterruptedException | IOError e) {
                     Thread.currentThread().interrupt();
-
                     break;
                 }
             }
@@ -109,17 +103,17 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     private KeyMap<KeyStroke> buildKeyMap() {
         KeyMap<KeyStroke> map = new KeyMap<>();
 
-        map.bind(new KeyStroke(KeyType.ARROW_UP),    "\033[A");
-        map.bind(new KeyStroke(KeyType.ARROW_DOWN),  "\033[B");
+        map.bind(new KeyStroke(KeyType.ARROW_UP), "\033[A");
+        map.bind(new KeyStroke(KeyType.ARROW_DOWN), "\033[B");
         map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033[C");
-        map.bind(new KeyStroke(KeyType.ARROW_LEFT),  "\033[D");
+        map.bind(new KeyStroke(KeyType.ARROW_LEFT), "\033[D");
         map.bind(new KeyStroke(KeyType.HOME), "\033[H");
         map.bind(new KeyStroke(KeyType.END), "\033[F");
 
-        map.bind(new KeyStroke(KeyType.ARROW_UP),    "\033OA");
-        map.bind(new KeyStroke(KeyType.ARROW_DOWN),  "\033OB");
+        map.bind(new KeyStroke(KeyType.ARROW_UP), "\033OA");
+        map.bind(new KeyStroke(KeyType.ARROW_DOWN), "\033OB");
         map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033OC");
-        map.bind(new KeyStroke(KeyType.ARROW_LEFT),  "\033OD");
+        map.bind(new KeyStroke(KeyType.ARROW_LEFT), "\033OD");
         map.bind(new KeyStroke(KeyType.HOME), "\033OH");
         map.bind(new KeyStroke(KeyType.END), "\033OF");
 
@@ -131,9 +125,9 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\b"); // BS (8)
         map.bind(new KeyStroke(KeyType.BACKSPACE), "\177"); // DEL
 
-        map.bind(new KeyStroke(KeyType.ENTER),     "\r");
+        map.bind(new KeyStroke(KeyType.ENTER), "\r");
 
-        map.bind(new KeyStroke(KeyType.ESCAPE),    "\033");
+        map.bind(new KeyStroke(KeyType.ESCAPE), "\033");
 
         for (int c = 32; c < 127; c++) {
             map.bind(new KeyStroke((char) c), String.valueOf((char) c));

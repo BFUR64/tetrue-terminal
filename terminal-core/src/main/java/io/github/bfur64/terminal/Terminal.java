@@ -12,8 +12,7 @@ import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.TextColor;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
-import io.github.bfur64.terminal.render.RenderStrategy;
-import io.github.bfur64.terminal.render.RenderType;
+import io.github.bfur64.terminal.render.FrameBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
@@ -30,14 +29,14 @@ public final class Terminal {
     private static final Logger logger = LogManager.getLogger(Terminal.class);
 
     private final TerminalEnvironment environment;
-    private final RenderStrategy renderStrategy;
+    private final FrameBuilder frameBuilder;
     private final InputSource inputSource;
 
     private final List<Command> buffer = new ArrayList<>();
 
-    public Terminal(TerminalEnvironment environment, RenderStrategy renderStrategy, InputSource inputSource) {
+    public Terminal(TerminalEnvironment environment, FrameBuilder frameBuilder, InputSource inputSource) {
         this.environment = environment;
-        this.renderStrategy = renderStrategy;
+        this.frameBuilder = frameBuilder;
         this.inputSource = inputSource;
     }
 
@@ -85,35 +84,35 @@ public final class Terminal {
         buffer.add(new Put(x, y, out));
     }
 
-    public void onSGR(SGR SGR) {
-        buffer.add(new OnSGR(SGR));
+    public void onSGR(SGR sgr) {
+        buffer.add(new OnSGR(sgr));
     }
 
-    public void onSGR(SGR... SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OnSGR(SGR));
+    public void onSGR(SGR... sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OnSGR(sgr));
         }
     }
 
-    public void onSGR(List<SGR> SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OnSGR(SGR));
+    public void onSGR(List<SGR> sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OnSGR(sgr));
         }
     }
 
-    public void offSGR(SGR SGR) {
-        buffer.add(new OffSGR(SGR));
+    public void offSGR(SGR sgr) {
+        buffer.add(new OffSGR(sgr));
     }
 
-    public void offSGR(SGR... SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OffSGR(SGR));
+    public void offSGR(SGR... sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OffSGR(sgr));
         }
     }
 
-    public void offSGR(List<SGR> SGRs) {
-        for (SGR SGR : SGRs) {
-            buffer.add(new OffSGR(SGR));
+    public void offSGR(List<SGR> sgrs) {
+        for (SGR sgr : sgrs) {
+            buffer.add(new OffSGR(sgr));
         }
     }
 
@@ -122,8 +121,7 @@ public final class Terminal {
     }
 
     public void flush() {
-        buffer.add(new Flush());
-        renderStrategy.execute(buffer, environment.xSize(), environment.ySize());
+        frameBuilder.render(buffer, environment.xSize(), environment.ySize());
         buffer.clear();
     }
 
@@ -166,7 +164,6 @@ public final class Terminal {
     @NullMarked
     public static class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
-        private RenderType renderType = RenderType.IMMEDIATE;
 
         public Builder auto() {
             if (isTermux()) {
@@ -200,26 +197,16 @@ public final class Terminal {
             return this;
         }
 
-        public Builder immediate() {
-            this.renderType = RenderType.IMMEDIATE;
-            return this;
-        }
-
-        public Builder buffered() {
-            this.renderType = RenderType.BUFFERED;
-            return this;
-        }
-
         public TerminalRuntime build() throws IOException {
             TerminalRuntime terminalRuntime = switch (runtimeType) {
-                case JLINE -> new JLineRuntime(renderType);
-                case LANTERNA -> new LanternaRuntime(renderType);
-                case MOCK -> new MockRuntime(renderType);
+                case JLINE -> new JLineRuntime();
+                case LANTERNA -> new LanternaRuntime();
+                case MOCK -> new MockRuntime();
             };
 
-            logger.info("Initialized {} runtime with {} strategy", runtimeType, renderType);
+            logger.info("Initialized {} runtime", runtimeType);
 
-            return  terminalRuntime;
+            return terminalRuntime;
         }
     }
 }

@@ -1,14 +1,15 @@
 package io.github.bfur64.terminal.implementations.lanterna;
 
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import io.github.bfur64.Versions;
-import io.github.bfur64.terminal.render.RenderType;
+import io.github.bfur64.terminal.interfaces.RendererBackend;
+import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
-import io.github.bfur64.terminal.render.BufferedMode;
-import io.github.bfur64.terminal.render.ImmediateMode;
-import io.github.bfur64.terminal.render.RenderStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.NullMarked;
@@ -26,23 +27,23 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     private static final int DEFAULT_Y = 0;
 
     private final Terminal terminal;
+    private final Screen screen;
     private final com.googlecode.lanterna.terminal.Terminal lanternaTerminal;
 
-    public LanternaRuntime(RenderType renderType) throws IOException {
+    public LanternaRuntime() throws IOException {
         this.lanternaTerminal = new DefaultTerminalFactory().createTerminal();
+        this.screen = new TerminalScreen(lanternaTerminal);
 
-        RenderStrategy renderStrategy = renderType == RenderType.BUFFERED ?
-                new BufferedMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics())) :
-                new ImmediateMode(new LanternaBackend(lanternaTerminal, lanternaTerminal.newTextGraphics()));
+        RendererBackend rendererBackend = new LanternaBackend(screen);
 
-        this.terminal = new Terminal(this, renderStrategy, new LanternaInputSource(lanternaTerminal));
+        this.terminal = new Terminal(this, new FrameBuilder(rendererBackend), new LanternaInputSource(lanternaTerminal));
 
         start();
     }
 
     private void start() throws IOException {
-        lanternaTerminal.enterPrivateMode();
-        lanternaTerminal.setCursorVisible(false);
+        screen.startScreen();
+        screen.setCursorPosition(null);
     }
 
     @Override
@@ -53,8 +54,8 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     @Override
     public void close() {
         try {
-            lanternaTerminal.exitPrivateMode();
-            lanternaTerminal.close();
+            screen.setCursorPosition(TerminalPosition.TOP_LEFT_CORNER);
+            screen.stopScreen();
         }
         catch (IOException e) {
             logger.error("Failed to close Lanterna runtime", e);

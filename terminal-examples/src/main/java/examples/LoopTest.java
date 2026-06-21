@@ -11,7 +11,7 @@ public final class LoopTest {
     private static final long NS_PER_FRAME = 1_000_000_000L / 60;
 
     public static void main(String[] args) {
-        try (TerminalRuntime runtime = Terminal.builder().auto().buffered().build()) {
+        try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
 
             while (true) {
