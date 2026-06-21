@@ -27,7 +27,7 @@ public final class FrameBuilder {
         this.rendererBackend = rendererBackend;
     }
 
-    public void execute(List<Command> commands, int termXSize, int termYSize) {
+    public void render(List<Command> commands, int termXSize, int termYSize) {
         if (frameXSize != termXSize || frameYSize != termYSize) {
             frame = copyFrame(frame, frameXSize, frameYSize, termXSize, termYSize);
             frameXSize = termXSize;
