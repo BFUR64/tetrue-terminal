@@ -16,11 +16,12 @@ import java.util.List;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
-    private final Terminal terminal;
     private final Display display;
 
+    private int displayXSize;
+    private int displayYSize;
+
     public JLineBackend(Terminal terminal) {
-        this.terminal = terminal;
         this.display = new Display(terminal, true);
     }
 
@@ -28,8 +29,12 @@ public final class JLineBackend implements RendererBackend {
     public void execute(Symbol[][] frame, int termXSize, int termYSize) {
         if (termXSize <= 0 || termYSize <= 0) return;
 
-        display.reset();
-        display.resize(Size.of(termXSize, termYSize));
+        if (displayXSize != termXSize || displayYSize != termYSize) {
+            display.reset();
+            display.resize(Size.of(termXSize, termYSize));
+            displayXSize = termXSize;
+            displayYSize = termYSize;
+        }
 
         List<AttributedString> lines = new ArrayList<>();
         for (int y = 0; y < termYSize; y++) {
@@ -52,7 +57,6 @@ public final class JLineBackend implements RendererBackend {
         }
 
         display.update(lines, 0);
-        terminal.flush();
     }
 
     private AttributedStyle buildStyle(Symbol symbol) {
