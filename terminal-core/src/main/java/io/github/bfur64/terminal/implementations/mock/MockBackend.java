@@ -7,5 +7,5 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public final class MockBackend implements RendererBackend {
     @Override
-    public void execute(Symbol[][] frame, int termXSize, int termYSize) {}
+    public void draw(Symbol[][] frame, int termXSize, int termYSize) {}
 }

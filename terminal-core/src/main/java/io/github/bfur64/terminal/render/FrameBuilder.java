@@ -60,7 +60,7 @@ public final class FrameBuilder {
             }
         }
 
-        rendererBackend.execute(frame, termXSize, termYSize);
+        rendererBackend.draw(frame, termXSize, termYSize);
     }
 
     private Symbol[][] copyFrame(Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {

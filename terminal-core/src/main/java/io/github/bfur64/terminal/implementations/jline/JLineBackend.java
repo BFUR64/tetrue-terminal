@@ -26,7 +26,7 @@ public final class JLineBackend implements RendererBackend {
     }
 
     @Override
-    public void execute(Symbol[][] frame, int termXSize, int termYSize) {
+    public void draw(Symbol[][] frame, int termXSize, int termYSize) {
         if (termXSize <= 0 || termYSize <= 0) return;
 
         if (displayXSize != termXSize || displayYSize != termYSize) {
