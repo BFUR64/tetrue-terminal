@@ -36,6 +36,8 @@ public final class LanternaBackend implements RendererBackend {
     public void draw(Symbol[][] frame, int termXSize, int termYSize) {
         if (termXSize <= 0 || termYSize <= 0) return;
 
+        screen.doResizeIfNecessary();
+
         screen.clear();
 
         for (int y = 0; y < termYSize; y++) {
