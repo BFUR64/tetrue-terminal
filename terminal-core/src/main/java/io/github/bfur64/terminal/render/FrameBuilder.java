@@ -17,7 +17,7 @@ public final class FrameBuilder {
 
     private int frameXSize = 0;
     private int frameYSize = 0;
-    private Symbol[][] frame = new Symbol[frameYSize][frameXSize];
+    private @Nullable Symbol[][] frame = new Symbol[frameYSize][frameXSize];
 
     private final Set<SGR> activeSGRs = new HashSet<>();
     private @Nullable Color frameFg;
@@ -63,8 +63,8 @@ public final class FrameBuilder {
         rendererBackend.draw(frame, termXSize, termYSize);
     }
 
-    private Symbol[][] copyFrame(Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
-        Symbol[][] localFrame = new Symbol[newYSize][newXSize];
+    private @Nullable Symbol[][] copyFrame(@Nullable Symbol [][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
+        @Nullable Symbol[][] localFrame = new Symbol[newYSize][newXSize];
 
         for (int y = 0; y < newYSize; y++) {
             for (int x = 0; x < newXSize; x++) {
