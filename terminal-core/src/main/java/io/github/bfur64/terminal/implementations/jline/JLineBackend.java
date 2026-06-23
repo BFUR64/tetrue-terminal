@@ -10,13 +10,19 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.jline.utils.Display;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
     private final Display display;
+
+    private @Nullable List<AttributedString> prevLines = new ArrayList<>();
+
+    private @Nullable Symbol @Nullable [][] prevFrame;
 
     private int displayXSize;
     private int displayYSize;
@@ -34,29 +40,55 @@ public final class JLineBackend implements RendererBackend {
             display.resize(Size.of(termXSize, termYSize));
             displayXSize = termXSize;
             displayYSize = termYSize;
+            prevLines = null;
+            prevFrame = null;
         }
 
-        List<AttributedString> lines = new ArrayList<>();
-        for (int y = 0; y < displayYSize; y++) {
-            AttributedStringBuilder stringBuilder = new AttributedStringBuilder(displayXSize);
-
-            for (int x = 0; x < displayXSize; x++) {
-                Symbol symbol = frame[y][x];
-
-                if (symbol == null) {
-                    stringBuilder.style(AttributedStyle.DEFAULT);
-                    stringBuilder.append(" ");
-                    continue;
+        List<AttributedString> newLines = new ArrayList<>(displayYSize);
+        if (prevLines == null) {
+            for (int y = 0; y < displayYSize; y++) {
+                newLines.add(buildLine(frame[y]));
+            }
+        }
+        else {
+            for (int y = 0; y < displayYSize; y++) {
+                if (rowChanged(frame[y], y)) {
+                    newLines.add(buildLine(frame[y]));
                 }
+                else {
+                    newLines.add(prevLines.get(y));
+                }
+            }
+        }
 
-                stringBuilder.style(buildStyle(symbol));
-                stringBuilder.append(symbol.character());
+        prevLines = newLines;
+        prevFrame = frame;
+        display.update(newLines, 0);
+    }
+
+    private AttributedString buildLine(@Nullable Symbol[] row) {
+        AttributedStringBuilder builder = new AttributedStringBuilder(displayXSize);
+
+        for (Symbol symbol : row) {
+            if (symbol == null) {
+                builder.style(AttributedStyle.DEFAULT);
+                builder.append(" ");
+                continue;
             }
 
-            lines.add(stringBuilder.toAttributedString());
+            builder.style(buildStyle(symbol));
+            builder.append(symbol.character());
         }
 
-        display.update(lines, 0);
+        return builder.toAttributedString();
+    }
+
+    private boolean rowChanged(@Nullable Symbol[] newRow, int y) {
+        if (prevFrame == null) return true;
+
+        @Nullable Symbol[] oldRow = prevFrame[y];
+
+        return !Arrays.equals(newRow, oldRow);
     }
 
     private AttributedStyle buildStyle(Symbol symbol) {
