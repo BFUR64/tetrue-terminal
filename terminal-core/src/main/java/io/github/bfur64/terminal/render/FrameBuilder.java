@@ -60,10 +60,20 @@ public final class FrameBuilder {
             }
         }
 
-        rendererBackend.draw(frame, termXSize, termYSize);
+        rendererBackend.draw(copyFrame(frame), termXSize, termYSize);
     }
 
-    private @Nullable Symbol[][] copyFrame(@Nullable Symbol [][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
+    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] frame) {
+        @Nullable Symbol[][] copy = new Symbol[frameYSize][frameXSize];
+
+        for (int y = 0; y < frameYSize; y++) {
+            System.arraycopy(frame[y], 0, copy[y], 0, frameXSize);
+        }
+
+        return copy;
+    }
+
+    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
         @Nullable Symbol[][] localFrame = new Symbol[newYSize][newXSize];
 
         for (int y = 0; y < newYSize; y++) {

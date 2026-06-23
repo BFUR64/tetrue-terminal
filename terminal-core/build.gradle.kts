@@ -40,6 +40,7 @@ dependencies {
     testImplementation(libs.junit)
 
     implementation("org.jspecify:jspecify:1.0.0")
+    implementation("org.apache.commons:commons-lang3:3.20.0")
 
     // Rendering Pipeline
     implementation("com.googlecode.lanterna:lanterna:${lanternaVersion}")
