@@ -3,6 +3,7 @@ package io.github.bfur64.terminal.implementations.jline;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.render.Symbol;
+import org.apache.commons.lang3.SystemUtils;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
@@ -33,6 +34,12 @@ public final class JLineBackend implements RendererBackend {
 
     @Override
     public void draw(@Nullable Symbol[][] frame, int termXSize, int termYSize) {
+        // Workaround for JLine 4.2.1
+        // Restores original width for `Display` diffing to work properly
+        if (SystemUtils.IS_OS_WINDOWS) {
+            termXSize += 1;
+        }
+
         if (termXSize <= 0 || termYSize <= 0) return;
 
         if (displayXSize != termXSize || displayYSize != termYSize) {
@@ -68,6 +75,14 @@ public final class JLineBackend implements RendererBackend {
 
     private AttributedString buildLine(@Nullable Symbol[] row) {
         AttributedStringBuilder builder = new AttributedStringBuilder(displayXSize);
+
+        // Workaround for JLine 4.2.1
+        // `FrameBuilder` receives N-1, enhanced for-loop skips the last column as a result
+        // We shift the rendering one column to the right to skip the bed left edge by padding it
+        if (SystemUtils.IS_OS_WINDOWS) {
+            builder.style(AttributedStyle.DEFAULT);
+            builder.append(" ");
+        }
 
         for (Symbol symbol : row) {
             if (symbol == null) {
