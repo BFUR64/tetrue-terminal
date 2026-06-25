@@ -9,6 +9,7 @@ import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.render.FrameBuilder;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
 import org.jline.terminal.TerminalBuilder;
@@ -69,6 +70,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP") // Terminal is intentionally exposed by contract
     public Terminal terminal() {
         return terminal;
     }
