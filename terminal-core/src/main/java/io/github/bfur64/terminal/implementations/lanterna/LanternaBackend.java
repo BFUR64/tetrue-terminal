@@ -6,6 +6,7 @@ import com.googlecode.lanterna.screen.Screen;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
+import io.github.bfur64.terminal.render.Frame;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +48,7 @@ public final class LanternaBackend implements RendererBackend {
     }
 
     @Override
-    public void draw(@Nullable Symbol[][] frame, int termXSize, int termYSize) {
+    public void draw(Frame frame, int termXSize, int termYSize) {
         if (termXSize <= 0 || termYSize <= 0) return;
 
         screen.doResizeIfNecessary();
@@ -56,7 +57,7 @@ public final class LanternaBackend implements RendererBackend {
 
         for (int y = 0; y < termYSize; y++) {
             for (int x = 0; x < termXSize; x++) {
-                Symbol symbol = frame[y][x];
+                Symbol symbol = frame.getSymbol(x, y);
 
                 if (symbol == null) continue;
 

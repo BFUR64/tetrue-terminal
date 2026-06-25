@@ -3,6 +3,7 @@ package io.github.bfur64.terminal.implementations.jline;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
+import io.github.bfur64.terminal.render.Frame;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.commons.lang3.SystemUtils;
 import org.jline.terminal.Size;
@@ -15,16 +16,14 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
     private final Display display;
+    private final Frame prevFrame = new Frame();
 
     private @Nullable List<AttributedString> prevLines = new ArrayList<>();
-
-    private @Nullable Symbol @Nullable [][] prevFrame;
 
     private int displayXSize;
     private int displayYSize;
@@ -34,7 +33,7 @@ public final class JLineBackend implements RendererBackend {
     }
 
     @Override
-    public void draw(@Nullable Symbol[][] frame, int termXSize, int termYSize) {
+    public void draw(Frame frame, int termXSize, int termYSize) {
         // Workaround for JLine 4.2.1
         // Restores original width for `Display` diffing to work properly
         if (SystemUtils.IS_OS_WINDOWS) {
@@ -49,19 +48,19 @@ public final class JLineBackend implements RendererBackend {
             displayXSize = termXSize;
             displayYSize = termYSize;
             prevLines = null;
-            prevFrame = null;
+            prevFrame.resizeBuffer(0, 0);
         }
 
         List<AttributedString> newLines = new ArrayList<>(displayYSize);
         if (prevLines == null) {
             for (int y = 0; y < displayYSize; y++) {
-                newLines.add(buildLine(frame[y]));
+                newLines.add(buildLine(frame, y));
             }
         }
         else {
             for (int y = 0; y < displayYSize; y++) {
-                if (rowChanged(frame[y], y)) {
-                    newLines.add(buildLine(frame[y]));
+                if (prevFrame.rowChanged(frame, y)) {
+                    newLines.add(buildLine(frame, y));
                 }
                 else {
                     newLines.add(prevLines.get(y));
@@ -70,21 +69,11 @@ public final class JLineBackend implements RendererBackend {
         }
 
         prevLines = newLines;
-        prevFrame = copyFrame(frame);
+        prevFrame.copyFrame(frame);
         display.update(newLines, 0);
     }
 
-    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] frame) {
-        @Nullable Symbol[][] copy = new Symbol[displayYSize][displayXSize];
-
-        for (int y = 0; y < displayYSize; y++) {
-            System.arraycopy(frame[y], 0, copy[y], 0, displayXSize);
-        }
-
-        return copy;
-    }
-
-    private AttributedString buildLine(@Nullable Symbol[] row) {
+    private AttributedString buildLine(Frame frame, int y) {
         AttributedStringBuilder builder = new AttributedStringBuilder(displayXSize);
 
         // Workaround for JLine 4.2.1
@@ -96,7 +85,9 @@ public final class JLineBackend implements RendererBackend {
             builder.append(" ");
         }
 
-        for (Symbol symbol : row) {
+        for (int x = 0; x < frame.getBufferXSize(); x++) {
+            Symbol symbol = frame.getSymbol(x, y);
+
             if (symbol == null) {
                 builder.style(AttributedStyle.DEFAULT);
                 builder.append(" ");
@@ -108,14 +99,6 @@ public final class JLineBackend implements RendererBackend {
         }
 
         return builder.toAttributedString();
-    }
-
-    private boolean rowChanged(@Nullable Symbol[] newRow, int y) {
-        if (prevFrame == null) return true;
-
-        @Nullable Symbol[] oldRow = prevFrame[y];
-
-        return !Arrays.equals(newRow, oldRow);
     }
 
     private AttributedStyle buildStyle(Symbol symbol) {
