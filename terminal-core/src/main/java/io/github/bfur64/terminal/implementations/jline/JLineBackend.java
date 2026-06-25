@@ -1,6 +1,7 @@
 package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.terminal.interfaces.RendererBackend;
+import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.commons.lang3.SystemUtils;
@@ -69,8 +70,18 @@ public final class JLineBackend implements RendererBackend {
         }
 
         prevLines = newLines;
-        prevFrame = frame;
+        prevFrame = copyFrame(frame);
         display.update(newLines, 0);
+    }
+
+    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] frame) {
+        @Nullable Symbol[][] copy = new Symbol[displayYSize][displayXSize];
+
+        for (int y = 0; y < displayYSize; y++) {
+            System.arraycopy(frame[y], 0, copy[y], 0, displayXSize);
+        }
+
+        return copy;
     }
 
     private AttributedString buildLine(@Nullable Symbol[] row) {
@@ -78,7 +89,8 @@ public final class JLineBackend implements RendererBackend {
 
         // Workaround for JLine 4.2.1
         // `FrameBuilder` receives N-1, enhanced for-loop skips the last column as a result
-        // We shift the rendering one column to the right to skip the bed left edge by padding it
+        // We shift rendering one column to the right by inserting a leading space,
+        // effectively avoiding writes to the problematic left edge.
         if (SystemUtils.IS_OS_WINDOWS) {
             builder.style(AttributedStyle.DEFAULT);
             builder.append(" ");
@@ -109,11 +121,14 @@ public final class JLineBackend implements RendererBackend {
     private AttributedStyle buildStyle(Symbol symbol) {
         AttributedStyle style = AttributedStyle.DEFAULT;
 
-        if (symbol.bg() != null) {
-            style = style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
+        Color symbolBg = symbol.bg();
+        if (symbolBg != null) {
+            style = style.background(symbolBg.r(), symbolBg.g(), symbolBg.b());
         }
-        if (symbol.fg() != null) {
-            style = style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
+
+        Color symbolFg = symbol.fg();
+        if (symbolFg != null) {
+            style = style.foreground(symbolFg.r(), symbolFg.g(), symbolFg.b());
         }
 
         for (SGR sgr : symbol.SGRs()) {
