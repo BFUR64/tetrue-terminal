@@ -4,10 +4,12 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
+import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -27,6 +29,18 @@ public final class LanternaBackend implements RendererBackend {
     private @Nullable TextColor prevFg = null;
     private @Nullable Set<SGR> prevSGRs = null;
 
+    /**
+     * Creates a {@link LanternaBackend} that uses the provided {@link Screen} for rendering.
+     *
+     * <p>This class does <b>not</b> own the {@link Screen} and will never invoke lifecycle
+     * methods such as {@link Screen#stopScreen()}.</p>
+     *
+     * <p>The {@link Screen} is owned by {@link LanternaRuntime} and must remain valid for
+     * the entire lifetime of this backend.</p>
+     *
+     * @param screen The rendering target used by this backend
+     */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public LanternaBackend(Screen screen) {
         this.screen = screen;
         this.textGraphics = screen.newTextGraphics();
@@ -46,8 +60,9 @@ public final class LanternaBackend implements RendererBackend {
 
                 if (symbol == null) continue;
 
-                TextColor bg = symbol.bg() != null
-                    ? new TextColor.RGB(symbol.bg().r(), symbol.bg().g(), symbol.bg().b())
+                Color bgColor = symbol.bg();
+                TextColor bg = bgColor != null
+                    ? new TextColor.RGB(bgColor.r(), bgColor.g(), bgColor.b())
                     : TextColor.ANSI.DEFAULT;
 
                 if (!bg.equals(prevBg)) {
@@ -55,8 +70,9 @@ public final class LanternaBackend implements RendererBackend {
                     prevBg = bg;
                 }
 
-                TextColor fg = symbol.fg() != null
-                    ? new TextColor.RGB(symbol.fg().r(), symbol.fg().g(), symbol.fg().b())
+                Color fgColor = symbol.fg();
+                TextColor fg = fgColor != null
+                    ? new TextColor.RGB(fgColor.r(), fgColor.g(), fgColor.b())
                     : TextColor.ANSI.DEFAULT;
 
                 if (!fg.equals(prevFg)) {
