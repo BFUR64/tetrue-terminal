@@ -12,6 +12,7 @@ import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP") // Terminal is intentionally exposed by contract
     public Terminal terminal() {
         return terminal;
     }
@@ -56,6 +58,7 @@ public final class LanternaRuntime implements TerminalRuntime, TerminalEnvironme
         try {
             screen.setCursorPosition(TerminalPosition.TOP_LEFT_CORNER);
             screen.stopScreen();
+            lanternaTerminal.close();
         }
         catch (IOException e) {
             logger.error("Failed to close Lanterna runtime", e);
