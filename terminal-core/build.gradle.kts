@@ -17,6 +17,7 @@ plugins {
 
     id("com.vanniktech.maven.publish") version "0.36.0"
     id("com.github.gmazzo.buildconfig") version "6.0.10"
+    id("com.github.spotbugs") version "6.5.8"
 }
 
 buildConfig {

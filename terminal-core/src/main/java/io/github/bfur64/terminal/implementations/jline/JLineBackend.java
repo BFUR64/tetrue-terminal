@@ -1,7 +1,9 @@
 package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.terminal.interfaces.RendererBackend;
+import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
+import io.github.bfur64.terminal.render.Frame;
 import io.github.bfur64.terminal.render.Symbol;
 import org.apache.commons.lang3.SystemUtils;
 import org.jline.terminal.Size;
@@ -14,16 +16,14 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @NullMarked
 public final class JLineBackend implements RendererBackend {
     private final Display display;
+    private final Frame prevFrame = new Frame();
 
     private @Nullable List<AttributedString> prevLines = new ArrayList<>();
-
-    private @Nullable Symbol @Nullable [][] prevFrame;
 
     private int displayXSize;
     private int displayYSize;
@@ -33,7 +33,7 @@ public final class JLineBackend implements RendererBackend {
     }
 
     @Override
-    public void draw(@Nullable Symbol[][] frame, int termXSize, int termYSize) {
+    public void draw(Frame frame, int termXSize, int termYSize) {
         // Workaround for JLine 4.2.1
         // Restores original width for `Display` diffing to work properly
         if (SystemUtils.IS_OS_WINDOWS) {
@@ -48,19 +48,19 @@ public final class JLineBackend implements RendererBackend {
             displayXSize = termXSize;
             displayYSize = termYSize;
             prevLines = null;
-            prevFrame = null;
+            prevFrame.resizeBuffer(0, 0);
         }
 
         List<AttributedString> newLines = new ArrayList<>(displayYSize);
         if (prevLines == null) {
             for (int y = 0; y < displayYSize; y++) {
-                newLines.add(buildLine(frame[y]));
+                newLines.add(buildLine(frame, y));
             }
         }
         else {
             for (int y = 0; y < displayYSize; y++) {
-                if (rowChanged(frame[y], y)) {
-                    newLines.add(buildLine(frame[y]));
+                if (prevFrame.rowChanged(frame, y)) {
+                    newLines.add(buildLine(frame, y));
                 }
                 else {
                     newLines.add(prevLines.get(y));
@@ -69,22 +69,25 @@ public final class JLineBackend implements RendererBackend {
         }
 
         prevLines = newLines;
-        prevFrame = frame;
+        prevFrame.copyFrame(frame);
         display.update(newLines, 0);
     }
 
-    private AttributedString buildLine(@Nullable Symbol[] row) {
+    private AttributedString buildLine(Frame frame, int y) {
         AttributedStringBuilder builder = new AttributedStringBuilder(displayXSize);
 
         // Workaround for JLine 4.2.1
         // `FrameBuilder` receives N-1, enhanced for-loop skips the last column as a result
-        // We shift the rendering one column to the right to skip the bed left edge by padding it
+        // We shift rendering one column to the right by inserting a leading space,
+        // effectively avoiding writes to the problematic left edge.
         if (SystemUtils.IS_OS_WINDOWS) {
             builder.style(AttributedStyle.DEFAULT);
             builder.append(" ");
         }
 
-        for (Symbol symbol : row) {
+        for (int x = 0; x < frame.getBufferXSize(); x++) {
+            Symbol symbol = frame.getSymbol(x, y);
+
             if (symbol == null) {
                 builder.style(AttributedStyle.DEFAULT);
                 builder.append(" ");
@@ -98,22 +101,17 @@ public final class JLineBackend implements RendererBackend {
         return builder.toAttributedString();
     }
 
-    private boolean rowChanged(@Nullable Symbol[] newRow, int y) {
-        if (prevFrame == null) return true;
-
-        @Nullable Symbol[] oldRow = prevFrame[y];
-
-        return !Arrays.equals(newRow, oldRow);
-    }
-
     private AttributedStyle buildStyle(Symbol symbol) {
         AttributedStyle style = AttributedStyle.DEFAULT;
 
-        if (symbol.bg() != null) {
-            style = style.background(symbol.bg().r(), symbol.bg().g(), symbol.bg().b());
+        Color symbolBg = symbol.bg();
+        if (symbolBg != null) {
+            style = style.background(symbolBg.r(), symbolBg.g(), symbolBg.b());
         }
-        if (symbol.fg() != null) {
-            style = style.foreground(symbol.fg().r(), symbol.fg().g(), symbol.fg().b());
+
+        Color symbolFg = symbol.fg();
+        if (symbolFg != null) {
+            style = style.foreground(symbolFg.r(), symbolFg.g(), symbolFg.b());
         }
 
         for (SGR sgr : symbol.SGRs()) {

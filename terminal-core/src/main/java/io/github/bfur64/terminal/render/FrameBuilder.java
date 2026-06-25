@@ -14,10 +14,7 @@ import java.util.Set;
 @NullMarked
 public final class FrameBuilder {
     private final RendererBackend rendererBackend;
-
-    private int frameXSize = 0;
-    private int frameYSize = 0;
-    private @Nullable Symbol[][] frame = new Symbol[frameYSize][frameXSize];
+    private final Frame frame = new Frame();
 
     private final Set<SGR> activeSGRs = new HashSet<>();
     private @Nullable Color frameFg;
@@ -28,15 +25,16 @@ public final class FrameBuilder {
     }
 
     public void render(List<Command> commands, int termXSize, int termYSize) {
-        if (frameXSize != termXSize || frameYSize != termYSize) {
-            frame = copyFrame(frame, frameXSize, frameYSize, termXSize, termYSize);
-            frameXSize = termXSize;
-            frameYSize = termYSize;
+        if (frame.getBufferXSize() != termXSize || frame.getBufferYSize() != termYSize) {
+            frame.resizeBuffer(termXSize, termYSize);
         }
+
+        int bufferXSize = frame.getBufferXSize();
+        int bufferYSize = frame.getBufferYSize();
 
         for (Command command : commands) {
             switch (command) {
-                case Clear ignored -> frame = new Symbol[frameYSize][frameXSize];
+                case Clear ignored -> frame.newBuffer();
                 case OffSGR offSGR -> activeSGRs.remove(offSGR.SGR());
                 case OnSGR onSGR -> activeSGRs.add(onSGR.SGR());
                 case Put put -> {
@@ -45,8 +43,8 @@ public final class FrameBuilder {
                     int y = put.y();
 
                     for (int i = 0; i < text.length; i++) {
-                        if (x + i < frameXSize && y < frameYSize) {
-                            frame[y][x + i] = new Symbol(text[i], frameFg, frameBg, Set.copyOf(activeSGRs));
+                        if (x + i < bufferXSize && y < bufferYSize) {
+                            frame.setSymbol(x + i, y, new Symbol(text[i], frameFg, frameBg, activeSGRs));
                         }
                     }
                 }
@@ -60,30 +58,6 @@ public final class FrameBuilder {
             }
         }
 
-        rendererBackend.draw(copyFrame(frame), termXSize, termYSize);
-    }
-
-    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] frame) {
-        @Nullable Symbol[][] copy = new Symbol[frameYSize][frameXSize];
-
-        for (int y = 0; y < frameYSize; y++) {
-            System.arraycopy(frame[y], 0, copy[y], 0, frameXSize);
-        }
-
-        return copy;
-    }
-
-    private @Nullable Symbol[][] copyFrame(@Nullable Symbol[][] oldFrame, int oldXSize, int oldYSize, int newXSize, int newYSize) {
-        @Nullable Symbol[][] localFrame = new Symbol[newYSize][newXSize];
-
-        for (int y = 0; y < newYSize; y++) {
-            for (int x = 0; x < newXSize; x++) {
-                if (y < oldYSize && x < oldXSize) {
-                    localFrame[y][x] = oldFrame[y][x];
-                }
-            }
-        }
-
-        return localFrame;
+        rendererBackend.draw(frame, termXSize, termYSize);
     }
 }
