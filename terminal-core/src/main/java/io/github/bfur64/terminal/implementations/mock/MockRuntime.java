@@ -6,6 +6,7 @@ import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
+import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -27,6 +28,7 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP") // Terminal is intentionally exposed by contract
     public Terminal terminal() {
         return terminal;
     }
