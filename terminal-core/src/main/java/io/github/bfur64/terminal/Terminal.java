@@ -77,7 +77,7 @@ public final class Terminal {
     }
 
     public void put(int x, int y, char out) {
-        put(x, y, String.valueOf(out));
+        buffer.add(new PutChar(x, y, out));
     }
 
     public void put(int x, int y, String out) {
