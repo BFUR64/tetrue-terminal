@@ -5,7 +5,7 @@ import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.TextColor;
 
-public class Testing {
+public class FeatureShowcase {
     public static void main(String[] args) throws Exception {
         try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
