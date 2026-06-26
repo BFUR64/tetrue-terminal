@@ -3,4 +3,4 @@ package io.github.bfur64.terminal.commands;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public sealed interface Command permits Clear, OffSGR, OnSGR, Put, PutChar, Reset, SetBg, SetFg {}
+public record PutChar(int x, int y, char out) implements Command {}

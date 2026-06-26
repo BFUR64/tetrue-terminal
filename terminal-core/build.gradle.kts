@@ -6,10 +6,10 @@
  */
 
 group = "io.github.bfur64"
-version = project.properties["version"] as String
+version = providers.gradleProperty("version").get()
 
-val lanternaVersion = project.properties["lanternaVersion"] as String
-val jlineVersion = project.properties["jlineVersion"] as String
+val lanternaVersion: String = providers.gradleProperty("lanternaVersion").get()
+val jlineVersion: String = providers.gradleProperty("jlineVersion").get()
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
