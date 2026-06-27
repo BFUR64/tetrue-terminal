@@ -10,64 +10,73 @@ import java.util.Set;
 
 @NullMarked
 public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
+    public static final Style DEFAULT = new Style(null, null, new HashSet<>());
+
     public Style {
         sgrSet = Set.copyOf(sgrSet);
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public Style fg(TextColor color) {
+        return fg(color.color());
     }
 
-    public static final class Builder {
-        private @Nullable Color fg;
-        private @Nullable Color bg;
-        private final Set<SGR> sgrSet = new HashSet<>();
+    public Style fg(Color color) {
+        return new Style(color, bg, sgrSet);
+    }
 
-        public Builder fg(TextColor color) {
-            return fg(color.color());
-        }
+    public Style fg(int r, int g, int b) {
+        return new Style(Color.of(r, g, b), bg, sgrSet);
+    }
 
-        public Style build() {
-            return new Style(fg, bg, sgrSet);
-        }
+    public Style bg(TextColor color) {
+        return bg(color.color());
+    }
 
-        public Builder fg(Color color) {
-            fg = color;
-            return this;
-        }
+    public Style bg(Color color) {
+        return new Style(fg, color, sgrSet);
+    }
 
-        public Builder fg(int r, int g, int b) {
-            fg = Color.of(r, g, b);
-            return this;
-        }
+    public Style bg(int r, int g, int b) {
+        return new Style(fg, Color.of(r, g, b), sgrSet);
+    }
 
-        public Builder bg(TextColor color) {
-            return bg(color.color());
-        }
+    public Style sgr(SGR sgr) {
+        return withSGRs(List.of(sgr));
+    }
 
-        public Builder bg(Color color) {
-            bg = color;
-            return this;
-        }
+    public Style sgr(SGR ... sgrList) {
+        return withSGRs(Arrays.asList(sgrList));
+    }
 
-        public Builder bg(int r, int g, int b) {
-            bg = Color.of(r, g, b);
-            return this;
-        }
+    public Style sgr(List<SGR> sgrList) {
+        return withSGRs(sgrList);
+    }
 
-        public Builder sgr(SGR sgr) {
-            sgrSet.add(sgr);
-            return this;
-        }
+    public Style bold() {
+        return sgr(SGR.BOLD);
+    }
 
-        public Builder sgr(SGR ... sgrList) {
-            sgrSet.addAll(Arrays.asList(sgrList));
-            return this;
-        }
+    public Style reverse() {
+        return sgr(SGR.REVERSE);
+    }
 
-        public Builder sgr(List<SGR> sgrList) {
-            sgrSet.addAll(sgrList);
-            return this;
+    public Style underline() {
+        return sgr(SGR.UNDERLINE);
+    }
+
+    public Style italic() {
+        return sgr(SGR.ITALIC);
+    }
+
+    public Style strikethrough() {
+        return sgr(SGR.STRIKETHROUGH);
+    }
+
+    private Style withSGRs(Iterable<SGR> sgrs) {
+        Set<SGR> copy = new HashSet<>(sgrSet);
+        for (SGR sgr : sgrs) {
+            copy.add(sgr);
         }
+        return new Style(fg, bg, copy);
     }
 }
