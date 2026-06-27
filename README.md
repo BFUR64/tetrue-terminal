@@ -7,11 +7,13 @@
 <h3 align="center">Opinionated terminal framework abstraction layer for Java 21+</h3>
 
 <div align="center">
-  <img width="612" height="296" alt="Tetrue Lite using Tetrue Terminal" src="https://github.com/user-attachments/assets/82459d5a-0a77-45b0-9c9e-877d924a65a9" />
+  <img width="864" height="456" alt="GIF showing colored bar moving with blinking text" src="https://github.com/user-attachments/assets/f1ddc8aa-b406-4bb8-abf4-86864b0f7e1c" />
 </div>
 
+---
+
 <div align="center">
-  <img width="612" alt="Colors, SGR, and text manipulation presented" src="https://github.com/user-attachments/assets/ebcf22f0-7015-43a6-980d-6b71124a8b8e" />
+  <img width="864" height="456" alt="Colors, SGR, and text manipulation presented" src="https://github.com/user-attachments/assets/086095a3-fdbf-4609-800b-16105f6e53bd" />
 </div>
 
 ## Quick Start
