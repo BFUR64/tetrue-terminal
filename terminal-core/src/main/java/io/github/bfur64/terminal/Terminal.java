@@ -9,6 +9,7 @@ import io.github.bfur64.terminal.implementations.lanterna.LanternaRuntime;
 import io.github.bfur64.terminal.implementations.mock.MockRuntime;
 import io.github.bfur64.terminal.output.Color;
 import io.github.bfur64.terminal.output.SGR;
+import io.github.bfur64.terminal.output.Style;
 import io.github.bfur64.terminal.output.TextColor;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
@@ -19,10 +20,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @NullMarked
 public final class Terminal {
@@ -80,22 +78,57 @@ public final class Terminal {
         buffer.add(new PutChar(x, y, out));
     }
 
+    public void put(int x, int y, char out, Style style) {
+        setStyle(style);
+        put(x, y, out);
+        reset();
+    }
+
     public void put(int x, int y, String out) {
         buffer.add(new Put(x, y, out));
+    }
+
+    public void put(int x, int y, String out, Style style) {
+        setStyle(style);
+        put(x, y, out);
+        reset();
+    }
+
+    private void setStyle(Style style) {
+        Color styleBg = style.bg();
+        if (styleBg != null) {
+            buffer.add(new SetBg(styleBg.r(), styleBg.g(), styleBg.b()));
+        }
+
+        Color styleFg = style.fg();
+        if (styleFg != null) {
+            buffer.add(new SetFg(styleFg.r(), styleFg.g(), styleFg.b()));
+        }
+
+        Set<SGR> sgrSet = style.sgrSet();
+        if (!sgrSet.isEmpty()) {
+            onSGR(sgrSet);
+        }
     }
 
     public void onSGR(SGR sgr) {
         buffer.add(new OnSGR(sgr));
     }
 
-    public void onSGR(SGR... sgrs) {
-        for (SGR sgr : sgrs) {
+    public void onSGR(SGR... sgrList) {
+        for (SGR sgr : sgrList) {
             buffer.add(new OnSGR(sgr));
         }
     }
 
-    public void onSGR(List<SGR> sgrs) {
-        for (SGR sgr : sgrs) {
+    public void onSGR(List<SGR> sgrList) {
+        for (SGR sgr : sgrList) {
+            buffer.add(new OnSGR(sgr));
+        }
+    }
+
+    public void onSGR(Set<SGR> sgrSet) {
+        for (SGR sgr : sgrSet) {
             buffer.add(new OnSGR(sgr));
         }
     }
@@ -104,14 +137,20 @@ public final class Terminal {
         buffer.add(new OffSGR(sgr));
     }
 
-    public void offSGR(SGR... sgrs) {
-        for (SGR sgr : sgrs) {
+    public void offSGR(SGR... sgrList) {
+        for (SGR sgr : sgrList) {
             buffer.add(new OffSGR(sgr));
         }
     }
 
-    public void offSGR(List<SGR> sgrs) {
-        for (SGR sgr : sgrs) {
+    public void offSGR(List<SGR> sgrList) {
+        for (SGR sgr : sgrList) {
+            buffer.add(new OffSGR(sgr));
+        }
+    }
+
+    public void offSGR(Set<SGR> sgrSet) {
+        for (SGR sgr : sgrSet) {
             buffer.add(new OffSGR(sgr));
         }
     }
@@ -162,7 +201,7 @@ public final class Terminal {
     }
 
     @NullMarked
-    public static class Builder {
+    public static final class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
 
         public Builder auto() {
