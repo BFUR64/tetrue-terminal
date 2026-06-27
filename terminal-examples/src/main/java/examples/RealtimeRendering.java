@@ -10,7 +10,7 @@ import java.util.concurrent.locks.LockSupport;
 public final class RealtimeRendering {
     private static final long NS_PER_FRAME = 1_000_000_000L / 60;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
 
@@ -50,9 +50,6 @@ public final class RealtimeRendering {
                 delta = System.nanoTime() - frameStart;
             }
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
