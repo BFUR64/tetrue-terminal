@@ -116,21 +116,15 @@ public final class Terminal {
     }
 
     public void onSGR(SGR... sgrList) {
-        for (SGR sgr : sgrList) {
-            buffer.add(new OnSGR(sgr));
-        }
+        withSGRs(List.of(sgrList), true);
     }
 
     public void onSGR(List<SGR> sgrList) {
-        for (SGR sgr : sgrList) {
-            buffer.add(new OnSGR(sgr));
-        }
+        withSGRs(sgrList, true);
     }
 
     public void onSGR(Set<SGR> sgrSet) {
-        for (SGR sgr : sgrSet) {
-            buffer.add(new OnSGR(sgr));
-        }
+        withSGRs(sgrSet, true);
     }
 
     public void offSGR(SGR sgr) {
@@ -138,20 +132,21 @@ public final class Terminal {
     }
 
     public void offSGR(SGR... sgrList) {
-        for (SGR sgr : sgrList) {
-            buffer.add(new OffSGR(sgr));
-        }
+        withSGRs(List.of(sgrList), false);
     }
 
     public void offSGR(List<SGR> sgrList) {
-        for (SGR sgr : sgrList) {
-            buffer.add(new OffSGR(sgr));
-        }
+        withSGRs(sgrList, false);
     }
 
     public void offSGR(Set<SGR> sgrSet) {
-        for (SGR sgr : sgrSet) {
-            buffer.add(new OffSGR(sgr));
+        withSGRs(sgrSet, false);
+    }
+
+    private void withSGRs(Iterable<SGR> sgrIterable, boolean on) {
+        for (SGR sgr : sgrIterable) {
+            if (on) buffer.add(new OnSGR(sgr));
+            else    buffer.add(new OffSGR(sgr));
         }
     }
 
