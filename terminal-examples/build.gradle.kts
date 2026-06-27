@@ -30,5 +30,5 @@ java {
 }
 
 application {
-    mainClass = "examples.LoopTest"
+    mainClass = "examples.FeatureShowcase"
 }
