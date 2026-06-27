@@ -162,7 +162,7 @@ public final class Terminal {
     }
 
     @NullMarked
-    public static class Builder {
+    public static final class Builder {
         private RuntimeType runtimeType = RuntimeType.JLINE;
 
         public Builder auto() {
