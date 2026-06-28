@@ -11,7 +11,7 @@
 
 ### Gradle (Kotlin DSL)
 
-Add this to your `build.gradle.kts` dependencies block:
+Add this to your `build.gradle.kts` `dependency { ... }` block:
 
 ``` kotlin
 implementation("io.github.bfur64:tetrue-terminal:3.1.4")
@@ -19,7 +19,7 @@ implementation("io.github.bfur64:tetrue-terminal:3.1.4")
 
 ### Maven
 
-Add this inside the `<dependencies>` element of your pom.xml:
+Add this to your `pom.xml` `<dependencies> ... </dependencies>` block:
 
 ``` xml
 <dependency>
