@@ -80,7 +80,7 @@ public class Main {
 
 ```java
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception { // Let it propagate upward
         try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
             Terminal terminal = runtime.terminal();
             terminal.put(0, 0, "Hello World!");
