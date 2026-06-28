@@ -37,7 +37,7 @@ Create a main class:
 
 ``` java
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.TerminalRuntime;
+import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 public class Main {
     // TerminalRuntime.close() throws Exception
