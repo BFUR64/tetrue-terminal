@@ -27,7 +27,7 @@ terminal.flush();
 runtime.close();
 ```
 
-### Wrapping in a try-with resources
+### Wrapping in a try-with-resources
 
 ```java
 try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
