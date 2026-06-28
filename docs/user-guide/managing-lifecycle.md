@@ -13,7 +13,7 @@ A `TerminalRuntime` manages the `TerminalBackend` and owns the `Terminal` refere
 There are two ways to close the runtime. The first is to call `runtime.close()` manually, and the second is to use a try‑with‑resources block that calls `close()` automatically.
 
 !!! info "Running the code"
-    The current section only illustrates the lifecycle. The next [section](#handling-exceptions) includes full examples and runnable code
+    The current section only illustrates the lifecycle. The next [section](#handling-exceptions) includes full examples and runnable code.
 
 ### Manually calling `close()`
 
@@ -43,6 +43,8 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 ## Handling exceptions
 
 `TerminalRuntime` implements `AutoCloseable` directly, so its `close()` method is allowed to throw a generic `Exception` (not just `IOException`). This is intentional because some backends may throw non‑IO exceptions during cleanup.
+
+`Terminal.Builder`'s `build()` throws an `IOException` as a backend may fail to start properly.
 
 You can handle it by catching the exception in a try-catch block, or by declaring `throws Exception` in the method signature.
 
