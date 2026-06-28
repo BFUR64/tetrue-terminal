@@ -2,7 +2,7 @@
 
 In this library, the `Terminal` and `TerminalRuntime` are separate ideas. One manipulates the Terminal, the other manages the lifecycle of the Terminal.
 
-A `Terminal` contains user-facing methods for manipulating the terminal (`put()`, `setBg()`, `flush()`) and getting envrinment information (`getXSize()`, `libraryInfo()`).
+A `Terminal` contains user-facing methods for manipulating the Terminal (`put()`, `setBg()`, `flush()`) and getting envrinment information (`xSize()`, `ySize()`, `terminalInfo()`, `libraryInfo()`).
 
 A `TerminalRuntime` manages the `TerminalBackend` and owns the `Terminal` reference. The runtime should be closed when no longer needed.
 
