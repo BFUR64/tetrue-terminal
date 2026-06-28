@@ -58,7 +58,7 @@ public class Main {
 }
 ```
 
-Run the application from your terminal (such as Gradle `./gradlew run`). The terminal switches into fullscreen mode, displays Hello Tetrue!, waits for a key press, and then restores your original terminal session when it exits.
+Run the application from your terminal (e.g., Gradle `./gradlew run`). The terminal switches into fullscreen mode, displays `"Hello Tetrue!"`, waits for a key press, and then restores your original terminal session when it exits.
 
 !!! warning "JLine on IDE"
     When using `.auto()` (which selects JLine by default), running inside an IDE may display a warning because the IDE’s built‑in terminal doesn’t support JLine’s full capabilities. For the best experience, run your application from a real terminal (e.g., Windows Terminal, iTerm2, GNOME Terminal).
