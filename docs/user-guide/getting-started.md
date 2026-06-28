@@ -3,7 +3,7 @@
 **Tetrue Terminal** is a Java 21 library for building opinionated, fullscreen terminal applications.
 
 !!! info "Java 21 required"
-    Tetrue Terminal requires Java 21 or higher. If you're using an older JDK, please upgrade before proceeding.
+    Tetrue Terminal requires Java 21 or higher. Check in the Terminal with `java -version`. If you're using an older JDK, please upgrade before proceeding.
 
 ---
 
