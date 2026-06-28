@@ -38,3 +38,14 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
     terminal.read();
 }
 ```
+
+---
+
+## Where to go from here
+
+- [Getting started](user-guide/getting-started.md)
+- [Managing lifecycle](user-guide/managing-lifecycle.md)
+- [Managing terminal state](user-guide/managing-state.md)
+- [Writing text](user-guide/writing-text.md)
+- [Reading input](user-guide/reading-input.md)
+- [Color & Styling](user-guide/styling.md)

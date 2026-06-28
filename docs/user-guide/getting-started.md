@@ -14,9 +14,7 @@
 Add this to your `build.gradle.kts` dependencies block:
 
 ``` kotlin
-dependencies {
-    implementation("io.github.bfur64:tetrue-terminal:3.1.4")
-}
+implementation("io.github.bfur64:tetrue-terminal:3.1.4")
 ```
 
 ### Maven
@@ -39,6 +37,7 @@ Create a main class:
 
 ``` java
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.TerminalRuntime;
 
 public class Main {
     // TerminalRuntime.close() throws Exception
@@ -59,17 +58,11 @@ public class Main {
 }
 ```
 
-Run it with your build tool (e.g., `./gradlew run`), and you should see `Hello, Tetrue!` printed in the terminal.
+Run the application from your terminal (like the gradle build tool `./gradlew run`). The terminal switches into fullscreen mode, displays Hello Tetrue!, waits for a key press, and then restores your original terminal session when it exits.
 
 !!! warning JLine on IDE
     When using `.auto()` (which selects JLine by default), running inside an IDE may display a warning because the IDE’s built‑in terminal doesn’t support JLine’s full capabilities. For the best experience, run your application from a real terminal (e.g., Windows Terminal, iTerm2, GNOME Terminal).
 
 ---
 
-## Where to go from here
-
-- Learn how to manage terminal state
-- Learn how to write text
-- Learn how to read user input
-- Learn how to color and style
-- Tired of redundant styling? Learn Style
+[Next](managing-lifecycle.md){ .md-button }
