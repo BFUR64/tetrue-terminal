@@ -8,6 +8,9 @@ nav:
     - Drawing Text: user-guide/drawing-text.md
     - Reading Input: user-guide/reading-input.md
     - Color & Styling: user-guide/styling.md
+    - Extras:
+      - Introduction: user-guide/extras/introduction.md
+      - Frame Timing: user-guide/extras/frame-timing.md
   - API Reference: api-reference.md
   - About: about.md
 theme:
