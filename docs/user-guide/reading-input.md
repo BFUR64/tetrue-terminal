@@ -43,7 +43,7 @@ while (true) {
 }
 ```
 
-A tight polling loop will consume an entire CPU core. In real applications, use a frame limiter or timing mechanism to cap the refresh rate. A real [capped polling](extras/game-timing.md) example can be seen in the extras page.
+A tight polling loop will consume an entire CPU thread. In real applications, use a frame limiter or timing mechanism to cap the refresh rate. A real [capped polling](extras/game-timing.md) example can be seen in the extras page.
 
 ---
 
