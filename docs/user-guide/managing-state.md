@@ -13,7 +13,7 @@ terminal.setBg(TextColor.BLUE);
 terminal.onSGR(SGR.UNDERLINE);
 terminal.put(0, 0, "Hello World!");
 terminal.put(3, 3, "I am Tetrue!");
-terminal.reset(); // `reset()` means resetting both the color and sgr
+terminal.reset(); // `reset()` sets the color and sgr to default
 terminal.flush();
 ```
 
@@ -32,7 +32,8 @@ In this example, we inline the `Style` directly into the `put()` method.
 ```java
 terminal.put(0, 0, "Hello World!", Style.DEFAULT.bg(TextColor.BLUE).underline());
 terminal.put(3, 3, "I should have default styles!");
-terminal.flush(); // No need to call `reset()` manually, as the `Style`s are stateless by design
+// We no longer need to call `reset()`
+terminal.flush();
 ```
 
 You can also store reusable styles in a `Config` class. This is useful for styles that are used throughout your application, such as error or success messages.
