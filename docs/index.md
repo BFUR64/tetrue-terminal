@@ -46,6 +46,6 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 - [Getting started](user-guide/getting-started.md)
 - [Managing lifecycle](user-guide/managing-lifecycle.md)
 - [Managing terminal state](user-guide/managing-state.md)
-- [Writing text](user-guide/writing-text.md)
+- [Drawing text](user-guide/drawing-text.md)
 - [Reading input](user-guide/reading-input.md)
 - [Color & Styling](user-guide/styling.md)

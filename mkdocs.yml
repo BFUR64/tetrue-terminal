@@ -5,7 +5,7 @@ nav:
     - Getting Started: user-guide/getting-started.md
     - Managing Lifecycle: user-guide/managing-lifecycle.md
     - Managing Terminal State: user-guide/managing-state.md
-    - Writing Text: user-guide/writing-text.md
+    - Drawing Text: user-guide/drawing-text.md
     - Reading Input: user-guide/reading-input.md
     - Color & Styling: user-guide/styling.md
   - API Reference: api-reference.md
@@ -46,3 +46,6 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - attr_list
+
+plugins:
+  - glightbox

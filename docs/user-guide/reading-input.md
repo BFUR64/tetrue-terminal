@@ -2,5 +2,5 @@
 
 ---
 
-[Previous](writing-text.md){ .md-button }
+[Previous](drawing-text.md){ .md-button }
 [Next](styling.md){ .md-button }

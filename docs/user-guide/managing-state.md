@@ -57,4 +57,4 @@ public class Main {
 ---
 
 [Previous](managing-lifecycle.md){ .md-button }
-[Next](writing-text.md){ .md-button }
+[Next](drawing-text.md){ .md-button }
