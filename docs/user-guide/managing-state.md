@@ -17,6 +17,10 @@ terminal.reset(); // `reset()` sets the color and sgr to default
 terminal.flush();
 ```
 
+Terminal output:
+
+![Stateful styling applies to multiple put() calls](../media/managing-state/stateful-1.webp){ width="350" }
+
 ---
 
 ## Statelss styling with Style
@@ -36,6 +40,10 @@ terminal.put(3, 3, "I should have default styles!");
 terminal.flush();
 ```
 
+Terminal output:
+
+![Stateless Style affects only a single put() call](../media/managing-state/stateless-1.webp)
+
 You can also store reusable styles in a `Config` class. This is useful for styles that are used throughout your application, such as error or success messages.
 
 ```java
@@ -53,6 +61,10 @@ public class Main {
     }
 }
 ```
+
+Terminal output:
+
+![Reusable Style constants for themed messages](../media/managing-state/stateless-2.webp)
 
 ---
 

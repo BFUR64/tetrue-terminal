@@ -30,5 +30,5 @@ java {
 }
 
 application {
-    mainClass = "examples.FeatureShowcase"
+    mainClass = "examples.Test"
 }

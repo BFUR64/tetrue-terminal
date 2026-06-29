@@ -161,6 +161,16 @@ terminal.flush();
 terminal.clear(); // This will not do anything until flush is called
 ```
 
+Output:
+
+```console
+┌────────────────────┐
+│ Hello World!       │
+│                    │
+│                    │
+└────────────────────┘
+```
+
 To make the clear operation take effect, call `flush()` after `clear()`.
 
 ```java
@@ -169,6 +179,16 @@ terminal.flush();
 
 terminal.clear();
 terminal.flush(); // It will clear "Hello World!" and all previously written text
+```
+
+Output:
+
+```console
+┌────────────────────┐
+│                    │
+│                    │
+│                    │
+└────────────────────┘
 ```
 
 Another way to clear text in the Terminal is by printing spaces. This allows you to erase specific portions of the screen instead of clearing the entire terminal.
@@ -182,6 +202,16 @@ terminal.flush();
 // We want to remove "World!", so we offset in the x position and print spaces
 terminal.put(6, 0, "      "); // This replaces "World!" with spaces, blanking it from the Terminal
 terminal.flush();
+```
+
+Output:
+
+```console
+┌────────────────────┐
+│ Hello              │
+│                    │
+│                    │
+└────────────────────┘
 ```
 
 ---
