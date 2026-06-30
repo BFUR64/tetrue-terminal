@@ -14,7 +14,7 @@
 Add this to your `build.gradle.kts` `dependency { ... }` block:
 
 ``` kotlin
-implementation("io.github.bfur64:tetrue-terminal:3.1.4")
+implementation("io.github.bfur64:tetrue-terminal:3.2.0")
 ```
 
 ### Maven
@@ -25,7 +25,7 @@ Add this to your `pom.xml` `<dependencies> ... </dependencies>` block:
 <dependency>
     <groupId>io.github.bfur64</groupId>
     <artifactId>tetrue-terminal</artifactId>
-    <version>3.1.4</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 
