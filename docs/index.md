@@ -4,18 +4,19 @@
 
 [Get Started](user-guide/getting-started.md){ .md-button }
 [Advanced](advanced/introduction.md){ .md-button }
+[Extras](extras/introduction.md){ .md-button }
 [API Reference](api-reference.md){ .md-button }
 
 ---
 
 ## Features
 
-- Fullscreen terminal UI
-- Resource-safe runtime management
+- Build fullscreen terminal applications
 - Automatic backend selection (via `.auto()`)
-- Simple drawing API
-- Simple input handling
-- Styling utility
+- Buffered rendering for flicker-free updates
+- Modern keyboard input API
+- Stateful and immutable styling
+- Built-in mock for testing
 
 ## Quick Start
 

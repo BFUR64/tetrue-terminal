@@ -12,7 +12,8 @@ Both return a `KeyStroke`, which represents the key that was pressed.
 
 ```java
 while (true) {
-    KeyStroke keyStroke = terminal.read(); // The application will pause here until a key press is detected
+    // The application will pause here until a key press is detected
+    KeyStroke keyStroke = terminal.read();
 
     if (keyStroke.keyType() == KeyType.ENTER) {
         terminal.put(0, 0, "Submitted!");
@@ -29,7 +30,8 @@ while (true) {
 ```java
 loop:
 while (true) {
-    KeyStroke keyStroke = terminal.poll(); // Does not wait, and will immediately continue execution
+    // Does not wait and will immediately continue execution
+    KeyStroke keyStroke = terminal.poll();
 
     if (keyStroke != null) {
         switch (keyStroke.keyType()) {
@@ -55,9 +57,9 @@ A `KeyStroke` represents the letter or special key that the user has pressed, ex
 
 A special key is a non-printable key such as `ENTER`, `ESCAPE`, or the arrow keys.
 
-`KeyTyp`e identifies what kind of key was pressed. Some values represent printable characters (`CHARACTER`), while others represent special keys (`ENTER`, `ESCAPE`, `UP`, `DOWN`, and so on).
+`KeyType` identifies what kind of key was pressed. Some values represent printable characters (`CHARACTER`), while others represent special keys (`ENTER`, `ESCAPE`, `UP`, `DOWN`, and so on).
 
-We want to read if the user pressed `ENTER` yet. To detect Enter, compare the returned KeyType against `KeyType.ENTER`.
+We want to read if the user pressed `ENTER` yet. To detect Enter, compare the returned `KeyType` against `KeyType.ENTER`.
 
 ```java
 KeyStroke keyStroke = terminal.read();
@@ -72,7 +74,9 @@ else {
 terminal.flush();
 ```
 
-Let us say we want to get the letter 't' from the user. We must first check if the `KeyType` is a single `CHARACTER` or if it's a special key. When `keyType()` is `CHARACTER`, `character()` contains the typed character. However, its return type is `@Nullable Character`, so Java still requires a null check.
+Let us say we want to get the letter 't' from the user. We must check if the `KeyType` is a single `CHARACTER` or if it's a special key.
+
+When `keyType()` is `CHARACTER`, `character()` contains the typed character. However, its return type is `@Nullable Character`, so Java still requires a null check.
 
 ```java
 KeyStroke keyStroke = terminal.read();
@@ -99,6 +103,7 @@ The only difference between `read()` and `poll()` `KeyStroke`s is that `poll()` 
 while (true) {
     KeyStroke keyStroke = terminal.poll();
 
+    // We check for null before checking the keyType
     if (keyStroke != null && keyStroke.keyType() == KeyType.ENTER) {
         break;
     }

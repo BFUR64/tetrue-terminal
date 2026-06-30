@@ -4,11 +4,11 @@
 
 ## Text coordinates
 
-To print text, we must first understand how it is positioned. We use the `put()` method to print text to the terminal, which accepts an `(x, y)` position and either a String or a character.
+To print text, have to understand how it's positioned in the Terminal. We use the `put()` method to print text, which accepts an `(x, y)` position and either a String or a character.
 
-Think of `(x, y)` as coordinates on the screen, similar to the coordinate system used in mathematics or many 2D game engines. `(0, 0)` always refers to the top-left corner of the terminal.
+Think of `(x, y)` as coordinates, similar to the coordinate system used in mathematics or many 2D game engines. `(0, 0)` always refers to the top-left corner of the Terminal.
 
-The diagram below shows the terminal coordinate system. `x` increases from left to right, while `y` increases from top to bottom.
+The diagram below shows the Terminal coordinate system. `x` increases from left to right, while `y` increases from top to bottom.
 
 ```console
    0123456789...          x
@@ -24,7 +24,7 @@ In this example, we are printing at `(0, 0)`.
 
 ```java
 terminal.put(0, 0, "Hi!");
-terminal.flush(); // "Hi!" will be printed to the top-left corner of the Terminal
+terminal.flush();
 ```
 
 Output:
@@ -38,13 +38,13 @@ Output:
 └──────────────────────┘
 ```
 
-Let's offset the text by increasing the x coordinate, as we don't want to keep printing to the left side all the time. We can adjust the `x` position to achieve this.
+Let's offset the text by increasing `x`. We can adjust the `x` position to achieve this.
 
 In this example, we offset the text 5 characters to the right, but we still print at the very top of the Terminal.
 
 ```java
 terminal.put(5, 0, "Hello!");
-terminal.flush(); // This will be offset by 5 characters to the right
+terminal.flush();
 ```
 
 Output:
@@ -58,7 +58,7 @@ Output:
 └────────────────────┘
 ```
 
-With this, we can now position text anywhere on the screen, so let us try printing "Hello World!" as two separate `put()` commands.
+With this, we can now position text anywhere on the screen, so let us try printing "Hello World!" as two separate `put()` methods.
 
 ```java
 terminal.put(1, 1, "Hello");
@@ -84,7 +84,7 @@ Let's try again. Let's move the second string so the two no longer overlap.
 ```java
 terminal.put(1, 1, "I have padding!");
 terminal.put(3, 5, "I am in a random position!");
-terminal.flush(); // This is now away from the corners of the Terminal
+terminal.flush();
 ```
 
 Output:
@@ -101,13 +101,13 @@ Output:
 └──────────────────────────┘
 ```
 
-Oh no! What is this? Our text is cut-off? This is because the Terminal has a set Size. We can query the Terminal size using `terminal.xSize()` and `terminal.ySize()`. Anything drawn outside those bounds is clipped.
+This is another unexpected output. Our text is cut-off? This is because the Terminal has a maximum size. We can query the Terminal size using `terminal.xSize()` and `terminal.ySize()`. Anything drawn outside those bounds is clipped.
 
 ---
 
 ## Printing text
 
-Text can be written to the terminal one character at a time or as an entire `String`.
+Text can be written to the Terminal one character at a time or as an entire `String`.
 
 In this example, we print "hello" with the use of characters.
 
@@ -120,7 +120,7 @@ terminal.put(4, 0, 'o');
 terminal.flush();
 ```
 
-To avoid repetitive `put()` calls, we can directly write Strings to achieve the same output.
+To avoid repetitive `put()` calls, we can directly write with a `String` to achieve the same output.
 
 ```java
 terminal.put(0, 0, "hello");
@@ -132,9 +132,9 @@ terminal.flush();
 ## Flushing to the Terminal
 
 !!! info "Buffered Rendering"
-    All drawing and state-changing operations are buffered in `Terminal`. Methods like `put()`, `setBg()`, `setFg()`, `onSGR()`, `offSGR()`, and `clear()` only record commands. Nothing is sent to the Terminal until `flush()` is called. Calling `flush()` submits all buffered commands at once.
+    All drawing and state-changing operations are buffered in the `Terminal`. Methods like `put()`, `setBg()`, `setFg()`, `onSGR()`, `offSGR()`, and `clear()` only record commands. Nothing is sent to the Terminal until `flush()` is called. Calling `flush()` submits all buffered commands at once.
 
-In this example, we use two flushes to print to the Terminal. This shows that we can call `flush()` at any point in the application, and all the buffered commands are sent to the Terminal.
+In this example, we use two flushes to print to the Terminal. This shows that we can call `flush()` at any point in the application, and all the buffered commands are then printed.
 
 Because `flush()` only submits buffered commands, it does not erase anything that has already been rendered.
 
@@ -142,14 +142,25 @@ Because `flush()` only submits buffered commands, it does not erase anything tha
 terminal.put(0, 0, "Hello World!");
 terminal.flush();
 terminal.put(0, 3, "I am Tetrue!");
-terminal.flush(); // "Hello World!" is still present after this flush
+terminal.flush();
+```
+
+Output:
+
+```console
+┌────────────────────┐
+│Hello World!        │
+│                    │
+│                    │
+│I am Tetrue!        │
+└────────────────────┘
 ```
 
 ---
 
 ## Clearing the Terminal
 
-The Terminal will never have its contents be cleared unless `clear()` is called. `clear()` removes everything currently displayed on the terminal.
+The Terminal will never have its contents be cleared unless `clear()` is called. `clear()` removes everything currently displayed on the Terminal.
 
 `clear()` is buffered just like `put()`. It records a clear command, which is applied the next time `flush()` is called.
 
@@ -158,7 +169,7 @@ In this example, we do not call `flush()` after calling `clear()` to show it not
 ```java
 terminal.put(0, 0, "Hello World!");
 terminal.flush();
-terminal.clear(); // This will not do anything until flush is called
+terminal.clear();
 ```
 
 Output:
@@ -178,7 +189,7 @@ terminal.put(0, 0, "Hello World!");
 terminal.flush();
 
 terminal.clear();
-terminal.flush(); // It will clear "Hello World!" and all previously written text
+terminal.flush();
 ```
 
 Output:
@@ -191,7 +202,7 @@ Output:
 └────────────────────┘
 ```
 
-Another way to clear text in the Terminal is by printing spaces. This allows you to erase specific portions of the screen instead of clearing the entire terminal.
+Another way to clear text in the Terminal is by printing spaces. This allows you to erase specific portions of the screen instead of clearing the entire Terminal.
 
 For example, we can replace "World!" with spaces.
 
@@ -200,7 +211,7 @@ terminal.put(0, 0, "Hello World!");
 terminal.flush();
 
 // We want to remove "World!", so we offset in the x position and print spaces
-terminal.put(6, 0, "      "); // This replaces "World!" with spaces, blanking it from the Terminal
+terminal.put(6, 0, "      ");
 terminal.flush();
 ```
 

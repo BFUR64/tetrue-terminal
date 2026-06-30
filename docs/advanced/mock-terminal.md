@@ -1,6 +1,6 @@
 # Mock Terminal
 
-The Mock Terminal is a backend that records draw commands instead of rendering them to a real terminal.
+The Mock Terminal is a backend with similar behavior to the `Terminal`, where it records draw commands. But the difference is the Mock Terminal does not render to a real Terminal.
 
 This is primarily useful for automated tests, where you want to verify what your application attempted to draw without opening a terminal window.
 
@@ -8,7 +8,7 @@ This is primarily useful for automated tests, where you want to verify what your
 
 ## Basic usage
 
-Unlike `JLine` or `Lanterna`, the Mock Terminal does not display anything on screen. Instead, it stores every drawing command so your tests can inspect them later. The `Terminal` class provides the `snapshotBuffer()` method to make this possible.
+The `Terminal` class provides the `snapshotBuffer()` which allows us to inspect the current list of commands before it's flushed.
 
 ```java
 public class Main {

@@ -65,4 +65,5 @@ Run the application from your terminal (e.g., Gradle `./gradlew run`). The Termi
 
 ---
 
+[Home](../index.md){ .md-button }
 [Next](managing-lifecycle.md){ .md-button }

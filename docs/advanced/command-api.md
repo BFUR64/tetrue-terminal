@@ -2,9 +2,9 @@
 
 The previous page introduced `Command` through the Mock Terminal. This page explains what those commands are and how they can be used in tests.
 
-`Command` is the internal representation of every drawing operation performed by the Terminal.
+`Command` is the internal representation of every drawing operation executed by the backend implementations.
 
-Every drawing operation performed by the `Terminal` is translated into one or more Command objects. For example, a styled `put()` expands into the color, attribute, drawing, and reset commands required to reproduce the requested output.
+Every drawing operation in `Terminal` is translated into one or more `Command` objects. For example, a styled `put()` expands into the color, attribute, drawing, and reset commands required to reproduce the requested output.
 
 `Command` is a sealed interface with the following implementations:
 

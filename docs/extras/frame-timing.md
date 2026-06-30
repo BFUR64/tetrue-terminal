@@ -1,6 +1,6 @@
 # Frame Timing
 
-Using while loops in Java will lock the CPU thread at 100%. It's better to use a capped refresh rate to prevent CPU waste, such as LockSupport.
+Using while loops in Java will lock the CPU thread at 100%. It's better to use a capped refresh rate to prevent CPU waste, such as `LockSupport`.
 
 The following example shows that:
 

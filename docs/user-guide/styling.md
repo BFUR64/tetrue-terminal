@@ -33,15 +33,15 @@ Terminal output:
 
 ## Text attributes (SGRs)
 
-In addition to colors, terminals support text attributes called **Select Graphic Rendition (SGR)** attributes. These control how text is displayed, such as making it bold, underlined, italic, or reversed.
+In addition to colors, Terminals support text attributes called **Select Graphic Rendition (SGR)**. These control how text is displayed, such as making it bold, underlined, italic, or reversed.
 
-Colors control what color text is displayed with, while SGR attributes control how the text is rendered.
+Colors control what color the text is displayed with, while SGR attributes control how the text is rendered.
 
 Enable an attribute with `onSGR()` and disable it with `offSGR()`.
 
-Some `SGR` attributes depend on terminal support. If an attribute is unsupported, the terminal may ignore it.
+Some `SGR` attributes depend on Terminal support. If an attribute is unsupported, the Terminal may ignore it.
 
-Multiple SGR attributes can be enabled at the same time. Calling `offSGR()` only disables the specified attribute, while `reset()` clears all colors and text attributes. You can see this in the following example.
+Multiple SGR attributes can be enabled at the same time. Calling `offSGR()` only disables the specified attribute, while `reset()` clears all colors and text attributes.
 
 ```java
 terminal.onSGR(SGR.ITALIC);
@@ -67,7 +67,7 @@ For the complete list of supported SGR values, see the [API Reference](../api-re
 
 ## Combining colors and attributes
 
-Because colors and text attributes are part of the terminal's current drawing state, they can be freely combined and changed between `put()` calls.
+Because colors and text attributes are part of the Terminal's current drawing state, they can be freely combined and changed between `put()` calls.
 
 ```java
 terminal.setFg(TextColor.WHITE);
@@ -100,11 +100,11 @@ Terminal output:
 
 ## Stateful styling
 
-Styling methods modify the terminal's current drawing state. Every subsequent `put()` uses the current foreground color, background color, and text attributes until `reset()` is called.
+Styling methods modify the Terminal's current drawing state. Every `put()` uses the current foreground color, background color, and text attributes until `reset()` is called.
 
 This is why earlier examples always called `reset()` after changing colors or text attributes.
 
-In this example, we call `reset()` after each styled `put()`. As a result, the final `put()` uses the terminal's default colors and text attributes.
+In this example, we call `reset()` after each styled `put()`. As a result, the final `put()` uses the Terminal's default colors and text attributes.
 
 ```java
 terminal.setBg(TextColor.WHITE);
@@ -136,7 +136,7 @@ Terminal output:
 
 Stateful styling is convenient when drawing many pieces of text with the same appearance. However, if you only want to style a single `put()` call, or reuse the attributes across different parts of the application, `Style` is usually the better choice.
 
-Unlike `setFg()`, `setBg()`, and `onSGR()`, using a `Style` does not modify the terminal's current drawing state.
+Unlike `setFg()`, `setBg()`, and `onSGR()`, using a `Style` does not modify the Terminal's current drawing state.
 
 Because `Style` objects are immutable, they can be stored as constants, shared safely, and reused throughout your application.
 

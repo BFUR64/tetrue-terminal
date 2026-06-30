@@ -10,11 +10,13 @@ nav:
   - Advanced:
     - Introduction: advanced/introduction.md
     - Backend Switching: advanced/backend-switching.md
+    - Mock Terminal: advanced/mock-terminal.md
+    - Command API: advanced/command-api.md
   - Extras:
     - Introduction: extras/introduction.md
     - Frame Timing: extras/frame-timing.md
   - API Reference: api-reference.md
-  - About: about.md
+  - FAQ: faq.md
 theme:
   name: material
   features:
