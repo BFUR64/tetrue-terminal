@@ -7,9 +7,12 @@ nav:
     - Drawing Text: user-guide/drawing-text.md
     - Reading Input: user-guide/reading-input.md
     - Color & Styling: user-guide/styling.md
-    - Extras:
-      - Introduction: user-guide/extras/introduction.md
-      - Frame Timing: user-guide/extras/frame-timing.md
+  - Advanced:
+    - Introduction: advanced/introduction.md
+    - Backend Switching: advanced/backend-switching.md
+  - Extras:
+    - Introduction: extras/introduction.md
+    - Frame Timing: extras/frame-timing.md
   - API Reference: api-reference.md
   - About: about.md
 theme:

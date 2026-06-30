@@ -3,6 +3,7 @@
 **Tetrue Terminal** is a Java 21 library for building opinionated, fullscreen terminal applications with automatic backend detection, modern text handling, and full keyboard support.
 
 [Get Started](user-guide/getting-started.md){ .md-button }
+[Advanced](advanced/introduction.md){ .md-button }
 [API Reference](api-reference.md){ .md-button }
 
 ---
@@ -41,11 +42,12 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 
 ---
 
-## Where to go from here
+## User guide reference
 
 - [Getting started](user-guide/getting-started.md)
 - [Managing lifecycle](user-guide/managing-lifecycle.md)
 - [Drawing text](user-guide/drawing-text.md)
 - [Reading input](user-guide/reading-input.md)
 - [Color & Styling](user-guide/styling.md)
-- [Extras](user-guide/extras/introduction.md)
+- [Advanced](advanced/introduction.md)
+- [Extras](extras/introduction.md)
