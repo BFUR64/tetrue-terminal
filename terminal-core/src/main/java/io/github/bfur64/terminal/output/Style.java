@@ -3,14 +3,11 @@ package io.github.bfur64.terminal.output;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @NullMarked
 public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
-    public static final Style DEFAULT = new Style(null, null, new HashSet<>());
+    public static final Style DEFAULT = new Style(null, null, new LinkedHashSet<>());
 
     public Style {
         sgrSet = Set.copyOf(sgrSet);
