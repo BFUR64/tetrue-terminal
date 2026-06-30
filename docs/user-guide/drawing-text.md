@@ -216,5 +216,5 @@ Output:
 
 ---
 
-[Previous](managing-state.md){ .md-button }
+[Previous](managing-lifecycle.md){ .md-button }
 [Next](reading-input.md){ .md-button }

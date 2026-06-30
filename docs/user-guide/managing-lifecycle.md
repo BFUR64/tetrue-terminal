@@ -94,4 +94,4 @@ public class Main {
 ---
 
 [Previous](getting-started.md){ .md-button }
-[Next](managing-state.md){ .md-button }
+[Next](drawing-text.md){ .md-button }

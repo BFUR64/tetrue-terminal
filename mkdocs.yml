@@ -4,7 +4,6 @@ nav:
   - User Guide:
     - Getting Started: user-guide/getting-started.md
     - Managing Lifecycle: user-guide/managing-lifecycle.md
-    - Managing Terminal State: user-guide/managing-state.md
     - Drawing Text: user-guide/drawing-text.md
     - Reading Input: user-guide/reading-input.md
     - Color & Styling: user-guide/styling.md
