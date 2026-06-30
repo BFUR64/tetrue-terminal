@@ -4,4 +4,5 @@ Extras contain patterns used by Tetrue's examples. They are optional and are not
 
 ---
 
+[Home](../index.md){ .md-button }
 [Next](frame-timing.md){ .md-button }

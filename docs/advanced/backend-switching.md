@@ -61,4 +61,4 @@ Explicit backend selection is primarily useful for testing, debugging, or enviro
 ---
 
 [Previous](introduction.md){ .md-button }
-[Next](mock-terminals.md){ .md-button }
+[Next](mock-terminal.md){ .md-button }

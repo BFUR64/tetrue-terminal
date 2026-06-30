@@ -55,4 +55,4 @@ This hybrid approach sleeps while enough time remains, then switches to a short 
 
 ---
 
-[Back to introductions](introduction.md){ .md-button }
+[Introduction](introduction.md){ .md-button }
