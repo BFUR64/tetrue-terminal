@@ -48,6 +48,14 @@ public final class FrameBuilder {
                         }
                     }
                 }
+                case PutChar putChar -> {
+                    int x = putChar.x();
+                    int y = putChar.y();
+
+                    if (x < bufferXSize && y < bufferYSize) {
+                        frame.setSymbol(x, y, new Symbol(putChar.out(), frameFg, frameBg, activeSGRs));
+                    }
+                }
                 case Reset ignored -> {
                     activeSGRs.clear();
                     frameFg = null;
