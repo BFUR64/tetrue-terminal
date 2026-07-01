@@ -106,7 +106,7 @@ At runtime, Tetrue Terminal selects and manages the appropriate backend, allowin
 
 ## Tech Stack
 
-- **Build Tool**: Gradle 9.5.0
+- **Build Tool**: Gradle 9.6.0
 - **Language**: Java 21
 
 ## Contributing
