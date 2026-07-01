@@ -31,7 +31,7 @@
     Yes. A project called [Tetrue Lite](https://github.com/BFUR64/tetrue-lite) is the first consumer of this library.
 
 ??? question "Can I build TUIs instead of games?"
-    Yes. Although originally developed with games in mind, the library is suitable for general fullscreen terminal applications. It is intentionally opinionated toward fullscreen alternate-screen mode.
+    Yes. Although originally developed with games in mind, the library is suitable for general fullscreen terminal applications. It is intentionally opinionated toward fullscreen alternate-screen mode. A good example is [Menu Manager](https://github.com/BFUR64/menu-manager).
 
 ??? question "Is Tetrue Terminal thread-safe?"
     No. Unless otherwise documented, Terminal operations should be performed from a single thread. If your application uses multiple threads, synchronize access yourself.
