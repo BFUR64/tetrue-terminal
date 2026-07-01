@@ -14,9 +14,9 @@
 - Build fullscreen terminal applications
 - Automatic backend selection (via `.auto()`)
 - Buffered rendering for flicker-free updates
-- Modern keyboard input API
-- Stateful and immutable styling
-- Built-in mock for testing
+- Blocking and non-blocking keyboard input
+- Stateful and stateless styling
+- Deterministic testing with a built-in Mock Terminal
 
 ## Quick Start
 

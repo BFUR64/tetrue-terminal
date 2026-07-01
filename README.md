@@ -4,7 +4,7 @@
 
 <h1 align="center">Tetrue Terminal</h1>
 
-<h3 align="center">Opinionated terminal framework abstraction layer for Java 21+</h3>
+<h3 align="center">Opinionated fullscreen terminal framework for Java 21+</h3>
 
 <div align="center">
   <img width="864" height="456" alt="GIF showing colored bar moving with blinking text" src="https://github.com/user-attachments/assets/f1ddc8aa-b406-4bb8-abf4-86864b0f7e1c" />
@@ -22,15 +22,16 @@
 try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
     Terminal terminal = runtime.terminal();
 
-    terminal.setBg(TextColor.BLUE);
-    terminal.onSGR(SGR.BOLD, SGR.UNDERLINE);
-    terminal.put(0, 0, "Hello World!");
-    terminal.reset();
+    terminal.put(0, 0, "Hello World!", Style.DEFAULT.fg(TextColor.BLUE).bold().underline());
     terminal.flush();
+
+    terminal.onSGR(SGR.BOLD);
+    terminal.put(0, 1, "Press Any Key!");
+    terminal.offSGR(SGR.BOLD);
 
     KeyStroke keyStroke = terminal.read();
     if (keyStroke.keyType() == KeyType.CHARACTER && keyStroke.character() == 't') {
-        terminal.put(0, 1, "You pressed `t`!");
+        terminal.put(0, 2, "You pressed `t`!");
     }
     terminal.flush();
 
@@ -38,12 +39,29 @@ try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
 }
 ```
 
+## Features
+
+- Build fullscreen terminal applications
+- Automatic backend selection (via `.auto()`)
+- Buffered rendering for flicker-free updates
+- Blocking and non-blocking keyboard input
+- Stateful and stateless styling
+- Deterministic testing with a built-in Mock Terminal
+
+## Why This Exists
+
+Tetrue Terminal separates application code from terminal implementation details
+
+This originally came from the concern of not being able to support Termux, as JLine3/4 did not work, while Lanterna did, and on Windows, Lanterna was clunky
+
+Thus, this library was born to solve that issue. Since then, it has evolved into an opinionated framework with a consistent rendering and input model across multiple terminal backends.
+
 ## Installation / Running
 
 ### Kotlin
 
 ```kotlin
-implementation("io.github.bfur64:tetrue-terminal:3.1.0")
+implementation("io.github.bfur64:tetrue-terminal:3.2.0")
 ```
 
 ### Maven
@@ -52,203 +70,23 @@ implementation("io.github.bfur64:tetrue-terminal:3.1.0")
 <dependency>
     <groupId>io.github.bfur64</groupId>
     <artifactId>tetrue-terminal</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 
-## Features
+## Wiki
 
-- Terminal abstraction layer
-- Automatic backend selection
-- Text rendering
-- Foreground / background colors
-- Limited SGR support
-- Keyboard input handling
-- Resource-safe runtime management
-- Backend-independent API
-
-## Usage
-
-### Reading Input
-
-Reads a single key press from the terminal. This method blocks until input is available
-
-It returns a `KeyStroke`, which represents a key that is pressed.
-
-A `KeyStroke` can be printed with user friendly formatting via the `toString()` method call
-
-It stores two fields:
-- KeyType - The type of key pressed, including special keys
-- @Nullable Character - If the `KeyType` is `CHARACTER`, the `char` field will be populated
-
-```java
-KeyStroke keyStroke = terminal.read();
-
-if (keyStroke.keyType() == KeyType.ESCAPE) {
-    terminal.put(0, 0, "You pressed " + keyStroke.keyType().toString()); // Prints the formatted `KeyType`
-}
-else if (keyStroke.keyType() == KeyType.CHARACTER) { // Checks if the type of key is a character
-    if (keyStroke.character() == 'q') { // Prints the character key
-        terminal.put(0, 0, "You pressed q");
-    }
-}
-
-terminal.flush();
-```
-
-### Polling Input
-
-Poll for input without blocking. Returns `null` if no input is available
-
-```java
-while (true) {
-    KeyStroke keyStroke = terminal.poll();
-
-    // Check if `keyStroke` is null first
-    if (keyStroke == null) continue;
-
-    if (keyStroke.keyType() == KeyType.ESCAPE) break;
-}
-```
-
-It is recommended to use a refresh-capped while loop to prevent CPU waste, like `LockSupport`
-
-```java
-while (true) {
-    long frameStart = System.nanoTime(); // Used for frame timing
-
-    KeyStroke keyStroke = terminal.poll();
-
-    String out = keyStroke == null
-        ? "None"
-        : keyStroke.toString();
-
-    // Basic pattern for breaking out with polling
-    if (keyStroke != null && keyStroke.keyType() == KeyType.ESCAPE) {
-        break;
-    }
-
-    // Print the pressed key
-    terminal.clear();
-    terminal.put(0, 0, "You pressed: " + out);
-    terminal.flush();
-
-    // Lock the refresh at 60fps
-    long deadline = frameStart + 1_000_000_000L / 60; // nsPerFrame
-    long now = System.nanoTime();
-
-    while (now < deadline) {
-        LockSupport.parkNanos(deadline - now);
-        now = System.nanoTime();
-    }
-}
-```
-
-### Writing Text
-
-Write text or individual characters at a specific x and y terminal position
-
-> [!IMPORTANT]
-> Changes are buffered. Call `flush()` to render any pending `Terminal` commands.
-
-```java
-terminal.put(0, 0, "Hello World!");
-terminal.put(0, 1, 'a');
-terminal.flush();
-```
-
-### Colors and Styling
-
-Apply styling attributes to output
-
-```java
-terminal.onSGR(SGR.BOLD);
-terminal.put(0, 0, "Hello World!");
-terminal.offSGR(SGR.BOLD);
-terminal.flush();
-```
-
-Multiple styles can be enabled at once
-
-```java
-terminal.onSGR(SGR.UNDERLINE, SGR.BOLD);
-terminal.put(0, 0, "Hello World!");
-terminal.offSGR(SGR.UNDERLINE, SGR.BOLD);
-terminal.flush();
-```
-
-Predefined colors via `TextColor`
-
-```java
-terminal.setBg(TextColor.MAROON);
-terminal.put(0, 0, "Hello World!");
-terminal.reset();
-terminal.flush();
-```
-
-Manual RGB coloring
-
-```java
-terminal.setBg(255, 0, 0);
-terminal.put(0, 0, "Hello World!");
-terminal.reset();
-terminal.flush();
-```
-
-### Managing Terminal State
-
-Terminal state like colors and style can be reset to default via the following:
-
-- `reset()` - Resets both color and sgr
-- `offSGR()` Resets a specified sgr
-
-```java
-terminal.setBg(TextColor.BLUE);
-terminal.onSGR(SGR.UNDERLINE);
-
-terminal.put(0, 0, "Hello World!");
-
-terminal.reset();
-terminal.flush();
-```
-
-### Runtime Lifecycle
-
-A `TerminalRuntime` manages the terminal backend and should be closed when no longer needed
-
-Try-with resources can be used as it implements `AutoCloseable`
-
-```java
-try (TerminalRuntime runtime = Terminal.builder().auto().build()) {
-    Terminal terminal = runtime.terminal();
-
-    terminal.put(0, 0, "Hello World!");
-    terminal.flush();
-}
-
-```
-
-## API Reference
-
-| Class | Description |
-|-------|-------------|
-| `TerminalRuntime` | Manages terminal backend lifecycle |
-| `Terminal` | Main rendering and input API |
-| `KeyStroke` | Represents user input |
-| `TextColor` | Opinionated CSS1 colors |
+Check out the [Wiki](https://bfur64.github.io/tetrue-terminal/)
 
 ## How It Works
 
-Tetrue Terminal provides a unified API over multiple terminal implementations
+Applications target the `Terminal` API rather than a specific terminal framework.
 
-Applications interact only with the `Terminal` API while the runtime selects and manages the appropriate backend implementation
-
-This allows applications to switch terminal frameworks without modifying application code
+At runtime, Tetrue Terminal selects and manages the appropriate backend, allowing applications to switch implementations without changing application code.
 
 ## Requirements
 
 - Java 21 or higher
-- Relatively modern terminals
 
 ### Tested Terminals
 
@@ -267,16 +105,9 @@ This allows applications to switch terminal frameworks without modifying applica
 - Other Linux terminals
 
 ## Tech Stack
+
 - **Build Tool**: Gradle 9.5.0
 - **Language**: Java 21
-
-## Why This Exists
-
-Tetrue Terminal separates application code from terminal implementation details
-
-This originally came from the concern of not being able to support Termux, as JLine3/4 did not work, while Lanterna did, and on Windows, Lanterna was clunky
-
-Thus, this library was born to solve that issue. Since then, it has become opinionated on how a Terminal should work
 
 ## Contributing
 
