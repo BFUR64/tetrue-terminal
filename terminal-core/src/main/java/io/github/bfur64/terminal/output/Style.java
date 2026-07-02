@@ -10,7 +10,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     public static final Style DEFAULT = new Style(null, null, new LinkedHashSet<>());
 
     public Style {
-        // Preserve insertion order while keeping the set immutable
+        // Collections.unmodifiableSet(...) instead of Set.copyOf(...) to preserve insertion order
         sgrSet = Collections.unmodifiableSet(new LinkedHashSet<>(sgrSet));
     }
 
