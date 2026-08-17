@@ -38,8 +38,8 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
         return withSGRs(Arrays.asList(sgrList));
     }
 
-    public Style sgr(List<SGR> sgrList) {
-        return withSGRs(sgrList);
+    public Style sgr(Iterable<SGR> sgrIterable) {
+        return withSGRs(sgrIterable);
     }
 
     public Style bold() {
