@@ -33,4 +33,5 @@ build
 site
 
 # Do not include private keys
-.signing-key.asc
+signing-key.asc
+*.asc
