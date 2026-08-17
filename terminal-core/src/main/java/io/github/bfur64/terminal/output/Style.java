@@ -15,11 +15,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     }
 
     public Style fg(TextColor color) {
-        return fg(color.color());
-    }
-
-    public Style fg(Color color) {
-        return new Style(color, bg, sgrSet);
+        return new Style(color.color(), bg, sgrSet);
     }
 
     public Style fg(int r, int g, int b) {
@@ -27,11 +23,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     }
 
     public Style bg(TextColor color) {
-        return bg(color.color());
-    }
-
-    public Style bg(Color color) {
-        return new Style(fg, color, sgrSet);
+        return new Style(fg, color.color(), sgrSet);
     }
 
     public Style bg(int r, int g, int b) {
