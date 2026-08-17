@@ -8,7 +8,6 @@ import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.render.FrameBuilder;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
@@ -77,16 +76,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
 
     @Override
     public int xSize() {
-        // Workaround for JLine 4.2.1
-        // Missing characters on the left edge appears under certain terminal operations for N
-        // `JLineBackend` shifts entire rendering to the right after N-1 to skip the bad left edge
-        // Affected Stack: `JlineRuntime` (this) -> `Terminal` -> `FrameBuilder` -> `JLineBackend`
-        if (SystemUtils.IS_OS_WINDOWS) {
-            return jlineTerminal.getColumns() - 1;
-        }
-        else {
-            return jlineTerminal.getColumns();
-        }
+        return jlineTerminal.getColumns();
     }
 
     @Override
