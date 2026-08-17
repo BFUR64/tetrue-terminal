@@ -181,25 +181,20 @@ public final class Terminal {
 
     @NullMarked
     public static final class Builder {
-        private RuntimeType runtimeType = RuntimeType.JLINE;
-
-        public Builder auto() {
-            if (isTermux()) {
-                return lanterna();
-            }
-            else {
-                return jline();
-            }
-        }
+        private RuntimeType runtimeType = RuntimeType.AUTOMATIC;
 
         private static boolean isTermux() {
             String prefix = System.getenv("PREFIX");
 
             return (prefix != null &&
-                    prefix.contains("termux")) ||
-                    System.getenv("TERMUX_VERSION") != null;
+                prefix.contains("termux")) ||
+                System.getenv("TERMUX_VERSION") != null;
         }
 
+        public Builder auto() {
+            this.runtimeType = RuntimeType.AUTOMATIC;
+            return this;
+        }
         public Builder jline() {
             this.runtimeType = RuntimeType.JLINE;
             return this;
@@ -217,6 +212,7 @@ public final class Terminal {
 
         public TerminalRuntime build() throws IOException {
             TerminalRuntime terminalRuntime = switch (runtimeType) {
+                case AUTOMATIC -> isTermux() ? new LanternaRuntime() : new JLineRuntime();
                 case JLINE -> new JLineRuntime();
                 case LANTERNA -> new LanternaRuntime();
                 case MOCK -> new MockRuntime();

@@ -4,5 +4,5 @@ import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 public enum RuntimeType {
-    JLINE, LANTERNA, MOCK;
+    AUTOMATIC, JLINE, LANTERNA, MOCK;
 }
