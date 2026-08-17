@@ -4,4 +4,4 @@ import io.github.bfur64.terminal.output.SGR;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public record OnSGR(SGR SGR) implements Command {}
+public record OnSGR(SGR sgr) implements Command {}
