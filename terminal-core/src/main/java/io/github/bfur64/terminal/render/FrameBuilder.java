@@ -35,8 +35,8 @@ public final class FrameBuilder {
         for (Command command : commands) {
             switch (command) {
                 case Clear ignored -> frame.newBuffer();
-                case OffSGR offSGR -> activeSGRs.remove(offSGR.SGR());
-                case OnSGR onSGR -> activeSGRs.add(onSGR.SGR());
+                case OffSGR offSGR -> activeSGRs.remove(offSGR.sgr());
+                case OnSGR onSGR -> activeSGRs.add(onSGR.sgr());
                 case Put put -> {
                     char[] text = put.text().toCharArray();
                     int x = put.x();
