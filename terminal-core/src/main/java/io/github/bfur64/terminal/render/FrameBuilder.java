@@ -35,34 +35,37 @@ public final class FrameBuilder {
         for (Command command : commands) {
             switch (command) {
                 case Clear ignored -> frame.newBuffer();
-                case OffSGR offSGR -> activeSGRs.remove(offSGR.sgr());
-                case OnSGR onSGR -> activeSGRs.add(onSGR.sgr());
-                case Put put -> {
-                    char[] text = put.text().toCharArray();
-                    int x = put.x();
-                    int y = put.y();
+                case OffSGR(SGR sgr) -> activeSGRs.remove(sgr);
+                case OnSGR(SGR sgr) -> activeSGRs.add(sgr);
+                case Put(int x, int y, String text) -> {
+                    char[] charArray = text.toCharArray();
 
-                    for (int i = 0; i < text.length; i++) {
-                        if (x + i < bufferXSize && y < bufferYSize) {
-                            frame.setSymbol(x + i, y, new Symbol(text[i], frameFg, frameBg, activeSGRs));
+                    for (int i = 0; i < charArray.length; i++) {
+                        int px = x + i;
+
+                        if (px >= 0 &&
+                            y >= 0 &&
+                            px < bufferXSize &&
+                            y < bufferYSize
+                        ) {
+                            frame.setSymbol(px, y, new Symbol(charArray[i], frameFg, frameBg, activeSGRs));
                         }
                     }
                 }
-                case PutChar putChar -> {
-                    int x = putChar.x();
-                    int y = putChar.y();
-
-                    if (x < bufferXSize && y < bufferYSize) {
-                        frame.setSymbol(x, y, new Symbol(putChar.out(), frameFg, frameBg, activeSGRs));
-                    }
-                }
+                case PutChar(int x, int y, char out) when (
+                    x >= 0 &&
+                    y >= 0 &&
+                    x < bufferXSize &&
+                    y < bufferYSize
+                ) -> frame.setSymbol(x, y, new Symbol(out, frameFg, frameBg, activeSGRs));
+                case PutChar ignored -> {}
                 case Reset ignored -> {
                     activeSGRs.clear();
                     frameFg = null;
                     frameBg = null;
                 }
-                case SetBg setBg -> frameBg = Color.of(setBg.r(), setBg.g(), setBg.b());
-                case SetFg setFg -> frameFg = Color.of(setFg.r(), setFg.g(), setFg.b());
+                case SetBg(int r, int g, int b) -> frameBg = Color.of(r, g, b);
+                case SetFg(int r, int g, int b) -> frameFg = Color.of(r, g, b);
             }
         }
 
