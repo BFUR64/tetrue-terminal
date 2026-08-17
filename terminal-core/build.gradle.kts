@@ -14,8 +14,9 @@ val jlineVersion: String = providers.gradleProperty("jlineVersion").get()
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
+    `maven-publish`
+    signing
 
-    id("com.vanniktech.maven.publish") version "0.36.0"
     id("com.github.gmazzo.buildconfig") version "6.0.10"
     id("com.github.spotbugs") version "6.5.8"
 }
@@ -53,40 +54,78 @@ dependencies {
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
+    withJavadocJar()
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
-mavenPublishing {
-    publishToMavenCentral()
-    signAllPublications()
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
 
-    coordinates(group.toString(), "tetrue-terminal", version.toString())
+            groupId = project.group.toString()
+            artifactId = "tetrue-terminal"
+            version = project.version.toString()
 
-    pom {
-        name.set("menu-manager")
-        description.set("A meta library that combines JLine and Lanterna for my specific purposes")
-        inceptionYear.set("2026")
-        url.set("https://github.com/BFUR64/tetrue-terminal")
-        licenses {
-            license {
-                name.set("MIT License")
-                url.set("https://opensource.org/license/mit")
-                distribution.set("repo")
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
             }
-        }
-        developers {
-            developer {
-                id.set("BFUR64")
-                name.set("Terrance")
-                url.set("https://github.com/BFUR64/")
+
+            pom {
+                name = "tetrue-terminal"
+                description = "A meta library that combines JLine and Lanterna for my specific purposes"
+                url = "https://github.com/BFUR64/tetrue-terminal"
+
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://opensource.org/license/mit"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "BFUR64"
+                        name = "Terrance"
+                        url = "https://github.com/BFUR64/"
+                    }
+                }
+
+                scm {
+                    url = "https://github.com/BFUR64/tetrue-terminal"
+                    connection = "scm:git:https://github.com/BFUR64/tetrue-terminal.git"
+                    developerConnection = "scm:git:ssh://git@github.com/BFUR64/tetrue-terminal.git"
+                }
             }
-        }
-        scm {
-            url.set("https://github.com/BFUR64/tetrue-terminal")
-            connection.set("scm:git:https://github.com/BFUR64/tetrue-terminal.git")
-            developerConnection.set("scm:git:ssh://git@github.com/BFUR64/tetrue-terminal.git")
         }
     }
+    repositories {
+        maven {
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            val releasesRepoUrl = uri(layout.buildDirectory.dir("repos/releases"))
+            val snapshotsRepoUrl = uri(layout.buildDirectory.dir("repos/snapshots"))
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+        }
+    }
+
+}
+
+signing {
+    val signingKey = file("signing-key.asc").readText()
+    val signingPassword = project.findProperty("signingPassword") as String?
+
+    useInMemoryPgpKeys(
+        signingKey,
+        signingPassword
+    )
+
+    sign(publishing.publications["mavenJava"])
 }
