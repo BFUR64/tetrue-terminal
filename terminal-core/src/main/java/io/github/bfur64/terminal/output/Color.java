@@ -9,6 +9,10 @@ public record Color(int rgb) {
     }
 
     public static Color of(int r, int g, int b) {
+        r = Math.clamp(r, 0, 255);
+        g = Math.clamp(g, 0, 255);
+        b = Math.clamp(b, 0, 255);
+
         return new Color((0xFF << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF));
     }
 
