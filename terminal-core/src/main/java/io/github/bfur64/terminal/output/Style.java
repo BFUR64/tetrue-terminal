@@ -30,10 +30,6 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
         return new Style(fg, Color.of(r, g, b), sgrSet);
     }
 
-    public Style sgr(SGR sgr) {
-        return withSGRs(List.of(sgr));
-    }
-
     public Style sgr(SGR... sgrList) {
         return withSGRs(Arrays.asList(sgrList));
     }
