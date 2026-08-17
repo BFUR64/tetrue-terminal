@@ -10,15 +10,12 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     public static final Style DEFAULT = new Style(null, null, new LinkedHashSet<>());
 
     public Style {
-        sgrSet = Set.copyOf(sgrSet);
+        // Collections.unmodifiableSet(...) instead of Set.copyOf(...) to preserve insertion order
+        sgrSet = Collections.unmodifiableSet(new LinkedHashSet<>(sgrSet));
     }
 
     public Style fg(TextColor color) {
-        return fg(color.color());
-    }
-
-    public Style fg(Color color) {
-        return new Style(color, bg, sgrSet);
+        return new Style(color.color(), bg, sgrSet);
     }
 
     public Style fg(int r, int g, int b) {
@@ -26,11 +23,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     }
 
     public Style bg(TextColor color) {
-        return bg(color.color());
-    }
-
-    public Style bg(Color color) {
-        return new Style(fg, color, sgrSet);
+        return new Style(fg, color.color(), sgrSet);
     }
 
     public Style bg(int r, int g, int b) {
@@ -41,7 +34,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
         return withSGRs(List.of(sgr));
     }
 
-    public Style sgr(SGR ... sgrList) {
+    public Style sgr(SGR... sgrList) {
         return withSGRs(Arrays.asList(sgrList));
     }
 
@@ -70,7 +63,7 @@ public record Style(@Nullable Color fg, @Nullable Color bg, Set<SGR> sgrSet) {
     }
 
     private Style withSGRs(Iterable<SGR> sgrs) {
-        Set<SGR> copy = new HashSet<>(sgrSet);
+        Set<SGR> copy = new LinkedHashSet<>(sgrSet);
         for (SGR sgr : sgrs) {
             copy.add(sgr);
         }
