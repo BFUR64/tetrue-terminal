@@ -3,26 +3,32 @@ package io.github.bfur64.terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
 import io.github.bfur64.terminal.input.KeyType;
 import io.github.bfur64.terminal.implementations.mock.MockRuntime;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class InputTest {
-    @Test public void noInputTest() throws Exception {
-        try (MockRuntime runtime = (MockRuntime) Terminal.builder().mock().build()) {
-            Terminal terminal = runtime.terminal();
+    private MockRuntime runtime;
+    private Terminal terminal;
 
-            assertNull(terminal.poll());
-        }
+    @Before public void setUp() throws Exception {
+        runtime = (MockRuntime) Terminal.builder().mock().build();
+        terminal = runtime.terminal();
     }
 
-    @Test public void oneInputTest() throws Exception {
-        try (MockRuntime runtime = (MockRuntime) Terminal.builder().mock().build()) {
-            Terminal terminal = runtime.terminal();
+    @After public void tearDown() {
+        runtime.close();
+    }
 
-            runtime.addKeyStroke(new KeyStroke(KeyType.PAGE_UP));
+    @Test public void noInput_returnsNull() {
+        assertNull(terminal.poll());
+    }
 
-            assertEquals(new KeyStroke(KeyType.PAGE_UP), terminal.read());
-        }
+    @Test public void addKeyStroke_thenRead_returnsSameKeyStroke() {
+        runtime.addKeyStroke(new KeyStroke(KeyType.PAGE_UP));
+
+        assertEquals(new KeyStroke(KeyType.PAGE_UP), terminal.read());
     }
 }

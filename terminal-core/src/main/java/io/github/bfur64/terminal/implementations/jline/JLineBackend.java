@@ -62,7 +62,7 @@ public final class JLineBackend implements RendererBackend {
         }
 
         prevLines = newLines;
-        prevFrame.copyFrame(frame);
+        prevFrame.copyFromFrame(frame);
         display.update(newLines, 0);
     }
 

@@ -1,29 +1,35 @@
 package io.github.bfur64.terminal;
 
 import io.github.bfur64.terminal.implementations.mock.MockRuntime;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class SizeTest {
-    @Test public void defaultSizeTest() throws Exception {
-        try (MockRuntime mockRuntime = (MockRuntime) Terminal.builder().mock().build();) {
-            Terminal terminal = mockRuntime.terminal();
+    private MockRuntime runtime;
+    private Terminal terminal;
 
-            assertEquals(0, terminal.xSize());
-            assertEquals(0, terminal.ySize());
-        }
+    @Before public void setUp() throws Exception {
+        runtime = (MockRuntime) Terminal.builder().mock().build();
+        terminal = runtime.terminal();
     }
 
-    @Test public void newSizeTest() throws Exception {
-        try (MockRuntime mockRuntime = (MockRuntime) Terminal.builder().mock().build();) {
-            Terminal terminal = mockRuntime.terminal();
+    @After public void tearDown() {
+        runtime.close();
+    }
 
-            mockRuntime.setXSize(25);
-            mockRuntime.setYSize(50);
+    @Test public void defaultSize_isZero() {
+        assertEquals(0, terminal.xSize());
+        assertEquals(0, terminal.ySize());
+    }
 
-            assertEquals(25, terminal.xSize());
-            assertEquals(50, terminal.ySize());
-        }
+    @Test public void newSizeTest() {
+        runtime.setXSize(25);
+        runtime.setYSize(50);
+
+        assertEquals(25, terminal.xSize());
+        assertEquals(50, terminal.ySize());
     }
 }
