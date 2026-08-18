@@ -12,11 +12,18 @@ public final class Frame {
 
     private @Nullable Symbol[] buffer = new Symbol[0];
 
-    public void copyFrame(Frame source) {
+    public void copyFromFrame(Frame source) {
         bufferXSize = source.bufferXSize;
         bufferYSize = source.bufferYSize;
         newBuffer();
         System.arraycopy(source.buffer, 0, buffer, 0, bufferXSize * bufferYSize);
+    }
+
+    public Frame copy() {
+        Frame frameCopy = new Frame();
+        frameCopy.copyFromFrame(this);
+
+        return frameCopy;
     }
 
     public void newBuffer() {

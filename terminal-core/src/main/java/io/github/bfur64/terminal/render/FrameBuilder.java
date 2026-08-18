@@ -71,4 +71,8 @@ public final class FrameBuilder {
 
         rendererBackend.draw(frame, termXSize, termYSize);
     }
+
+    public Frame getFrameCopy() {
+        return frame.copy();
+    }
 }
