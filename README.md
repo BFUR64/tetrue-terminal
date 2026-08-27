@@ -90,19 +90,7 @@ At runtime, Tetrue Terminal selects and manages the appropriate backend, allowin
 
 ### Tested Terminals
 
-**Supported:**
-
-- Windows Terminal (Windows 11)
-- Powershell 7
-- CMD.exe
-- Linux xterm
-- WSL2
-- Termux (Android)
-
-**Untested:**
-
-- macOS Terminal, iTerm2
-- Other Linux terminals
+- Whatever JLine or Lanterna supports, it should work here too
 
 ## Tech Stack
 
