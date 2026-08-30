@@ -57,9 +57,9 @@ A `KeyStroke` represents the letter or special key that the user has pressed, ex
 
 A special key is a non-printable key such as `ENTER`, `ESCAPE`, or the arrow keys.
 
-`KeyType` identifies what kind of key was pressed. Some values represent printable characters (`CHARACTER`), while others represent special keys (`ENTER`, `ESCAPE`, `UP`, `DOWN`, and so on).
+`Key` identifies what kind of key was pressed. Some values represent printable characters (`CHARACTER`), while others represent special keys (`ENTER`, `ESCAPE`, `UP`, `DOWN`, and so on).
 
-We want to read if the user pressed `ENTER` yet. To detect Enter, compare the returned `KeyType` against `KeyType.ENTER`.
+We want to read if the user pressed `ENTER` yet. To detect Enter, compare the returned `Key` against `KeyType.ENTER`.
 
 ```java
 KeyStroke keyStroke = terminal.read();
@@ -74,7 +74,7 @@ else {
 terminal.flush();
 ```
 
-Let us say we want to get the letter 't' from the user. We must check if the `KeyType` is a single `CHARACTER` or if it's a special key.
+Let us say we want to get the letter 't' from the user. We must check if the `Key` is a single `CHARACTER` or if it's a special key.
 
 When `keyType()` is `CHARACTER`, `character()` contains the typed character. However, its return type is `@Nullable Character`, so Java still requires a null check.
 

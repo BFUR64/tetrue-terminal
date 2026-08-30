@@ -1,8 +1,9 @@
 package examples;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 import java.util.concurrent.locks.LockSupport;
@@ -21,11 +22,7 @@ public final class RealtimeRendering {
 
                 KeyStroke keyStroke = terminal.poll();
 
-                if (keyStroke != null) {
-                    if (keyStroke.keyType() == KeyType.ESCAPE) {
-                        break;
-                    }
-                }
+                if (keyStroke instanceof SpecialKey(Key key) && key == Key.ESCAPE) break;
 
                 terminal.clear();
                 terminal.put(0, 0, terminal.libraryInfo());

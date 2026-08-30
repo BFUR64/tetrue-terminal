@@ -1,7 +1,8 @@
 package io.github.bfur64.terminal.implementations.mock;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -16,13 +17,13 @@ public final class MockInputSource implements InputSource {
     @Override
     public KeyStroke read() {
         if (keyStrokes.isEmpty()) {
-            return new KeyStroke(KeyType.UNKNOWN);
+            return new SpecialKey(Key.UNKNOWN);
         }
 
         KeyStroke keyStroke = keyStrokes.getFirst();
         keyStrokes.removeFirst();
 
-        return keyStroke != null ? keyStroke : new KeyStroke(KeyType.UNKNOWN);
+        return keyStroke != null ? keyStroke : new SpecialKey(Key.UNKNOWN);
     }
 
     @Override
