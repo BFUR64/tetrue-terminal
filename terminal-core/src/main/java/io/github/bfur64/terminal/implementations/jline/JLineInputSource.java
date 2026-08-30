@@ -1,7 +1,8 @@
 package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
@@ -39,7 +40,7 @@ public final class JLineInputSource implements InputSource {
             Thread.currentThread().interrupt();
         }
 
-        return new KeyStroke(KeyType.UNKNOWN);
+        return new SpecialKey(Key.UNKNOWN);
     }
 
     @Override

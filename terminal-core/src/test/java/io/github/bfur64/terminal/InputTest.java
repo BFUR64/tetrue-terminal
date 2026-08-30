@@ -1,8 +1,9 @@
 package io.github.bfur64.terminal;
 
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
 import io.github.bfur64.terminal.implementations.mock.MockRuntime;
+import io.github.bfur64.terminal.input.SpecialKey;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +28,8 @@ public class InputTest {
     }
 
     @Test public void addKeyStroke_thenRead_returnsSameKeyStroke() {
-        runtime.addKeyStroke(new KeyStroke(KeyType.PAGE_UP));
+        runtime.addKeyStroke(new SpecialKey(Key.PAGE_UP));
 
-        assertEquals(new KeyStroke(KeyType.PAGE_UP), terminal.read());
+        assertEquals(new SpecialKey(Key.PAGE_UP), terminal.read());
     }
 }

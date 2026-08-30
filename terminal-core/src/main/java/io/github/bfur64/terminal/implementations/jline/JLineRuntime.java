@@ -1,9 +1,11 @@
 package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.Versions;
+import io.github.bfur64.terminal.input.CharacterKey;
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
@@ -105,34 +107,34 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     private KeyMap<KeyStroke> buildKeyMap() {
         KeyMap<KeyStroke> map = new KeyMap<>();
 
-        map.bind(new KeyStroke(KeyType.ARROW_UP), "\033[A");
-        map.bind(new KeyStroke(KeyType.ARROW_DOWN), "\033[B");
-        map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033[C");
-        map.bind(new KeyStroke(KeyType.ARROW_LEFT), "\033[D");
-        map.bind(new KeyStroke(KeyType.HOME), "\033[H");
-        map.bind(new KeyStroke(KeyType.END), "\033[F");
+        map.bind(new SpecialKey(Key.ARROW_UP), "\033[A");
+        map.bind(new SpecialKey(Key.ARROW_DOWN), "\033[B");
+        map.bind(new SpecialKey(Key.ARROW_RIGHT), "\033[C");
+        map.bind(new SpecialKey(Key.ARROW_LEFT), "\033[D");
+        map.bind(new SpecialKey(Key.HOME), "\033[H");
+        map.bind(new SpecialKey(Key.END), "\033[F");
 
-        map.bind(new KeyStroke(KeyType.ARROW_UP), "\033OA");
-        map.bind(new KeyStroke(KeyType.ARROW_DOWN), "\033OB");
-        map.bind(new KeyStroke(KeyType.ARROW_RIGHT), "\033OC");
-        map.bind(new KeyStroke(KeyType.ARROW_LEFT), "\033OD");
-        map.bind(new KeyStroke(KeyType.HOME), "\033OH");
-        map.bind(new KeyStroke(KeyType.END), "\033OF");
+        map.bind(new SpecialKey(Key.ARROW_UP), "\033OA");
+        map.bind(new SpecialKey(Key.ARROW_DOWN), "\033OB");
+        map.bind(new SpecialKey(Key.ARROW_RIGHT), "\033OC");
+        map.bind(new SpecialKey(Key.ARROW_LEFT), "\033OD");
+        map.bind(new SpecialKey(Key.HOME), "\033OH");
+        map.bind(new SpecialKey(Key.END), "\033OF");
 
-        map.bind(new KeyStroke(KeyType.HOME), "\033[1~");
-        map.bind(new KeyStroke(KeyType.END), "\033[4~");
-        map.bind(new KeyStroke(KeyType.PAGE_UP), "\033[5~");
-        map.bind(new KeyStroke(KeyType.PAGE_DOWN), "\033[6~");
+        map.bind(new SpecialKey(Key.HOME), "\033[1~");
+        map.bind(new SpecialKey(Key.END), "\033[4~");
+        map.bind(new SpecialKey(Key.PAGE_UP), "\033[5~");
+        map.bind(new SpecialKey(Key.PAGE_DOWN), "\033[6~");
 
-        map.bind(new KeyStroke(KeyType.BACKSPACE), "\b"); // BS (8)
-        map.bind(new KeyStroke(KeyType.BACKSPACE), "\177"); // DEL
+        map.bind(new SpecialKey(Key.BACKSPACE), "\b"); // BS (8)
+        map.bind(new SpecialKey(Key.BACKSPACE), "\177"); // DEL
 
-        map.bind(new KeyStroke(KeyType.ENTER), "\r");
+        map.bind(new SpecialKey(Key.ENTER), "\r");
 
-        map.bind(new KeyStroke(KeyType.ESCAPE), "\033");
+        map.bind(new SpecialKey(Key.ESCAPE), "\033");
 
         for (int c = 32; c < 127; c++) {
-            map.bind(new KeyStroke((char) c), String.valueOf((char) c));
+            map.bind(new CharacterKey((char) c), String.valueOf((char) c));
         }
 
         map.setAmbiguousTimeout(10);

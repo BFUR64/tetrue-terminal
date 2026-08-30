@@ -2,7 +2,8 @@ package examples;
 
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 public final class ColorShowcase {
@@ -217,12 +218,13 @@ public final class ColorShowcase {
             KeyStroke keyStroke = terminal.poll();
 
             if (keyStroke != null) {
-                if (keyStroke.keyType() == KeyType.ESCAPE) {
-                    System.exit(0);
-                }
-
-                if (keyStroke.keyType() == KeyType.ENTER) {
-                    return;
+                if (keyStroke instanceof SpecialKey(Key key)) {
+                    switch (key) {
+                        case ESCAPE -> System.exit(0);
+                        case ENTER -> {
+                            return;
+                        }
+                    }
                 }
             }
 

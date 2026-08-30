@@ -1,8 +1,10 @@
 package examples;
 
 import io.github.bfur64.terminal.Terminal;
+import io.github.bfur64.terminal.input.CharacterKey;
 import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.KeyType;
+import io.github.bfur64.terminal.input.Key;
+import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.Style;
@@ -28,13 +30,16 @@ public class FeatureShowcase {
 
                 KeyStroke keyStroke = terminal.read();
 
-                if (keyStroke.keyType() == KeyType.ESCAPE) break;
-
-                if (keyStroke.keyType() == KeyType.CHARACTER && keyStroke.character() != null) {
-                    switch (keyStroke.character()) {
-                        case '1' -> staticShowcase(terminal);
-                        case '2' -> dynamicShowcase(terminal);
-                        case '0' -> { break loop; }
+                switch (keyStroke) {
+                    case CharacterKey(char character) -> {
+                        switch (character) {
+                            case '1' -> staticShowcase(terminal);
+                            case '2' -> dynamicShowcase(terminal);
+                            case '0' -> { break loop; }
+                        }
+                    }
+                    case SpecialKey(Key key) -> {
+                        if (key == Key.ESCAPE) { break loop; }
                     }
                 }
             }
@@ -69,7 +74,7 @@ public class FeatureShowcase {
 
         while (true) {
             KeyStroke keyStroke = terminal.poll();
-            if (keyStroke != null && keyStroke.keyType() == KeyType.ESCAPE) break;
+            if (keyStroke instanceof SpecialKey(Key key) && key == Key.ESCAPE) break;
 
             drawBar(terminal, 0, 0, offset);
             drawFlashingText(terminal, 0, 2, flash, "Hello World!");
