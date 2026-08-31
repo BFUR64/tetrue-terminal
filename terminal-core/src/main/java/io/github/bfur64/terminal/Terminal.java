@@ -1,7 +1,7 @@
 package io.github.bfur64.terminal;
 
 import io.github.bfur64.Versions;
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.commands.*;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.implementations.jline.JLineRuntime;
@@ -42,11 +42,11 @@ public final class Terminal {
         return new Builder();
     }
 
-    public KeyStroke read() {
+    public InputEvent read() {
         return inputSource.read();
     }
 
-    public @Nullable KeyStroke poll() {
+    public @Nullable InputEvent poll() {
         return inputSource.poll();
     }
 

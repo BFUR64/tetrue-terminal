@@ -1,6 +1,6 @@
 package io.github.bfur64.terminal.implementations.mock;
 
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.render.*;
 import io.github.bfur64.terminal.Terminal;
@@ -59,19 +59,19 @@ public final class MockRuntime implements TerminalRuntime, TerminalEnvironment {
         this.ySize = ySize;
     }
 
-    public void addKeyStroke(@Nullable KeyStroke keyStroke) {
-        mockInputSource.addKeyStroke(keyStroke);
+    public void addKeyStroke(@Nullable KeyEvent keyEvent) {
+        mockInputSource.addKeyStroke(keyEvent);
     }
 
-    public void addKeyStroke(@Nullable KeyStroke... keyStrokes) {
-        for (KeyStroke keyStroke : keyStrokes) {
-            mockInputSource.addKeyStroke(keyStroke);
+    public void addKeyStroke(@Nullable KeyEvent... keyEvents) {
+        for (KeyEvent keyEvent : keyEvents) {
+            mockInputSource.addKeyStroke(keyEvent);
         }
     }
 
-    public void addKeyStroke(List<@Nullable KeyStroke> keyStrokes) {
-        for (KeyStroke keyStroke : keyStrokes) {
-            mockInputSource.addKeyStroke(keyStroke);
+    public void addKeyStroke(List<@Nullable KeyEvent> keyEvents) {
+        for (KeyEvent keyEvent : keyEvents) {
+            mockInputSource.addKeyStroke(keyEvent);
         }
     }
 }

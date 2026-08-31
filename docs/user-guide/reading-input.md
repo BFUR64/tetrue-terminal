@@ -2,7 +2,7 @@
 
 The `Terminal` exposes two methods for reading user input: `read()` and `poll()`.
 
-Both return a `KeyStroke`, which represents the key that was pressed.
+Both return a `InputEvent`, which represents the key that was pressed.
 
 ---
 
@@ -51,9 +51,9 @@ A tight polling loop will consume an entire CPU thread. In real applications, us
 
 ## KeyStroke
 
-Polling and reading both return `KeyStroke`.
+Polling and reading both return `InputEvent`.
 
-A `KeyStroke` represents the letter or special key that the user has pressed, excluding control keys (e.g. shift, ctrl, function, etc.).
+A `InputEvent` represents the letter or special key that the user has pressed, excluding control keys (e.g. shift, ctrl, function, etc.).
 
 A special key is a non-printable key such as `ENTER`, `ESCAPE`, or the arrow keys.
 
@@ -97,7 +97,7 @@ if (keyStroke.keyType() == KeyType.CHARACTER) {
 
 ## Keystroke for polling
 
-The only difference between `read()` and `poll()` `KeyStroke`s is that `poll()` can return `null`, as we do not block the Terminal for user input. We simply add a `null` check at every site where we want to check for user input to account for that.
+The only difference between `read()` and `poll()` `InputEvent`s is that `poll()` can return `null`, as we do not block the Terminal for user input. We simply add a `null` check at every site where we want to check for user input to account for that.
 
 ```java
 while (true) {

@@ -1,11 +1,8 @@
 package io.github.bfur64.terminal.implementations.jline;
 
 import io.github.bfur64.Versions;
-import io.github.bfur64.terminal.input.CharacterKey;
-import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.Key;
+import io.github.bfur64.terminal.input.*;
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.input.SpecialKey;
 import io.github.bfur64.terminal.interfaces.RendererBackend;
 import io.github.bfur64.terminal.interfaces.TerminalEnvironment;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
@@ -36,7 +33,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
     public JLineRuntime() throws IOException {
         this.jlineTerminal = TerminalBuilder.builder().build();
 
-        BlockingQueue<KeyStroke> inputQueue = new LinkedBlockingQueue<>(16);
+        BlockingQueue<InputEvent> inputQueue = new LinkedBlockingQueue<>(16);
         this.pollingThread = startPollingThread(inputQueue, new BindingReader(jlineTerminal.reader()), buildKeyMap());
 
         RendererBackend rendererBackend = new JLineBackend(jlineTerminal);
@@ -53,7 +50,7 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         jlineTerminal.flush();
     }
 
-    private Thread startPollingThread(BlockingQueue<KeyStroke> inputQueue, BindingReader bindingReader, KeyMap<KeyStroke> keyMap) {
+    private Thread startPollingThread(BlockingQueue<InputEvent> inputQueue, BindingReader bindingReader, KeyMap<InputEvent> keyMap) {
         Thread pollingThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted() && isRunning.get()) {
                 try {
@@ -104,37 +101,37 @@ public final class JLineRuntime implements TerminalRuntime, TerminalEnvironment 
         jlineTerminal.close();
     }
 
-    private KeyMap<KeyStroke> buildKeyMap() {
-        KeyMap<KeyStroke> map = new KeyMap<>();
+    private KeyMap<InputEvent> buildKeyMap() {
+        KeyMap<InputEvent> map = new KeyMap<>();
 
-        map.bind(new SpecialKey(Key.ARROW_UP), "\033[A");
-        map.bind(new SpecialKey(Key.ARROW_DOWN), "\033[B");
-        map.bind(new SpecialKey(Key.ARROW_RIGHT), "\033[C");
-        map.bind(new SpecialKey(Key.ARROW_LEFT), "\033[D");
-        map.bind(new SpecialKey(Key.HOME), "\033[H");
-        map.bind(new SpecialKey(Key.END), "\033[F");
+        map.bind(new KeyEvent(Key.ARROW_UP), "\033[A");
+        map.bind(new KeyEvent(Key.ARROW_DOWN), "\033[B");
+        map.bind(new KeyEvent(Key.ARROW_RIGHT), "\033[C");
+        map.bind(new KeyEvent(Key.ARROW_LEFT), "\033[D");
+        map.bind(new KeyEvent(Key.HOME), "\033[H");
+        map.bind(new KeyEvent(Key.END), "\033[F");
 
-        map.bind(new SpecialKey(Key.ARROW_UP), "\033OA");
-        map.bind(new SpecialKey(Key.ARROW_DOWN), "\033OB");
-        map.bind(new SpecialKey(Key.ARROW_RIGHT), "\033OC");
-        map.bind(new SpecialKey(Key.ARROW_LEFT), "\033OD");
-        map.bind(new SpecialKey(Key.HOME), "\033OH");
-        map.bind(new SpecialKey(Key.END), "\033OF");
+        map.bind(new KeyEvent(Key.ARROW_UP), "\033OA");
+        map.bind(new KeyEvent(Key.ARROW_DOWN), "\033OB");
+        map.bind(new KeyEvent(Key.ARROW_RIGHT), "\033OC");
+        map.bind(new KeyEvent(Key.ARROW_LEFT), "\033OD");
+        map.bind(new KeyEvent(Key.HOME), "\033OH");
+        map.bind(new KeyEvent(Key.END), "\033OF");
 
-        map.bind(new SpecialKey(Key.HOME), "\033[1~");
-        map.bind(new SpecialKey(Key.END), "\033[4~");
-        map.bind(new SpecialKey(Key.PAGE_UP), "\033[5~");
-        map.bind(new SpecialKey(Key.PAGE_DOWN), "\033[6~");
+        map.bind(new KeyEvent(Key.HOME), "\033[1~");
+        map.bind(new KeyEvent(Key.END), "\033[4~");
+        map.bind(new KeyEvent(Key.PAGE_UP), "\033[5~");
+        map.bind(new KeyEvent(Key.PAGE_DOWN), "\033[6~");
 
-        map.bind(new SpecialKey(Key.BACKSPACE), "\b"); // BS (8)
-        map.bind(new SpecialKey(Key.BACKSPACE), "\177"); // DEL
+        map.bind(new KeyEvent(Key.BACKSPACE), "\b"); // BS (8)
+        map.bind(new KeyEvent(Key.BACKSPACE), "\177"); // DEL
 
-        map.bind(new SpecialKey(Key.ENTER), "\r");
+        map.bind(new KeyEvent(Key.ENTER), "\r");
 
-        map.bind(new SpecialKey(Key.ESCAPE), "\033");
+        map.bind(new KeyEvent(Key.ESCAPE), "\033");
 
         for (int c = 32; c < 127; c++) {
-            map.bind(new CharacterKey((char) c), String.valueOf((char) c));
+            map.bind(new CharacterEvent((char) c), String.valueOf((char) c));
         }
 
         map.setAmbiguousTimeout(10);

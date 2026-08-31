@@ -1,8 +1,8 @@
 package io.github.bfur64.terminal.implementations.mock;
 
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.input.Key;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -12,33 +12,33 @@ import java.util.List;
 
 @NullMarked
 public final class MockInputSource implements InputSource {
-    private final List<@Nullable KeyStroke> keyStrokes = new LinkedList<>();
+    private final List<@Nullable KeyEvent> keyEvents = new LinkedList<>();
 
     @Override
-    public KeyStroke read() {
-        if (keyStrokes.isEmpty()) {
-            return new SpecialKey(Key.UNKNOWN);
+    public InputEvent read() {
+        if (keyEvents.isEmpty()) {
+            return new KeyEvent(Key.UNKNOWN);
         }
 
-        KeyStroke keyStroke = keyStrokes.getFirst();
-        keyStrokes.removeFirst();
+        KeyEvent keyEvent = keyEvents.getFirst();
+        keyEvents.removeFirst();
 
-        return keyStroke != null ? keyStroke : new SpecialKey(Key.UNKNOWN);
+        return keyEvent != null ? keyEvent : new KeyEvent(Key.UNKNOWN);
     }
 
     @Override
-    public @Nullable KeyStroke poll() {
-        if (keyStrokes.isEmpty()) {
+    public @Nullable InputEvent poll() {
+        if (keyEvents.isEmpty()) {
             return null;
         }
 
-        KeyStroke keyStroke = keyStrokes.getFirst();
-        keyStrokes.removeFirst();
+        KeyEvent keyEvent = keyEvents.getFirst();
+        keyEvents.removeFirst();
 
-        return keyStroke;
+        return keyEvent;
     }
 
-    void addKeyStroke(@Nullable KeyStroke keyStroke) {
-        keyStrokes.add(keyStroke);
+    void addKeyStroke(@Nullable KeyEvent keyEvent) {
+        keyEvents.add(keyEvent);
     }
 }

@@ -1,11 +1,11 @@
 package io.github.bfur64.terminal.interfaces;
 
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public interface InputSource {
-    KeyStroke read();
-    @Nullable KeyStroke poll();
+    InputEvent read();
+    @Nullable InputEvent poll();
 }

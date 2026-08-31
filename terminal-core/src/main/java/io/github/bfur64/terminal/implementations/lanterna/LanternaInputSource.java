@@ -1,10 +1,10 @@
 package io.github.bfur64.terminal.implementations.lanterna;
 
 import com.googlecode.lanterna.terminal.Terminal;
-import io.github.bfur64.terminal.input.CharacterKey;
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.CharacterEvent;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.input.Key;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
@@ -31,23 +31,23 @@ public final class LanternaInputSource implements InputSource {
     }
 
     @Override
-    public KeyStroke read() {
+    public InputEvent read() {
         try {
             com.googlecode.lanterna.input.KeyStroke lanternaKeyStroke = terminal.readInput();
 
             if (lanternaKeyStroke.getKeyType() == com.googlecode.lanterna.input.KeyType.Character) {
-                return new CharacterKey(lanternaKeyStroke.getCharacter());
+                return new CharacterEvent(lanternaKeyStroke.getCharacter());
             }
 
-            return new SpecialKey(getKeyType(lanternaKeyStroke));
+            return new KeyEvent(getKeyType(lanternaKeyStroke));
         }
         catch (IOException ignored) {
-            return new SpecialKey(Key.UNKNOWN);
+            return new KeyEvent(Key.UNKNOWN);
         }
     }
 
     @Override
-    public @Nullable KeyStroke poll() {
+    public @Nullable InputEvent poll() {
         try {
             com.googlecode.lanterna.input.KeyStroke lanternaKeyStroke = terminal.pollInput();
 
@@ -56,13 +56,13 @@ public final class LanternaInputSource implements InputSource {
             }
 
             if (lanternaKeyStroke.getKeyType() == com.googlecode.lanterna.input.KeyType.Character) {
-                return new CharacterKey(lanternaKeyStroke.getCharacter());
+                return new CharacterEvent(lanternaKeyStroke.getCharacter());
             }
 
-            return new SpecialKey(getKeyType(lanternaKeyStroke));
+            return new KeyEvent(getKeyType(lanternaKeyStroke));
         }
         catch (IOException ignored) {
-            return new SpecialKey(Key.UNKNOWN);
+            return new KeyEvent(Key.UNKNOWN);
         }
     }
 

@@ -1,8 +1,8 @@
 package io.github.bfur64.terminal.implementations.jline;
 
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.input.Key;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.InputSource;
 import org.apache.logging.log4j.internal.annotation.SuppressFBWarnings;
 import org.jspecify.annotations.NullMarked;
@@ -12,7 +12,7 @@ import java.util.concurrent.BlockingQueue;
 
 @NullMarked
 public final class JLineInputSource implements InputSource {
-    private final BlockingQueue<KeyStroke> inputQueue;
+    private final BlockingQueue<InputEvent> inputQueue;
 
     /**
      * Creates a {@link JLineInputSource} backed by the provided {@link BlockingQueue}.
@@ -24,15 +24,15 @@ public final class JLineInputSource implements InputSource {
      * If a thread waiting for input is interrupted during a blocking read operation,
      * the interrupt status will be restored before returning.</p>
      *
-     * @param inputQueue Queue containing {@link KeyStroke} events produced by the runtime
+     * @param inputQueue Queue containing {@link InputEvent} events produced by the runtime
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public JLineInputSource(BlockingQueue<KeyStroke> inputQueue) {
+    public JLineInputSource(BlockingQueue<InputEvent> inputQueue) {
         this.inputQueue = inputQueue;
     }
 
     @Override
-    public KeyStroke read() {
+    public InputEvent read() {
         try {
             return inputQueue.take();
         }
@@ -40,11 +40,11 @@ public final class JLineInputSource implements InputSource {
             Thread.currentThread().interrupt();
         }
 
-        return new SpecialKey(Key.UNKNOWN);
+        return new KeyEvent(Key.UNKNOWN);
     }
 
     @Override
-    public @Nullable KeyStroke poll() {
+    public @Nullable InputEvent poll() {
         return inputQueue.poll();
     }
 }

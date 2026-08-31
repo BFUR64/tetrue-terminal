@@ -1,10 +1,10 @@
 package examples;
 
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.input.Key;
 import io.github.bfur64.terminal.Terminal;
 import io.github.bfur64.terminal.commands.Command;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public final class BufferShowcase {
 
             terminal.clear();
 
-            KeyStroke keyStroke = new SpecialKey(Key.UNKNOWN);
+            InputEvent keyStroke = new KeyEvent(Key.UNKNOWN);
 
             terminal.put(0, 0, "Current Renderer: " + terminal.terminalInfo());
             terminal.put(0, 1, "Cols: " + terminal.xSize() + " | " + "Rows: " + terminal.ySize());

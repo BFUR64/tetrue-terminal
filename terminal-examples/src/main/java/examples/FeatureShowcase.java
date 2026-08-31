@@ -1,16 +1,14 @@
 package examples;
 
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.input.CharacterKey;
-import io.github.bfur64.terminal.input.KeyStroke;
-import io.github.bfur64.terminal.input.Key;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.*;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 import io.github.bfur64.terminal.output.SGR;
 import io.github.bfur64.terminal.output.Style;
 import io.github.bfur64.terminal.output.TextColor;
 
 import java.awt.*;
+import java.util.concurrent.locks.LockSupport;
 
 public class FeatureShowcase {
     public static void main(String[] args) throws Exception {
@@ -28,20 +26,22 @@ public class FeatureShowcase {
 
                 terminal.flush();
 
-                KeyStroke keyStroke = terminal.read();
+                InputEvent inputEvent = terminal.read();
 
-                switch (keyStroke) {
-                    case CharacterKey(char character) -> {
+                switch (inputEvent) {
+                    case CharacterEvent(char character) -> {
                         switch (character) {
                             case '1' -> staticShowcase(terminal);
                             case '2' -> dynamicShowcase(terminal);
                             case '0' -> { break loop; }
                         }
                     }
-                    case SpecialKey(Key key) -> {
+                    case KeyEvent(Key key) -> {
                         if (key == Key.ESCAPE) { break loop; }
                     }
                 }
+
+                terminal.flush();
             }
         }
     }
@@ -73,8 +73,8 @@ public class FeatureShowcase {
         boolean flash = true;
 
         while (true) {
-            KeyStroke keyStroke = terminal.poll();
-            if (keyStroke instanceof SpecialKey(Key key) && key == Key.ESCAPE) break;
+            InputEvent keyStroke = terminal.poll();
+            if (keyStroke instanceof KeyEvent(Key key) && key == Key.ESCAPE) break;
 
             drawBar(terminal, 0, 0, offset);
             drawFlashingText(terminal, 0, 2, flash, "Hello World!");

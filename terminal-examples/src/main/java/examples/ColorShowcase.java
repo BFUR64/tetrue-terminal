@@ -1,9 +1,9 @@
 package examples;
 
 import io.github.bfur64.terminal.Terminal;
-import io.github.bfur64.terminal.input.KeyStroke;
+import io.github.bfur64.terminal.input.InputEvent;
 import io.github.bfur64.terminal.input.Key;
-import io.github.bfur64.terminal.input.SpecialKey;
+import io.github.bfur64.terminal.input.KeyEvent;
 import io.github.bfur64.terminal.interfaces.TerminalRuntime;
 
 public final class ColorShowcase {
@@ -215,10 +215,10 @@ public final class ColorShowcase {
 
     private static void runCountDown(Terminal terminal, int seconds, int x, int y) throws InterruptedException {
         while (seconds > 0) {
-            KeyStroke keyStroke = terminal.poll();
+            InputEvent keyStroke = terminal.poll();
 
             if (keyStroke != null) {
-                if (keyStroke instanceof SpecialKey(Key key)) {
+                if (keyStroke instanceof KeyEvent(Key key)) {
                     switch (key) {
                         case ESCAPE -> System.exit(0);
                         case ENTER -> {

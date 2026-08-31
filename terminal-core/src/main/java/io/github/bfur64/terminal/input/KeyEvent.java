@@ -3,7 +3,7 @@ package io.github.bfur64.terminal.input;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public record SpecialKey(Key key) implements KeyStroke {
+public record KeyEvent(Key key) implements InputEvent {
     @Override
     public String toString() {
         return switch (key) {
